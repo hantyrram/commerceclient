@@ -1,0 +1,33 @@
+TransitionTable
+
+
+Properties of bread action
+
+PermissionFeature
+
+permission_browse action
+  success?
+    no - /permissions with error e.g. unauthorized
+    yes - /permissions with data,with no data
+
+permission_read action
+  success?         
+    no - refererrer,back
+    yes - /permissions/:name 
+    
+permission_edit action
+  success?
+    no - '/permissions/:name with error
+    yes- '/permissions/:name with success    
+
+permission_add action 
+  success?
+    no - '/permissions/add'
+    yes - '/permissions/:name    
+
+permission_delete action
+  success?
+    no - refererrer,or current location with error
+    yes - current location with success    
+
+
