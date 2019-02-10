@@ -10,12 +10,7 @@ import UserHome from './pages/UserHome';
 import features from './features';
 import {user_permissions_read as getUserPermissions} from './features/requesters';
 import './App.css';
-<<<<<<< HEAD
-
-
-=======
-console.log('on devs');
->>>>>>> b701b018c6a66e862e48d144576e6201e3e21766
+console.log('should push to dev');
 /**
  * Checks if the user has the given permission.Note: MUST bind user as this.
  * @param {string} permissionName 
