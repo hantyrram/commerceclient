@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 export default styled.table`
  border-collapse:collapse;
+ 
  min-width:100%;
  & > thead {
   background-color: #dbdbdb;

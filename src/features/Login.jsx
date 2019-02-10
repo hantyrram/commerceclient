@@ -79,11 +79,11 @@ class Login extends Component {
     }
     return ( 
       <form action="" style={formStyle} onSubmit={this.onSubmit}>
-          <div style={{minWidth:"100%"}}>
+          <div style={{minWidth:"95%"}}>
             <label htmlFor="username" >Username</label>
             <input id="username" type="text" name="username" style={inputStyle} onChange={this.onChange}/>
           </div>
-          <div style={{minWidth:"100%"}}>
+          <div style={{minWidth:"95%"}}>
             <label htmlFor="password" >Password</label>
             <input id="password" type="text" name="password" style={inputStyle} onChange={this.onChange}/>
           </div>

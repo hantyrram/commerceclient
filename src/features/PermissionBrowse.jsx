@@ -20,13 +20,17 @@ class PermissionBrowse extends Component {
     this.setState({permissions:response.data.data.permissions});
   }
   
+  onAdd(e){
+   console.log('Adding New Record');
+  }
+
   render() { 
+    let onAdd = this.props.user.hasPermission(PermissionAdd.requiredPermission)?this.onAdd.bind(this):null;
     return ( 
-     <Card>
-      {this.props.user.hasPermission(PermissionAdd.requiredPermission)?<Link to={PermissionAdd.path} >Add New Permission</Link>:null}
-      <EntityBrowser entities={this.state.permissions} follow={{pathname:PermissionRead.path,column:'name',entityName:'permission'}}/>
-     </Card>
-      
+      <Card>
+       {this.props.user.hasPermission(PermissionAdd.requiredPermission)?<Link to={PermissionAdd.path} >Add New Permission</Link>:null}
+       <EntityBrowser onAdd={onAdd} title={PermissionBrowse.name} entities={this.state.permissions} follow={{pathname:PermissionRead.path,column:'name',entityName:'permission'}}/>
+      </Card>
      );
   }
 }

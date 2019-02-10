@@ -42,6 +42,7 @@ export default (props)=>{
           <SideNav features={props.user.permittedFeatures}/>
         </SideNavDiv>
         <Content id="content">
+          
           <Switch>
            {
             props.user.permittedFeatures && props.user.permittedFeatures.length > 0 ? props.user.permittedFeatures.reduce((acc,Feature)=>{

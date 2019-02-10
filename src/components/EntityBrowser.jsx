@@ -11,25 +11,33 @@
  *                 entityName: REQUIRED! The name of the entity e.g. user, This is used as property of the location.state. 
  *               }
  *  remove : [OPTIONAL] A function that will handle the delete button click event.
+ *  title: [OPTIONAL] The Title shown on top of the Entity Browser.
+ *  onAdd: [OPTIONAL] The handler for the add button.Which is used to add a new Entity.
  * }
  */
 
 import React from 'react';
 import {Link} from 'react-router-dom';
 import Table from './styled_elements/Table';
+import EntityBrowserTitle from './EntityBrowserTitle';
+import styled from 'styled-components';
 
+const Div = styled.div`
+ border:1px solid #7fd7f5;
+`;
 
-export default ({entities,follow,schema,remove})=>{
+export default ({entities,follow,schema,remove,title,onAdd})=>{
  let columnNames = [];
  if(entities && entities.length > 0){
-  columnNames.push('#');
+  columnNames.push('#');//number column
   
   let sample = entities[0];//get a sample entity just to check the property names
-  console.log(Object.getOwnPropertyNames(sample).map((samplePropName)=>{return samplePropName}));
   columnNames = columnNames.concat(Object.getOwnPropertyNames(sample).map((samplePropName)=>{return samplePropName}));
  }
   return(
-    <div>
+    <Div>
+      {title? <EntityBrowserTitle>{title}</EntityBrowserTitle>:null}
+      {onAdd? <button onClick={onAdd}>+</button>:null}
       <Table>
         <thead>
           <tr>
@@ -44,17 +52,16 @@ export default ({entities,follow,schema,remove})=>{
           {
              entities && entities.length > 0?entities.map((entity,index)=>{
               return <tr key={index}>
-                       <td>{index + 1}</td> 
+                       <td >{index + 1}</td> 
                        {
                          Object.getOwnPropertyNames(entity).map((entityFieldName,i)=>{
-                         
                            let state = {};
                            let el = entity[entityFieldName];
                            if(follow && follow.column && entityFieldName === follow.column){
                              state[`${follow.entityName}`] = entity;//state.user = user
-                             el = <Link to={{pathname:follow.pathname.replace(":"+follow.column,entityFieldName),state:{...state}}} >{entity[entityFieldName]}</Link>;
+                             el = <Link to={{pathname:follow.pathname.replace(":"+follow.column,entity[follow.column]),state:{...state}}} >{entity[entityFieldName]}</Link>;
                            }
-                           return <td key={i}>{el}</td>
+                           return <td key={i} contenteditable={"true"}>{el}</td>
                          })
                          
                        }
@@ -67,6 +74,6 @@ export default ({entities,follow,schema,remove})=>{
         </tbody>
       </Table>
       <div>Back Forward Navigator here</div>
-    </div>
+    </Div>
   );
 }
