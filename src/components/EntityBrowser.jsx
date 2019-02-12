@@ -16,64 +16,82 @@
  * }
  */
 
-import React from 'react';
+import React,{Component} from 'react';
+import ReactDOM from 'react-dom';
 import {Link} from 'react-router-dom';
 import Table from './styled_elements/Table';
 import EntityBrowserTitle from './EntityBrowserTitle';
 import styled from 'styled-components';
+import "./EntityBrowser.css";
 
 const Div = styled.div`
  border:1px solid #7fd7f5;
 `;
 
-export default ({entities,follow,schema,remove,title,onAdd})=>{
- let columnNames = [];
- if(entities && entities.length > 0){
-  columnNames.push('#');//number column
+
+class EntityBrowser extends Component{
+
+
+ render(){
+  let columnNames = [];
+  if(this.props.entities && this.props.entities.length > 0){
+   columnNames.push('#');//number column
+   
+   let sample = this.props.entities[0];//get a sample entity just to check the property names
+   columnNames = columnNames.concat(Object.getOwnPropertyNames(sample).map((samplePropName)=>{return samplePropName}));
+  }
   
-  let sample = entities[0];//get a sample entity just to check the property names
-  columnNames = columnNames.concat(Object.getOwnPropertyNames(sample).map((samplePropName)=>{return samplePropName}));
- }
   return(
-    <Div>
-      {title? <EntityBrowserTitle>{title}</EntityBrowserTitle>:null}
-      {onAdd? <button onClick={onAdd}>+</button>:null}
-      <Table>
-        <thead>
-          <tr>
-            {
-              columnNames.length > 0? columnNames.map((columnName,i)=>{
-                return <th key={i}>{columnName}</th>
-              }):null
-            }
-          </tr>
-        </thead>
-        <tbody>
-          {
-             entities && entities.length > 0?entities.map((entity,index)=>{
-              return <tr key={index}>
-                       <td >{index + 1}</td> 
-                       {
-                         Object.getOwnPropertyNames(entity).map((entityFieldName,i)=>{
-                           let state = {};
-                           let el = entity[entityFieldName];
-                           if(follow && follow.column && entityFieldName === follow.column){
-                             state[`${follow.entityName}`] = entity;//state.user = user
-                             el = <Link to={{pathname:follow.pathname.replace(":"+follow.column,entity[follow.column]),state:{...state}}} >{entity[entityFieldName]}</Link>;
-                           }
-                           return <td key={i} contenteditable={"true"}>{el}</td>
-                         })
-                         
-                       }
-                       {
-                         remove?<button><i className="material-icons" onClick={(e)=>{remove(entity)}}>delete_forever</i></button>:null
-                       }
-              </tr>
-            }):<tr><td>No Available Data</td></tr>
-          }
-        </tbody>
-      </Table>
-      <div>Back Forward Navigator here</div>
+     
+     <Div>
+      {this.props.title? <EntityBrowserTitle>{this.props.title}</EntityBrowserTitle>:null}
+      <div>Actions Row
+      {this.props.onAdd? <button onClick={this.props.onAdd}>+</button>:null}
+      </div>
+      <div id="table-container">Content Row
+        <div id="table-wrapper">
+          <Table id="entitybrowser-table" >
+           <thead>
+             <tr>
+               {
+                 columnNames.length > 0? columnNames.map((columnName,i)=>{
+                   return <th key={i}>{columnName}</th>
+                 }):null
+               }
+               <th className="fixed-column">Action</th>
+             </tr>
+           </thead>
+           <tbody>
+             {
+                this.props.entities && this.props.entities.length > 0?this.props.entities.map((entity,index)=>{
+                 return <tr key={index}>
+                          <td>{index + 1}</td> 
+                          {
+                            Object.getOwnPropertyNames(entity).map((entityFieldName,i)=>{
+                              let state = {};
+                              let el = entity[entityFieldName];
+                              if(this.props.follow && this.props.follow.column && entityFieldName === this.props.follow.column){
+                                state[`${this.props.follow.entityName}`] = entity;//state.user = user
+                                el = <Link to={{pathname:this.props.follow.pathname.replace(":"+this.props.follow.column,entity[this.props.follow.column]),state:{...state}}} >{entity[entityFieldName]}</Link>;
+                              }
+                              return <td key={i} contentEditable={"true"}>{el}</td>
+                            })
+                            
+                          }
+                          {
+                            <td className="fixed-column">edit</td>
+                          }
+                 </tr>
+               }):<tr><td>No Available Data</td></tr>
+             }
+            </tbody>
+          </Table>
+        </div>
+       
+      </div>
     </Div>
-  );
+  )
+ }
 }
+
+export default EntityBrowser;

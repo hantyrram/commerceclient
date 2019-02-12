@@ -1,0 +1,30 @@
+#table-container{
+ position:relative;
+ overflow: hidden;
+ width:100%;
+}
+
+#table-wrapper{
+ overflow: auto;
+}
+
+#entitybrowser-table tbody tr td{
+ white-space: nowrap;
+}
+
+.fixed-column{
+ position: absolute;
+ background-color: white;
+ top:auto;
+ right:0;
+ min-width: 50px;
+}
+
+/* 
+.clone th, .clone td{
+ visibility: hidden;
+}
+
+.clone tbody .fixed-column{
+ visibility: visible;
+} */
