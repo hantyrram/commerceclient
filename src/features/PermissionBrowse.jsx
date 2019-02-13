@@ -11,8 +11,11 @@ class PermissionBrowse extends Component {
   constructor(props) {
     super(props);
     this.state = { 
-      permissions:null
+      permissions:null,
+      read:false,
+      readEntity:null
      }
+
   }
 
   async componentDidMount(){
@@ -24,13 +27,26 @@ class PermissionBrowse extends Component {
    console.log('Adding New Record');
   }
 
+  onRead(entity){
+    console.log('Editing',entity);
+    this.setState({})
+  }
+
   render() { 
     let onAdd = this.props.user.hasPermission(PermissionAdd.requiredPermission)?this.onAdd.bind(this):null;
+    let onRead = this.props.user.hasPermission(PermissionAdd.requiredPermission)?this.onEdit.bind(this):null;
     return ( 
-      <Card>
-       {this.props.user.hasPermission(PermissionAdd.requiredPermission)?<Link to={PermissionAdd.path} >Add New Permission</Link>:null}
-       <EntityBrowser onAdd={onAdd} title={PermissionBrowse.name} entities={this.state.permissions} follow={{pathname:PermissionRead.path,column:'name',entityName:'permission'}}/>
-      </Card>
+      <React.Fragment>
+        <Card display={this.state.read?'block':'none'} >
+          <PermissionRead  entity={this.state.readEntity}/>
+        </Card>
+        <Card>
+          {this.props.user.hasPermission(PermissionAdd.requiredPermission)?<Link to={PermissionAdd.path} >Add New Permission</Link>:null}
+          {/* <EntityBrowser onEdit={onEdit} onAdd={onAdd} title={PermissionBrowse.name} entities={this.state.permissions} follow={{pathname:PermissionRead.path,column:'name',entityName:'permission'}}/> */}
+          <EntityBrowser onRead={onRead} onAdd={onAdd} title={PermissionBrowse.name} entities={this.state.permissions} />
+        </Card>
+      </React.Fragment>
+      
      );
   }
 }

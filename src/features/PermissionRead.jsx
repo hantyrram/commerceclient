@@ -6,7 +6,7 @@ class PermissionRead extends Component{
     
     constructor(props){
      super(props);
-     console.log('Permission Read Mounted',this.props.location.state.permission);
+    //  console.log('Permission Read Mounted',this.props.location.state.permission);
     }
     
     componentDidMount(){
@@ -20,13 +20,14 @@ class PermissionRead extends Component{
      }
      return(
       <Card>
-        <EntityForm title="Permission" formType="read" entity={this.props.location.state.permission} schema={schema} onSubmit={()=>{}} onChange={()=>{}}/>
+        {/* <EntityForm title="Permission" formType="read" entity={this.props.location.state.permission} schema={schema} onSubmit={()=>{}} onChange={()=>{}}/> */}
+        <EntityForm title="Permission" formType="read" entity={this.props.entity} schema={schema} onSubmit={()=>{}} onChange={()=>{}}/>
       </Card>
      )
     }
   }
 
-  Object.defineProperty(PermissionRead,'path',{get:()=>'/permissions/:name'});
+  // Object.defineProperty(PermissionRead,'path',{get:()=>'/permissions/:name'});
   Object.defineProperty(PermissionRead,'requiredPermission',{get:()=>'permission_read'})
 
   export default PermissionRead;

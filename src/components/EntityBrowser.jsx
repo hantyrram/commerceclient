@@ -79,7 +79,7 @@ class EntityBrowser extends Component{
                             
                           }
                           {
-                            <td className="fixed-column">edit</td>
+                            <td className="fixed-column" ><button onClick={this.props.onEdit}>edit</button></td>
                           }
                  </tr>
                }):<tr><td>No Available Data</td></tr>
