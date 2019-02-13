@@ -19,6 +19,7 @@
 import React,{Component} from 'react';
 import ReactDOM from 'react-dom';
 import {Link} from 'react-router-dom';
+import PropTypes from 'prop-types';
 import Table from './styled_elements/Table';
 import EntityBrowserTitle from './EntityBrowserTitle';
 import styled from 'styled-components';
@@ -40,6 +41,7 @@ class EntityBrowser extends Component{
    let sample = this.props.entities[0];//get a sample entity just to check the property names
    columnNames = columnNames.concat(Object.getOwnPropertyNames(sample).map((samplePropName)=>{return samplePropName}));
   }
+  
   
   return(
      
@@ -64,7 +66,7 @@ class EntityBrowser extends Component{
            <tbody>
              {
                 this.props.entities && this.props.entities.length > 0?this.props.entities.map((entity,index)=>{
-                 return <tr key={index}>
+                 return <tr key={index} onClick={this.props.onRead?this.props.onRead.bind({},entity):()=>{}}> {/** Row is clickable if there is onRead handler else default = empty function*/}
                           <td>{index + 1}</td> 
                           {
                             Object.getOwnPropertyNames(entity).map((entityFieldName,i)=>{
@@ -74,12 +76,14 @@ class EntityBrowser extends Component{
                                 state[`${this.props.follow.entityName}`] = entity;//state.user = user
                                 el = <Link to={{pathname:this.props.follow.pathname.replace(":"+this.props.follow.column,entity[this.props.follow.column]),state:{...state}}} >{entity[entityFieldName]}</Link>;
                               }
-                              return <td key={i} contentEditable={"true"}>{el}</td>
+                              return <td key={i} >{el}</td>
                             })
                             
                           }
                           {
-                            <td className="fixed-column" ><button onClick={this.props.onEdit}>edit</button></td>
+                            this.props.onEdit || this.props.onDelete ?
+                             <td className="fixed-column" ><button onClick={this.props.onEdit.bind({},entity)}>edit</button></td>:
+                            null
                           }
                  </tr>
                }):<tr><td>No Available Data</td></tr>
@@ -94,4 +98,10 @@ class EntityBrowser extends Component{
  }
 }
 
+EntityBrowser.propTypes = {
+ /** The data to tabulate, the data will be shown in a Table */
+ entities: PropTypes.array,
+ /** The text that will be shown at the top */
+ title: PropTypes.string
+}
 export default EntityBrowser;
