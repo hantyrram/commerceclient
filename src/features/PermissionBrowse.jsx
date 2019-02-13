@@ -3,19 +3,22 @@ import {permission_browse as getPermissions} from './requesters';
 import EntityBrowser from '../components/EntityBrowser';
 import PermissionAdd from './PermissionAdd';
 import PermissionRead from './PermissionRead';
+import PermissionEdit from './PermissionEdit';
 import FEATUREGROUPS from './featureGroups';
 import Card from '../components/styled_elements/Card';
 import {Link} from 'react-router-dom';
 import axios from 'axios';
+/**
+ * 
+ */
 class PermissionBrowse extends Component {
   constructor(props) {
     super(props);
     this.state = { 
       permissions:null,
-      read:false,
-      readEntity:null
+      currentAction:null,
+      currentActionableEntity:null
      }
-
   }
 
   async componentDidMount(){
@@ -23,27 +26,45 @@ class PermissionBrowse extends Component {
     this.setState({permissions:response.data.data.permissions});
   }
   
-  onAdd(e){
-   console.log('Adding New Record');
+  onAdd(entity){
+   console.log('Adding New Record',entity);
   }
 
   onRead(entity){
-    console.log('Editing',entity);
-    this.setState({})
+    console.log('Reading',entity);
+    this.setState({currentAction:'read',currentActionableEntity:entity});
   }
+
+  onEdit(entity){
+   console.log('Editing')
+   this.setState({currentAction:'edit',currentActionableEntity:entity});
+  }
+
+  onDelete(entity){
+   console.log('Deleting',entity);
+  }
+
+  onClose(){
+   this.setState({currentAction:null});
+  }
+   
+  
 
   render() { 
     let onAdd = this.props.user.hasPermission(PermissionAdd.requiredPermission)?this.onAdd.bind(this):null;
-    let onRead = this.props.user.hasPermission(PermissionAdd.requiredPermission)?this.onEdit.bind(this):null;
+    let onRead = this.props.user.hasPermission(PermissionRead.requiredPermission)?this.onRead.bind(this):null;
+    let onEdit = this.props.user.hasPermission(PermissionEdit.requiredPermission)?this.onEdit.bind(this):null;
     return ( 
       <React.Fragment>
-        <Card display={this.state.read?'block':'none'} >
-          <PermissionRead  entity={this.state.readEntity}/>
+        {this.state.currentAction? 
+        <Card closable onClose={this.onClose.bind(this)}>
+          {this.state.currentAction === 'read'?<PermissionRead  entity={this.state.currentActionableEntity}/>:null}
+          {this.state.currentAction === 'edit'?<PermissionEdit  entity={this.state.currentActionableEntity}/>:null}
         </Card>
+        :null}
         <Card>
-          {this.props.user.hasPermission(PermissionAdd.requiredPermission)?<Link to={PermissionAdd.path} >Add New Permission</Link>:null}
           {/* <EntityBrowser onEdit={onEdit} onAdd={onAdd} title={PermissionBrowse.name} entities={this.state.permissions} follow={{pathname:PermissionRead.path,column:'name',entityName:'permission'}}/> */}
-          <EntityBrowser onRead={onRead} onAdd={onAdd} title={PermissionBrowse.name} entities={this.state.permissions} />
+          <EntityBrowser onEdit={onEdit} onRead={onRead} onDelete={this.onDelete.bind(this)} onAdd={onAdd} title={PermissionBrowse.name} entities={this.state.permissions} />
         </Card>
       </React.Fragment>
       
