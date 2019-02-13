@@ -19,10 +19,11 @@ class PermissionRead extends Component{
        'label': 1
      }
      return(
-      <Card>
-        {/* <EntityForm title="Permission" formType="read" entity={this.props.location.state.permission} schema={schema} onSubmit={()=>{}} onChange={()=>{}}/> */}
-        <EntityForm title="Permission" formType="read" entity={this.props.entity} schema={schema} onSubmit={()=>{}} onChange={()=>{}}/>
-      </Card>
+      // <Card>
+      //   {/* <EntityForm title="Permission" formType="read" entity={this.props.location.state.permission} schema={schema} onSubmit={()=>{}} onChange={()=>{}}/> */}
+        
+      // </Card>
+      <EntityForm title="Permission" formType="read" entity={this.props.entity} schema={schema} onSubmit={()=>{}} onChange={()=>{}}/>
      )
     }
   }

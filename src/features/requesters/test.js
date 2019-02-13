@@ -25,6 +25,7 @@ export const user_permissions_read = async ()=>{
     {name:'permission_browse',label:'Permissions'},
     {name:'permission_add',label: 'Add New Permission'},
     {name:'permission_read',label: 'Permission'},
+    {name:'permission_edit',label: 'Edit Permission'},
     {name:'user_browse', label: 'Users'},
     {name:'product_browse',label: 'Products'},
     {name:'order_browse',label: 'Orders'}
@@ -49,6 +50,16 @@ export const permission_browse = async()=>{
 }
 
 export const permission_add = async(permission)=>{
+ let response = new Response();
+ permission._id = 'randompermissionid';
+ response.data.data = {
+  permission: permission
+ }
+ 
+ return Promise.resolve(response);
+}
+
+export const permission_edit= async(permission)=>{
  let response = new Response();
  permission._id = 'randompermissionid';
  response.data.data = {
