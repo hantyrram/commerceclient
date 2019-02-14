@@ -1,9 +1,10 @@
 import styled from 'styled-components';
 
 export default styled.div`
- background-color: #7fd7f5;
+ background-color: #073647;
  line-height: 2em;
- border: none;
+ border: 1px solid #073647;
  padding-left: 1em;
  font-weight: bold;
+ color:orange;
 `;

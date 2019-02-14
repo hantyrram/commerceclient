@@ -8,9 +8,23 @@
  overflow-x: auto;
  width: 120%;
 }
+#entitybrowser-table tbody tr:hover{
+ background-color:grey;
+}
 
 #entitybrowser-table tbody tr td{
  white-space: nowrap;
+ cursor: default;
+ padding-left: 1em;
+}
+
+/** # column*/
+#entitybrowser-table tbody tr td:first-child{
+ padding-left: .5em;
+}
+
+#entitybrowser-table tbody tr:last-child{
+ padding-bottom: 2em;
 }
 
 .fixed-column{

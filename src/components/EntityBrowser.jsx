@@ -37,12 +37,14 @@ class EntityBrowser extends Component{
   }
 
   componentDidUpdate(){
-    // console.log(this.refs);
-    // this.refs.ebAction.addEventListener('click',function(e){
-    //   console.log(e);
-    //   if(e.currentTarget.className.includes("eb-action-column")) return;
-    //   console.log('Fire onRead');
-    // },true);
+    this.refs.ebTableTbody.addEventListener('click',function(e){
+     // Uses event capturing to stop propagation when the user clicks on the 
+     // "eb-action-column" cell
+     if(e.target.className && e.target.className.indexOf("action-column") !== -1){
+      e.stopImmediatePropagation();
+      return;
+     }
+    },true);
   }
   /**
    * Stop propagation when the user clicks on the Table cell/TD with class = "eb-action-column".
@@ -50,17 +52,7 @@ class EntityBrowser extends Component{
    * @param {Event} e - Event object
    */
   onReadMiddleware(entity,e){
-    console.dir(e.target);
-    //use .includes instead of indexOf
-    if(e.target.parentNode.className.indexOf("eb-action-column") !==-1 
-    ||  e.target.className.indexOf("eb-action-column") !== -1
-    || e.target.className.indexOf("eb-action") !== -1 ) { // action button 
-      e.preventDefault();
-      return;
-    }; //inside action button
-
     this.props.onRead(entity);
-    // this.props.onRead(entity);
   }
 
 
@@ -68,64 +60,60 @@ class EntityBrowser extends Component{
   let columnNames = [];
   if(this.props.entities && this.props.entities.length > 0){
    columnNames.push('#');//number column
-   
    let sample = this.props.entities[0];//get a sample entity just to check the property names
    columnNames = columnNames.concat(Object.getOwnPropertyNames(sample).map((samplePropName)=>{return samplePropName}));
   }
-  
-
-  return(
-     
-     <Div>
-      {this.props.title? <EntityBrowserTitle>{this.props.title}</EntityBrowserTitle>:null}
-      <div>Actions Row
-      {this.props.onAdd? <button onClick={this.props.onAdd}>+</button>:null}
-      <i className="fas fa-edit"></i>
-      </div>
-      <div id="table-container">Content Row
-        <div id="table-wrapper">
-          <Table id="entitybrowser-table" >
-           <thead>
-             <tr>
-               {
-                 columnNames.length > 0? columnNames.map((columnName,i)=>{
-                   return <th key={i}>{columnName}</th>
-                 }):null
-               }
-               <th className="fixed-column">Action</th>
-             </tr>
-           </thead>
-           <tbody>
+  return(     
+   <Div>
+    {this.props.title? <EntityBrowserTitle>{this.props.title}</EntityBrowserTitle>:null}
+    <div>Actions Row
+     {this.props.onAdd? <button onClick={this.props.onAdd}>+</button>:null}
+    </div>
+    <div id="table-container">Content Row
+      <div id="table-wrapper">
+        <Table id="entitybrowser-table" >
+         <thead>
+           <tr>
              {
-                this.props.entities && this.props.entities.length > 0?this.props.entities.map((entity,index)=>{
-                 return <tr key={index} onClick={this.props.onRead?this.onReadMiddleware.bind(this,entity):()=>{}}> {/** Row is clickable if there is onRead handler else default = empty function*/}
-                          <td>{index + 1}</td> 
-                          {
-                            Object.getOwnPropertyNames(entity).map((entityFieldName,i)=>{
-                              let state = {};
-                              let el = entity[entityFieldName];
-                              if(this.props.follow && this.props.follow.column && entityFieldName === this.props.follow.column){
-                                state[`${this.props.follow.entityName}`] = entity;//state.user = user
-                                el = <Link to={{pathname:this.props.follow.pathname.replace(":"+this.props.follow.column,entity[this.props.follow.column]),state:{...state}}} >{entity[entityFieldName]}</Link>;
-                              }
-                              return <td key={i} >{el}</td>
-                            })
-                            
-                          }
-                          {
-                            this.props.onEdit || this.props.onDelete ?
-                             <td ref="ebAction" className="fixed-column eb-action-column" style={{zIndex:"3"}}><span  className="eb-action fas fa-edit" onClick={this.props.onEdit.bind({},entity)}></span></td>:
-                            null
-                          }
-                 </tr>
-               }):<tr><td>No Available Data</td></tr>
+               columnNames.length > 0? columnNames.map((columnName,i)=>{
+                 return <th key={i}>{columnName}</th>
+               }):null
              }
-            </tbody>
-          </Table>
-        </div>
-       
+             <th className="fixed-column">Action</th>
+           </tr>
+         </thead>
+         <tbody ref="ebTableTbody">
+           {
+            this.props.entities && this.props.entities.length > 0 ?
+             this.props.entities.map((entity,index)=>{
+              return <tr key={index} > {/** Row is clickable if there is onRead handler else default = empty function*/}
+                      <td >{index + 1}</td> 
+                      {
+                        Object.getOwnPropertyNames(entity).map((entityFieldName,i)=>{
+                          let state = {};
+                          let el = entity[entityFieldName];
+                          if(this.props.follow && this.props.follow.column && entityFieldName === this.props.follow.column){
+                            state[`${this.props.follow.entityName}`] = entity;//state.user = user
+                            el = <Link to={{pathname:this.props.follow.pathname.replace(":"+this.props.follow.column,entity[this.props.follow.column]),state:{...state}}} >{entity[entityFieldName]}</Link>;
+                          }
+                          return <td key={i} onClick={this.props.onRead?this.onReadMiddleware.bind(this,entity):()=>{}}>{el}</td>
+                        })
+                        
+                      }
+                      {
+                        this.props.onEdit || this.props.onDelete ?
+                         <td className="fixed-column eb-action-column" style={{zIndex:"3"}}><span  className="eb-action fas fa-edit" onClick={this.props.onEdit.bind({},entity)}></span></td>:
+                        null
+                      }
+             </tr>
+             }):<tr><td>No Available Data</td></tr>
+           }
+          </tbody>
+        </Table>
       </div>
-    </Div>
+     
+    </div>
+   </Div>
   )
  }
 }
