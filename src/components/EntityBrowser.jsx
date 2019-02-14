@@ -32,6 +32,37 @@ const Div = styled.div`
 
 class EntityBrowser extends Component{
 
+  componentDidMount(){
+    
+  }
+
+  componentDidUpdate(){
+    // console.log(this.refs);
+    // this.refs.ebAction.addEventListener('click',function(e){
+    //   console.log(e);
+    //   if(e.currentTarget.className.includes("eb-action-column")) return;
+    //   console.log('Fire onRead');
+    // },true);
+  }
+  /**
+   * Stop propagation when the user clicks on the Table cell/TD with class = "eb-action-column".
+   * @param {object} entity - The bounded entity
+   * @param {Event} e - Event object
+   */
+  onReadMiddleware(entity,e){
+    console.dir(e.target);
+    //use .includes instead of indexOf
+    if(e.target.parentNode.className.indexOf("eb-action-column") !==-1 
+    ||  e.target.className.indexOf("eb-action-column") !== -1
+    || e.target.className.indexOf("eb-action") !== -1 ) { // action button 
+      e.preventDefault();
+      return;
+    }; //inside action button
+
+    this.props.onRead(entity);
+    // this.props.onRead(entity);
+  }
+
 
  render(){
   let columnNames = [];
@@ -42,13 +73,14 @@ class EntityBrowser extends Component{
    columnNames = columnNames.concat(Object.getOwnPropertyNames(sample).map((samplePropName)=>{return samplePropName}));
   }
   
-  
+
   return(
      
      <Div>
       {this.props.title? <EntityBrowserTitle>{this.props.title}</EntityBrowserTitle>:null}
       <div>Actions Row
       {this.props.onAdd? <button onClick={this.props.onAdd}>+</button>:null}
+      <i className="fas fa-edit"></i>
       </div>
       <div id="table-container">Content Row
         <div id="table-wrapper">
@@ -66,7 +98,7 @@ class EntityBrowser extends Component{
            <tbody>
              {
                 this.props.entities && this.props.entities.length > 0?this.props.entities.map((entity,index)=>{
-                 return <tr key={index} onClick={this.props.onRead?this.props.onRead.bind({},entity):()=>{}}> {/** Row is clickable if there is onRead handler else default = empty function*/}
+                 return <tr key={index} onClick={this.props.onRead?this.onReadMiddleware.bind(this,entity):()=>{}}> {/** Row is clickable if there is onRead handler else default = empty function*/}
                           <td>{index + 1}</td> 
                           {
                             Object.getOwnPropertyNames(entity).map((entityFieldName,i)=>{
@@ -82,7 +114,7 @@ class EntityBrowser extends Component{
                           }
                           {
                             this.props.onEdit || this.props.onDelete ?
-                             <td className="fixed-column" ><button onClick={this.props.onEdit.bind({},entity)}>edit</button></td>:
+                             <td ref="ebAction" className="fixed-column eb-action-column" style={{zIndex:"3"}}><span  className="eb-action fas fa-edit" onClick={this.props.onEdit.bind({},entity)}></span></td>:
                             null
                           }
                  </tr>
