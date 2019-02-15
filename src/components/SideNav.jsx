@@ -18,6 +18,7 @@ const DropdownContentItem = style.li`
 const toggleDropdownContent = ()=>{}
 
 export default (props)=>{
+ 
  if(!props.features || props.features.length < 1){
    return null;
  }
@@ -45,6 +46,7 @@ export default (props)=>{
      document.getElementById(contentId).style.display = 'block';
     }
    }
+   e.stopPropagation();
  }
 
  return(
@@ -58,7 +60,7 @@ export default (props)=>{
          return(
            //key = group name without spaces
            <li className="dropdown-trigger" key={groupKey+'key'} content={groupKey} onClick={onClick}>{g}
-             <DropdownContent id={groupKey}>
+             <DropdownContent id={groupKey} >
               {
                features.reduce((acc,feature)=>{
                 if(feature.featureGroup === g){

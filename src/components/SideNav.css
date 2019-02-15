@@ -30,6 +30,18 @@ div#sidenav li:hover{
   
 }
 
+div#sidenav li ul{
+ background-color: rgba(60, 204, 75, 0.65);
+ text-decoration: none;
+}
+
+div#sidenav ul li a{
+ text-decoration: none;
+ cursor: default;
+ color: inherit;
+ margin-left: 5px;
+}
+
 div#sidenav ul li a:-webkit-any-link {
   text-decoration: none;
   cursor: default;
