@@ -40,8 +40,9 @@ class EntityBrowser extends Component{
     this.refs.ebTableTbody.addEventListener('click',function(e){
      // Uses event capturing to stop propagation when the user clicks on the 
      // "eb-action-column" cell
-     if(e.target.className && e.target.className.indexOf("action-column") !== -1){
-      e.stopImmediatePropagation();
+     if(e.target.tagName.toUpperCase() === 'TD' && e.target.className.includes("eb-action-column")){
+      console.log('Reached ', e);
+      e.stopPropagation();
       return;
      }
     },true);
@@ -102,7 +103,7 @@ class EntityBrowser extends Component{
                       }
                       {
                         this.props.onEdit || this.props.onDelete ?
-                         <td className="fixed-column eb-action-column" style={{zIndex:"3"}}><span  className="eb-action fas fa-edit" onClick={this.props.onEdit.bind({},entity)}></span></td>:
+                         <td className="fixed-column eb-action-column" style={{zIndex:"3"}} onClick={this.props.onEdit.bind({},entity)}><span  className="eb-action fas fa-edit" ></span></td>:
                         null
                       }
              </tr>
