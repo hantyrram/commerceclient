@@ -26,7 +26,13 @@ export const permission_add = async (permission)=>{
  }
 
 export const permission_edit = async (permission)=>{
- return await axios.post('/apiv1/permissions'+permission.name+'/edit',permission);
+ return await axios.update('/apiv1/permissions'+permission.name,permission);
 }
+
+export const permission_delete = async (permission)=>{
+ return await axios.delete('/apiv1/permissions'+permission.name,permission);
+}
+
+
  
  

@@ -28,29 +28,37 @@ class PermissionBrowse extends Component {
     this.setState({permissions:response.data.data.permissions});
   }
   
-  onAdd(entity){
-   console.log('Adding New Record',entity);
+  onAdd(){
+   this.setState({currentAction:'add',currentActionableEntity:null});
+  }
+
+  onAddResult(artifact){
+   console.log(artifact);
+   if(artifact.status === 'ok'){
+    this.setState({currentAction:'edit',currentActionableEntity:artifact.data.permission});
+   }
   }
 
   onRead(entity){
-    console.log('Reading',entity);
     this.setState({currentAction:'read',currentActionableEntity:entity});
   }
 
   onEdit(entity){
-   console.log('Editing')
    this.setState({currentAction:'edit',currentActionableEntity:entity});
   }
 
   onDelete(entity){
+   let _self = this;
    if(this.state.permissions && Object.getOwnPropertyNames(this.state.permissions).length > 0){
      (async ()=>{
        let deleteResponse = await deletePermission(entity);
+       console.log(deleteResponse);
        if(deleteResponse.status === 'ok'){
         console.log(deleteResponse.data);  
        }
-       let updatedPermission = await getPermissions();
-       this.setState({permissions:updatedPermission});
+       let {data} = await getPermissions();
+       console.log(data.data.permissions);
+       _self.setState({permissions:data.data.permissions});
      })()
      
      
@@ -71,6 +79,7 @@ class PermissionBrowse extends Component {
       <React.Fragment>
         {this.state.currentAction? 
         <Card closable onClose={this.onClose.bind(this)}>
+          {this.state.currentAction === 'add'?<PermissionAdd onAddResult={this.onAddResult.bind(this)}/>:null}
           {this.state.currentAction === 'read'?<PermissionRead  entity={this.state.currentActionableEntity}/>:null}
           {this.state.currentAction === 'edit'?<PermissionEdit  entity={this.state.currentActionableEntity}/>:null}
         </Card>

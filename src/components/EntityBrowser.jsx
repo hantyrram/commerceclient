@@ -37,40 +37,34 @@ class EntityBrowser extends Component{
   }
 
   componentDidUpdate(){
-    let _self = this;
-    let rows = document.getElementsByTagName("tr");
-    for(let row of rows){
-      for(let td of row.children){
-        td.addEventListener('click',function(e){
-          console.log(e.currentTarget);
-          if(e.currentTarget.className.includes("eb-entity") && e.currentTarget.className.includes("eb-entity-data")){
-            //row.attributes[0] is the saved entity on tr ,MUST do additional check on attributes[0].name === ebentity
-            //if additional attribute is added on the tr
-            let ebentity = row.attributes[0];
-            _self.props.onRead(JSON.parse(ebentity.nodeValue));
-            e.stopPropagation();
-          }
-          return;
-        },true);
+   this.initOnReadActionHandler.call(this);
+  }
+  
+  initOnReadActionHandler(){
+   let _self = this;
+   let rows = document.getElementsByTagName("tr");
+   for(let row of rows){
+     row.addEventListener('click',function(e){
+      if(e.eventPhase === Event.CAPTURING_PHASE && e.target.tagName.toLowerCase() == 'td'){
+       if(e.target.className.includes("eb-entity-data")){
+           //row.attributes[0] is the saved entity on tr ,MUST do additional check on attributes[0].name === ebentity
+           //if additional attribute is added on the tr
+           let ebentity = row.attributes[0];
+           _self.props.onRead(JSON.parse(ebentity.nodeValue));
+        e.stopImmediatePropagation();
+       }
       }
-    }
+     },true);
+   }
   }
-  /**
-   * Stop propagation when the user clicks on the Table cell/TD with class = "eb-action-column".
-   * @param {object} entity - The bounded entity
-   * @param {Event} e - Event object
-   */
-  onReadMiddleware(entity,e){
-    this.props.onRead(entity);
-  }
- 
+
   onEditActionHandler(entity,event){
-    console.log('onEdit Action Called');
     this.props.onEdit(entity);
-    // event.stopPropagation();
+    event.stopPropagation();
   }
 
   onDeleteActionHandler(entity,event){
+    console.log('Deleting');
     this.props.onDelete(entity);
     event.stopPropagation();
   } 
@@ -93,10 +87,12 @@ class EntityBrowser extends Component{
   return(     
    <Div>
     {this.props.title? <EntityBrowserTitle>{this.props.title}</EntityBrowserTitle>:null}
-    <div>Actions Row
-     {this.props.onAdd? <button onClick={this.props.onAdd}>+</button>:null}
+    <div id="main-actions-container"> &nbsp;
+     {this.props.onAdd? <button className="eb-action-add" onClick={this.props.onAdd}>+</button>:null}
     </div>
-    <div id="table-container">Content Row
+    {
+     this.props.entities && this.props.entities.length > 0 ?
+     <div id="table-container">
       <div id="table-wrapper">
         <Table id="entitybrowser-table" >
          <thead>
@@ -111,7 +107,6 @@ class EntityBrowser extends Component{
          </thead>
          <tbody ref="ebTableTbody">
            {
-            this.props.entities && this.props.entities.length > 0 ?
              this.props.entities.map((entity,index)=>{
               return <tr key={index} ebentity={JSON.stringify(entity)}> {/** Row is clickable if there is onRead handler else default = empty function*/}
                       <td >{index + 1}</td> 
@@ -136,14 +131,17 @@ class EntityBrowser extends Component{
                         :null
                       }
                       
-             </tr>
-             }):<tr><td>No Available Data</td></tr>
+                    </tr>
+             })
            }
           </tbody>
         </Table>
       </div>
      
     </div>
+    : <div>No available data</div>
+    }
+   
    </Div>
   )
  }

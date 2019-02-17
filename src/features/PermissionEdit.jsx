@@ -28,8 +28,9 @@ class PermissionEdit extends Component{
     }
   }
 
-  // Object.defineProperty(PermissionRead,'path',{get:()=>'/permissions/:name'});
-  Object.defineProperty(PermissionEdit,'requiredPermission',{get:()=>'permission_edit'})
+  Object.defineProperty(PermissionEdit,'path',{get:()=>'/permissions/:name'});
+  Object.defineProperty(PermissionEdit,'requiredPermission',{get:()=>'permission_edit'});
+
 
   export default PermissionEdit;
 

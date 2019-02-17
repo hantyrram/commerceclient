@@ -8,6 +8,31 @@
  overflow-x: auto;
  width: 120%;
 }
+
+#main-actions-container{
+ display: flex;
+ justify-content: space-between;
+ margin-top: 1%;
+ padding-right: 1%;
+ padding-left: 1%;
+}
+
+#main-actions-container .eb-action-add{
+ border: none;
+ font-size: 1.5em;
+ font-weight: bold;
+ color: green;
+}
+
+#main-actions-container .eb-action-add{
+ display:inline-block;
+}
+
+#main-actions-container .eb-action-add:hover{
+ background-color:#e3f9e8;
+ text-shadow: 0px 0px .5px, .5px .5px 1px #1e7a08;
+}
+
 #entitybrowser-table tbody tr:hover{
  background-color:grey;
 }

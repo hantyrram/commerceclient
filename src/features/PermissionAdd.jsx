@@ -34,20 +34,16 @@ class PermissionAdd extends Component{
      e.preventDefault();
      addPermission(this.state.permission)
      .then(response=>{
-      console.log('Add Permission Response');
-      this.setState({permission: response.data.data.permission});
+      let artifact = response.data;
+      this.props.onAddResult(artifact);
      }).catch(e=>console.log(e));
     }
 
     render(){
-     const schema = this.state.permission;
-     if(this.state.permission && this.state.permission._id){
-      return <Redirect to={{pathname: `/permissions/${this.state.permission.name}`,state:{permission:this.state.permission}}} />
-     }
 
      return(
       <Card>
-        <EntityForm formType="add" schema={schema} onSubmit={this.onSubmit} onChange={this.onChange}/>
+        <EntityForm formType="add" schema={this.state.permission} onSubmit={this.onSubmit} onChange={this.onChange}/>
       </Card>
      )
     }

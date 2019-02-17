@@ -1,6 +1,6 @@
 
-const permissions =  [
-  {_id: 1, name:'permission_browse',label:'Permissions',name2:'permission_browse',name3:'Permissions',name4:'permission_browse',name5:'Permissions',name6:'permission_browse',name7:'Permissions',name8:'permission_browse',name9:'Permissions',name10:'Permissions',name11:'Permissions',name13:'Permissions'},
+let permissions =  [
+  {_id:1, name:'permission_browse',label:'Permissions',name2:'permission_browse',name3:'Permissions',name4:'permission_browse',name5:'Permissions',name6:'permission_browse',name7:'Permissions',name8:'permission_browse',name9:'Permissions',name10:'Permissions',name11:'Permissions',name13:'Permissions'},
   {_id:2,name:'permission_add',label: 'Add New Permission',name2:'permission_browse',name3:'Permissions',name4:'permission_browse',name5:'Permissions',name6:'permission_browse',name7:'Permissions',name8:'permission_browse',name9:'Permissions',name10:'Permissions',name11:'Permissions',name13:'Permissions'},
   {_id:3,name:'permission_read',label: 'Permission',name2:'permission_browse',name3:'Permissions',name4:'permission_browse',name5:'Permissions',name6:'permission_browse',name7:'Permissions',name8:'permission_browse',name9:'Permissions',name10:'Permissions',name11:'Permissions',name13:'Permissions'},
   {_id:4,name:'user_browse', label: 'Users',name2:'permission_browse',name3:'Permissions',name4:'permission_browse',name5:'Permissions',name6:'permission_browse',name7:'Permissions',name8:'permission_browse',name9:'Permissions',name10:'Permissions',name11:'Permissions',name13:'Permissions'},
@@ -8,7 +8,7 @@ const permissions =  [
   {_id:6,name:'order_browse',label: 'Orders',name2:'permission_browse',name3:'Permissions',name4:'permission_browse',name5:'Permissions',name6:'permission_browse',name7:'Permissions',name8:'permission_browse',name9:'Permissions',name10:'Permissions',name11:'Permissions',name13:'Permissions'},
 ];
 
-const userPermissions = [
+let userPermissions = [
   {name:'permission_browse',label:'Permissions'},
   {name:'permission_add',label: 'Add New Permission'},
   {name:'permission_read',label: 'Permission'},
@@ -55,11 +55,12 @@ export const permission_browse = async()=>{
 
 export const permission_add = async(permission)=>{
  let response = new Response();
- permission._id = 'randompermissionid';
+ let p = Object.assign({_id: permissions.length + 1}, permission);
+ permissions.push(p);
+ response.data.status = 'ok';
  response.data.data = {
   permission: permission
  }
- 
  return Promise.resolve(response);
 }
 
@@ -74,12 +75,16 @@ export const permission_edit= async(permission)=>{
 }
 
 export const permission_delete = async(permission)=>{
-  let i = permissions.indexOf(p=>{
+ console.log('permission passed to delete',permission);
+  let permissionToDelete = permissions.find(p=>{
     return p._id === permission._id;
   });
 
   let response = new Response();
-  if(i !== -1){
+  if(permissionToDelete){
+    permissions = permissions.filter(p=>{//updated permissions
+     return p._id !== permissionToDelete._id;
+    });
     response.data.status = 'ok';
     response.data.message = permission._id + ' deleted';
     return Promise.resolve(response);
