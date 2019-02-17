@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {permission_browse as getPermissions} from './requesters';
+import {permission_delete as deletePermission} from './requesters';
 import EntityBrowser from '../components/EntityBrowser';
 import PermissionAdd from './PermissionAdd';
 import PermissionRead from './PermissionRead';
@@ -8,6 +9,7 @@ import FEATUREGROUPS from './featureGroups';
 import Card from '../components/styled_elements/Card';
 import {Link} from 'react-router-dom';
 import axios from 'axios';
+import { isRegExp } from 'util';
 /**
  * 
  */
@@ -41,7 +43,18 @@ class PermissionBrowse extends Component {
   }
 
   onDelete(entity){
-   console.log('Deleting',entity);
+   if(this.state.permissions && Object.getOwnPropertyNames(this.state.permissions).length > 0){
+     (async ()=>{
+       let deleteResponse = await deletePermission(entity);
+       if(deleteResponse.status === 'ok'){
+        console.log(deleteResponse.data);  
+       }
+       let updatedPermission = await getPermissions();
+       this.setState({permissions:updatedPermission});
+     })()
+     
+     
+   }
   }
 
   onClose(){

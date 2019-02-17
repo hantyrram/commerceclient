@@ -12,7 +12,7 @@
  background-color:grey;
 }
 
-#entitybrowser-table tbody tr td{
+#entitybrowser-table tbody tr td:not(.fixed-column){
  white-space: nowrap;
  cursor: default;
  padding-left: 1em;
@@ -33,6 +33,8 @@
  top:auto;
  right:0;
  min-width: 50px;
+ max-width: 50px;
+ padding-left: 0;
 }
 
 /* 

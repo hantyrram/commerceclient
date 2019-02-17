@@ -37,15 +37,23 @@ class EntityBrowser extends Component{
   }
 
   componentDidUpdate(){
-    this.refs.ebTableTbody.addEventListener('click',function(e){
-     // Uses event capturing to stop propagation when the user clicks on the 
-     // "eb-action-column" cell
-     if(e.target.tagName.toUpperCase() === 'TD' && e.target.className.includes("eb-action-column")){
-      console.log('Reached ', e);
-      e.stopPropagation();
-      return;
-     }
-    },true);
+    let _self = this;
+    let rows = document.getElementsByTagName("tr");
+    for(let row of rows){
+      for(let td of row.children){
+        td.addEventListener('click',function(e){
+          console.log(e.currentTarget);
+          if(e.currentTarget.className.includes("eb-entity") && e.currentTarget.className.includes("eb-entity-data")){
+            //row.attributes[0] is the saved entity on tr ,MUST do additional check on attributes[0].name === ebentity
+            //if additional attribute is added on the tr
+            let ebentity = row.attributes[0];
+            _self.props.onRead(JSON.parse(ebentity.nodeValue));
+            e.stopPropagation();
+          }
+          return;
+        },true);
+      }
+    }
   }
   /**
    * Stop propagation when the user clicks on the Table cell/TD with class = "eb-action-column".
@@ -55,7 +63,17 @@ class EntityBrowser extends Component{
   onReadMiddleware(entity,e){
     this.props.onRead(entity);
   }
+ 
+  onEditActionHandler(entity,event){
+    console.log('onEdit Action Called');
+    this.props.onEdit(entity);
+    // event.stopPropagation();
+  }
 
+  onDeleteActionHandler(entity,event){
+    this.props.onDelete(entity);
+    event.stopPropagation();
+  } 
 
  render(){
   let columnNames = [];
@@ -64,6 +82,14 @@ class EntityBrowser extends Component{
    let sample = this.props.entities[0];//get a sample entity just to check the property names
    columnNames = columnNames.concat(Object.getOwnPropertyNames(sample).map((samplePropName)=>{return samplePropName}));
   }
+
+  let actions = [this.props.onEdit,this.props.onDelete];
+  actions = actions.filter(a=>Boolean(a));
+
+  let actionStyleWidth = {
+    width: (actions.length > 0? 100 / actions.length : 0) + "%"
+  };
+
   return(     
    <Div>
     {this.props.title? <EntityBrowserTitle>{this.props.title}</EntityBrowserTitle>:null}
@@ -80,14 +106,14 @@ class EntityBrowser extends Component{
                  return <th key={i}>{columnName}</th>
                }):null
              }
-             <th className="fixed-column">Action</th>
+             <th className="fixed-column" colSpan={actions.length}>Action</th>
            </tr>
          </thead>
          <tbody ref="ebTableTbody">
            {
             this.props.entities && this.props.entities.length > 0 ?
              this.props.entities.map((entity,index)=>{
-              return <tr key={index} > {/** Row is clickable if there is onRead handler else default = empty function*/}
+              return <tr key={index} ebentity={JSON.stringify(entity)}> {/** Row is clickable if there is onRead handler else default = empty function*/}
                       <td >{index + 1}</td> 
                       {
                         Object.getOwnPropertyNames(entity).map((entityFieldName,i)=>{
@@ -97,15 +123,19 @@ class EntityBrowser extends Component{
                             state[`${this.props.follow.entityName}`] = entity;//state.user = user
                             el = <Link to={{pathname:this.props.follow.pathname.replace(":"+this.props.follow.column,entity[this.props.follow.column]),state:{...state}}} >{entity[entityFieldName]}</Link>;
                           }
-                          return <td key={i} onClick={this.props.onRead?this.onReadMiddleware.bind(this,entity):()=>{}}>{el}</td>
+                          return <td key={i} className="eb-entity eb-entity-data" >{el}</td>
                         })
                         
                       }
                       {
-                        this.props.onEdit || this.props.onDelete ?
-                         <td className="fixed-column eb-action-column" style={{zIndex:"3"}} onClick={this.props.onEdit.bind({},entity)}><span  className="eb-action fas fa-edit" ></span></td>:
-                        null
+                        this.props.onEdit || this.props.onDelete?
+                         <td className="fixed-column eb-entity eb-entity-action " style={{zIndex:"3"}} >
+                          {this.props.onEdit?<span  style={actionStyleWidth} className="eb-action-edit fas fa-edit" onClick={this.onEditActionHandler.bind(this,entity)}></span>:null}
+                          {this.props.onDelete?<span  style={actionStyleWidth} className="eb-action-delete fas fa-trash" onClick={this.onDeleteActionHandler.bind(this,entity)}></span>:null}
+                         </td>
+                        :null
                       }
+                      
              </tr>
              }):<tr><td>No Available Data</td></tr>
            }
