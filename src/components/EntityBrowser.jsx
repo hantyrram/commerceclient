@@ -92,7 +92,7 @@ class EntityBrowser extends Component{
    <Div>
     {this.props.title? <EntityBrowserTitle>{this.props.title}</EntityBrowserTitle>:null}
     <div id="main-actions-container"> &nbsp;
-     {this.props.onAdd? <button className="eb-action-add" onClick={this.props.onAdd}>+</button>:null}
+     {this.props.Adder? <Link to={{pathname:this.props.Adder.path}} className="eb-action-add" >+</Link>:null}
     </div>
     {
      this.props.entities && this.props.entities.length > 0 ?

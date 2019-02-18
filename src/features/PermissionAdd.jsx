@@ -42,9 +42,10 @@ class PermissionAdd extends Component{
     render(){
 
      return(
-      <Card>
-        <EntityForm formType="add" schema={this.state.permission} onSubmit={this.onSubmit} onChange={this.onChange}/>
-      </Card>
+      // <Card>
+        
+      // </Card>
+      <EntityForm formType="add" schema={this.state.permission} onSubmit={this.onSubmit} onChange={this.onChange}/>
      )
     }
   }

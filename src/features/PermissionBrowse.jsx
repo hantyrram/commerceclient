@@ -86,6 +86,7 @@ class PermissionBrowse extends Component {
          </Switch>
         <Card>
           {/* <EntityBrowser onEdit={onEdit} onAdd={onAdd} title={PermissionBrowse.name} entities={this.state.permissions} follow={{pathname:PermissionRead.path,column:'name',entityName:'permission'}}/> */}
+          <Link to={PermissionAdd.path} className="eb-action-add" >+</Link>
           <EntityBrowser Reader={PermissionRead} Editor={PermissionEdit} Adder={PermissionAdd} onDelete={this.onDelete.bind(this)}  title={PermissionBrowse.name} entities={this.state.permissions} />
         </Card>
       </React.Fragment>
