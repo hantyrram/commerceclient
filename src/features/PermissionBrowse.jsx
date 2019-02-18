@@ -7,9 +7,10 @@ import PermissionRead from './PermissionRead';
 import PermissionEdit from './PermissionEdit';
 import FEATUREGROUPS from './featureGroups';
 import Card from '../components/styled_elements/Card';
-import {Link} from 'react-router-dom';
+import {Link,Route} from 'react-router-dom';
 import axios from 'axios';
 import { isRegExp } from 'util';
+import { Switch } from '../../node_modules/react-router-dom';
 /**
  * 
  */
@@ -82,6 +83,14 @@ class PermissionBrowse extends Component {
           {this.state.currentAction === 'add'?<PermissionAdd onAddResult={this.onAddResult.bind(this)}/>:null}
           {this.state.currentAction === 'read'?<PermissionRead  entity={this.state.currentActionableEntity}/>:null}
           {this.state.currentAction === 'edit'?<PermissionEdit  entity={this.state.currentActionableEntity}/>:null}
+          {
+            // <Switch>
+            // {this.state.currentAction === 'read'?
+            //   <Route path={{pathname:PermissionAdd.path,state:this.state.currentActionableEntity}} render={(props)=>{return <PermissionRead entity={this.state.currentActionableEntity} /> }} />
+            // :null
+            // }
+            // </Switch>
+          }
         </Card>
         :null}
         <Card>

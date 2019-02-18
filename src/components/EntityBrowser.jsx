@@ -45,7 +45,7 @@ class EntityBrowser extends Component{
    let rows = document.getElementsByTagName("tr");
    for(let row of rows){
      row.addEventListener('click',function(e){
-      if(e.eventPhase === Event.CAPTURING_PHASE && e.target.tagName.toLowerCase() == 'td'){
+      if(e.eventPhase === Event.CAPTURING_PHASE && e.target.tagName.toLowerCase() === 'td'){
        if(e.target.className.includes("eb-entity-data")){
            //row.attributes[0] is the saved entity on tr ,MUST do additional check on attributes[0].name === ebentity
            //if additional attribute is added on the tr
@@ -64,7 +64,6 @@ class EntityBrowser extends Component{
   }
 
   onDeleteActionHandler(entity,event){
-    console.log('Deleting');
     this.props.onDelete(entity);
     event.stopPropagation();
   } 

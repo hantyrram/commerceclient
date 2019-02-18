@@ -52,7 +52,7 @@ export default (props)=>{
               acc.push(Feature);
              }
              return acc;
-            },[]).map(Feature=><Route exact path={Feature.path} render={(renderProps)=><Feature {...renderProps} {...props}/>}/>) : null 
+            },[]).map(Feature=><Route path={Feature.path} render={(renderProps)=><Feature {...renderProps} {...props}/>}/>) : null 
            }
           </Switch>
         </Content>
