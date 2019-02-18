@@ -5,10 +5,11 @@
  *  follow : An object which represents a column value that is a Link to a path.
  *             : { 
  *                 pathname: REQUIRED! The pathname e.g. /users/:username
- *                 column:  REQUIRED! The entity property  e.g. if entities contains array of users then setting this
+ *                 paramName:  REQUIRED! The entity property  e.g. if entities contains array of users then setting this
  *                          value to "username" will replace the :username on the path with "username".
  *                          The column values of "username" will be a Link.
  *                 entityName: REQUIRED! The name of the entity e.g. user, This is used as property of the location.state. 
+ *                 //entityName deprecated, all state will contain "entity" prop name
  *               }
  *  remove : [OPTIONAL] A function that will handle the delete button click event.
  *  title: [OPTIONAL] The Title shown on top of the Entity Browser.
@@ -18,7 +19,7 @@
 
 import React,{Component} from 'react';
 import ReactDOM from 'react-dom';
-import {Link} from 'react-router-dom';
+import {Link,withRouter} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Table from './styled_elements/Table';
 import EntityBrowserTitle from './EntityBrowserTitle';
@@ -33,7 +34,7 @@ const Div = styled.div`
 class EntityBrowser extends Component{
 
   componentDidMount(){
-    
+    console.log('EntityBrowser',this.props);
   }
 
   componentDidUpdate(){
@@ -43,14 +44,18 @@ class EntityBrowser extends Component{
   initOnReadActionHandler(){
    let _self = this;
    let rows = document.getElementsByTagName("tr");
+   console.log(rows);
    for(let row of rows){
      row.addEventListener('click',function(e){
       if(e.eventPhase === Event.CAPTURING_PHASE && e.target.tagName.toLowerCase() === 'td'){
        if(e.target.className.includes("eb-entity-data")){
+        console.log('Clicked');
            //row.attributes[0] is the saved entity on tr ,MUST do additional check on attributes[0].name === ebentity
            //if additional attribute is added on the tr
-           let ebentity = row.attributes[0];
-           _self.props.onRead(JSON.parse(ebentity.nodeValue));
+           let dataHref = JSON.parse(row.attributes["data-href"].value);
+           console.log(dataHref);
+           console.log(_self.props);
+           _self.props.history.push(dataHref.href,{entity:dataHref.entity});
         e.stopImmediatePropagation();
        }
       }
@@ -76,7 +81,7 @@ class EntityBrowser extends Component{
    columnNames = columnNames.concat(Object.getOwnPropertyNames(sample).map((samplePropName)=>{return samplePropName}));
   }
 
-  let actions = [this.props.onEdit,this.props.onDelete];
+  let actions = [this.props.Editor,this.props.onDelete];
   actions = actions.filter(a=>Boolean(a));
 
   let actionStyleWidth = {
@@ -107,29 +112,29 @@ class EntityBrowser extends Component{
          <tbody ref="ebTableTbody">
            {
              this.props.entities.map((entity,index)=>{
-              return <tr key={index} ebentity={JSON.stringify(entity)}> {/** Row is clickable if there is onRead handler else default = empty function*/}
+              let href = Object.getOwnPropertyNames(entity).reduce(function(acc,entityPropertyName){
+                if(acc.indexOf(":") !== -1 && acc.indexOf(entityPropertyName) !== -1){
+                  acc = acc.replace(`:${entityPropertyName}`,entity[entityPropertyName]);
+                }
+                return acc;
+              },this.props.Reader.path);
+              
+              return <tr key={index} data-href={JSON.stringify({href:href,entity:entity})}> {/** Row is clickable if there is onRead handler else default = empty function*/}
                       <td >{index + 1}</td> 
                       {
                         Object.getOwnPropertyNames(entity).map((entityFieldName,i)=>{
-                          let state = {};
-                          let el = entity[entityFieldName];
-                          if(this.props.follow && this.props.follow.column && entityFieldName === this.props.follow.column){
-                            state[`${this.props.follow.entityName}`] = entity;//state.user = user
-                            el = <Link to={{pathname:this.props.follow.pathname.replace(":"+this.props.follow.column,entity[this.props.follow.column]),state:{...state}}} >{entity[entityFieldName]}</Link>;
-                          }
-                          return <td key={i} className="eb-entity eb-entity-data" >{el}</td>
+                          return <td key={i} className="eb-entity eb-entity-data">{entity[entityFieldName]}</td>
                         })
-                        
                       }
                       {
                         this.props.onEdit || this.props.onDelete?
                          <td className="fixed-column eb-entity eb-entity-action " style={{zIndex:"3"}} >
-                          {this.props.onEdit?<span  style={actionStyleWidth} className="eb-action-edit fas fa-edit" onClick={this.onEditActionHandler.bind(this,entity)}></span>:null}
+                          {/* by convention edit path = read path + /edit */}
+                          {this.props.Editor?<Link className="eb-action-edit" style={actionStyleWidth}  to={{pathname:`${href}/edit`,state:{entity:entity}}}><span    className="fas fa-edit"  onClick={this.onEditActionHandler.bind(this,entity)}></span></Link>:null}
                           {this.props.onDelete?<span  style={actionStyleWidth} className="eb-action-delete fas fa-trash" onClick={this.onDeleteActionHandler.bind(this,entity)}></span>:null}
                          </td>
                         :null
                       }
-                      
                     </tr>
              })
            }
@@ -152,4 +157,4 @@ EntityBrowser.propTypes = {
  /** The text that will be shown at the top */
  title: PropTypes.string
 }
-export default EntityBrowser;
+export default withRouter(EntityBrowser);

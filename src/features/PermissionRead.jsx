@@ -8,8 +8,9 @@ class PermissionRead extends Component{
        'name':1,
        'label': 1
      }
+     let entity = this.props.location && this.props.location.state && this.props.location.state.entity? this.props.location.state.entity:{}; //else fetch using paramname
      return(
-      <EntityForm title="Permission" formType="read" entity={this.props.entity} schema={schema} onSubmit={()=>{}} onChange={()=>{}}/>
+      <EntityForm title="Permission" formType="read" entity={entity} schema={schema} onSubmit={()=>{}} onChange={()=>{}}/>
      )
     }
   }

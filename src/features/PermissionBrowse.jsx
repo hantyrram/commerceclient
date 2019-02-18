@@ -7,10 +7,10 @@ import PermissionRead from './PermissionRead';
 import PermissionEdit from './PermissionEdit';
 import FEATUREGROUPS from './featureGroups';
 import Card from '../components/styled_elements/Card';
-import {Link,Route} from 'react-router-dom';
+import {Link,Route,Router} from 'react-router-dom';
 import axios from 'axios';
 import { isRegExp } from 'util';
-import { Switch } from '../../node_modules/react-router-dom';
+import { Switch, withRouter } from '../../node_modules/react-router-dom';
 /**
  * 
  */
@@ -25,6 +25,7 @@ class PermissionBrowse extends Component {
   }
 
   async componentDidMount(){
+    console.log(this.props);
     let response = await getPermissions();
     this.setState({permissions:response.data.data.permissions});
   }
@@ -34,7 +35,6 @@ class PermissionBrowse extends Component {
   }
 
   onAddResult(artifact){
-   console.log(artifact);
    if(artifact.status === 'ok'){
     this.setState({currentAction:'edit',currentActionableEntity:artifact.data.permission});
    }
@@ -46,6 +46,7 @@ class PermissionBrowse extends Component {
 
   onEdit(entity){
    this.setState({currentAction:'edit',currentActionableEntity:entity});
+    this.props.history.push(PermissionEdit.path.replace(":name",entity.name),{entity:entity});
   }
 
   onDelete(entity){
@@ -78,24 +79,14 @@ class PermissionBrowse extends Component {
     let onEdit = this.props.user.hasPermission(PermissionEdit.requiredPermission)?this.onEdit.bind(this):null;
     return ( 
       <React.Fragment>
-        {this.state.currentAction? 
-        <Card closable onClose={this.onClose.bind(this)}>
-          {this.state.currentAction === 'add'?<PermissionAdd onAddResult={this.onAddResult.bind(this)}/>:null}
-          {this.state.currentAction === 'read'?<PermissionRead  entity={this.state.currentActionableEntity}/>:null}
-          {this.state.currentAction === 'edit'?<PermissionEdit  entity={this.state.currentActionableEntity}/>:null}
-          {
-            // <Switch>
-            // {this.state.currentAction === 'read'?
-            //   <Route path={{pathname:PermissionAdd.path,state:this.state.currentActionableEntity}} render={(props)=>{return <PermissionRead entity={this.state.currentActionableEntity} /> }} />
-            // :null
-            // }
-            // </Switch>
-          }
-        </Card>
-        :null}
+         <Switch>
+          <Route exact path={PermissionRead.path} render={(props)=>{return <PermissionRead {... props} entity={{}} /> }} />
+          <Route exact path={PermissionEdit.path} render={(props)=>{return <PermissionEdit {... props}  entity={{}} /> }} />
+          <Route exact path={PermissionAdd.path} render={(props)=>{return <PermissionAdd {... props}  /> }} />
+         </Switch>
         <Card>
           {/* <EntityBrowser onEdit={onEdit} onAdd={onAdd} title={PermissionBrowse.name} entities={this.state.permissions} follow={{pathname:PermissionRead.path,column:'name',entityName:'permission'}}/> */}
-          <EntityBrowser onEdit={onEdit} onRead={onRead} onDelete={this.onDelete.bind(this)} onAdd={onAdd} title={PermissionBrowse.name} entities={this.state.permissions} />
+          <EntityBrowser Reader={PermissionRead} Editor={PermissionEdit} Adder={PermissionAdd} onDelete={this.onDelete.bind(this)}  title={PermissionBrowse.name} entities={this.state.permissions} />
         </Card>
       </React.Fragment>
       
