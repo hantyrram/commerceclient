@@ -4,11 +4,7 @@ import Card from '../components/styled_elements/Card';
 import {permission_edit as updatePermission} from './requesters';
 class PermissionEdit extends Component{
     
-    constructor(props){
-     super(props);
-    //  console.log('Permission Read Mounted',this.props.location.state.permission);
-    }
-    
+   
     componentDidMount(){
      
     }
@@ -18,17 +14,18 @@ class PermissionEdit extends Component{
        'name':1,
        'label': 1
      }
+     let entity = this.props.location && this.props.location.state && this.props.location.state.entity? this.props.location.state.entity:{}; //else fetch using paramname
      return(
       // <Card>
       //   {/* <EntityForm title="Permission" formType="read" entity={this.props.location.state.permission} schema={schema} onSubmit={()=>{}} onChange={()=>{}}/> */}
         
       // </Card>
-      <EntityForm title="Permission" formType="update" entity={this.props.entity} schema={schema} onSubmit={()=>{}} onChange={()=>{}}/>
+      <EntityForm title="Permission" formType="update" entity={entity} schema={schema} onSubmit={()=>{}} onChange={()=>{}}/>
      )
     }
   }
 
-  Object.defineProperty(PermissionEdit,'path',{get:()=>'/permissions/:name'});
+  Object.defineProperty(PermissionEdit,'path',{get:()=>'/permissions/:name/edit'});
   Object.defineProperty(PermissionEdit,'requiredPermission',{get:()=>'permission_edit'});
 
 

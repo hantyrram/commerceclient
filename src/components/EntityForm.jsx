@@ -22,6 +22,10 @@ const FormContent = styled.div`
  padding: 1em;
 `;
 
+const FormActionContainer = styled.div`
+  text-align:right;
+`
+
 //NOTE: renderes will hold the entities, this forms are just to display or accept entities data from user
 /**
  * Form used to add an Entity. Has a Save button. Requires onSubmit props to handle form submittion.
@@ -51,9 +55,9 @@ const EntityAddForm = (props)=>{
         })
        }
       </FormContent>
-     <div className="form-action-wrapper">
+     <FormActionContainer className="form-action-wrapper">
       <PrimaryButton name="save">Save</PrimaryButton>
-     </div>
+     </FormActionContainer>
     </Form>
   )
 }
@@ -124,9 +128,9 @@ const EntityReadForm = (props)=>{
        }
       </FormContent>
       
-     <div className="form-action-wrapper">
+     <FormActionContainer className="form-action-wrapper">
       <PrimaryButton  className="btn" name="edit" onClick={props.onEdit}> Edit </PrimaryButton> <PrimaryButton className="btn" name="delete" onClick={props.onDelete}> Delete </PrimaryButton>
-     </div>
+     </FormActionContainer>
     </Form>
   )
 }

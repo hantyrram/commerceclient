@@ -33,6 +33,7 @@ const Content = style.div`
  max-width: 78%;
  padding-top: 5px;
  scroll:auto;
+ background-color:white;
 `
 export default (props)=>{
   return(
@@ -52,7 +53,7 @@ export default (props)=>{
               acc.push(Feature);
              }
              return acc;
-            },[]).map(Feature=><Route exact path={Feature.path} render={(renderProps)=><Feature {...renderProps} {...props}/>}/>) : null 
+            },[]).map(Feature=><Route path={Feature.path} render={(renderProps)=><Feature {...renderProps} {...props}/>}/>) : null 
            }
           </Switch>
         </Content>

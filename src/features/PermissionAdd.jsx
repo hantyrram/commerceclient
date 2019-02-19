@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {Redirect} from 'react-router-dom';
 import EntityForm from '../components/EntityForm';
 import Card from '../components/styled_elements/Card';
+import PermissionRead from './PermissionRead';
 import {permission_add as addPermission} from './requesters';
 class PermissionAdd extends Component{
     constructor(props){
@@ -35,16 +36,24 @@ class PermissionAdd extends Component{
      addPermission(this.state.permission)
      .then(response=>{
       let artifact = response.data;
-      this.props.onAddResult(artifact);
+      console.log(artifact);
+      if(artifact.status === 'ok'){
+        this.setState({permission: artifact.data.permission})
+        console.log(PermissionRead.path.replace(":name",this.state.name));
+      }
      }).catch(e=>console.log(e));
     }
 
     render(){
-
+     
      return(
-      <Card>
-        <EntityForm formType="add" schema={this.state.permission} onSubmit={this.onSubmit} onChange={this.onChange}/>
-      </Card>
+      <React.Fragment>
+        {
+         this.state.permission._id? <Redirect to={{pathname:PermissionRead.path.replace(":name",this.state.permission.name),state:{entity:this.state.permission}}}/>:
+         <EntityForm title="Add Permission" formType="add" schema={this.state.permission} onSubmit={this.onSubmit} onChange={this.onChange}/>
+        }
+      </React.Fragment>
+      
      )
     }
   }
