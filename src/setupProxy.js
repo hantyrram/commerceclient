@@ -1,10 +1,10 @@
 
-let proxy;
-const config = require('./config');
-if(config.env === 'prod'){
- console.log(config.env)
- proxy = require('http-proxy-middleware');
-}
+let proxy = require('http-proxy-middleware');
+// const config = require('./config');
+// if(config.env === 'prod'){
+//  console.log(config.env)
+//  proxy = require('http-proxy-middleware');
+// }
 
 //if multipart url does not work check this file
 module.exports = function(app){
