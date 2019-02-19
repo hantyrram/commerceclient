@@ -60,6 +60,7 @@ export const permission_add = async(permission)=>{
  let p = Object.assign({_id: permissions.length + 1}, permission);
  permissions.push(p);
  response.data.status = 'ok';
+ response.data.message = {type: 'success', text: 'Permission Added Successfully'}
  response.data.data = {
   permission: p
  }

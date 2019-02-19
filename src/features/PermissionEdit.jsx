@@ -2,11 +2,12 @@ import React, { Component } from 'react';
 import EntityForm from '../components/EntityForm';
 import Card from '../components/styled_elements/Card';
 import {permission_edit as updatePermission} from './requesters';
+import {emit} from '../actionEvent';
 class PermissionEdit extends Component{
     
    
     componentDidMount(){
-     
+     emit('permission_edit');
     }
     
     render(){

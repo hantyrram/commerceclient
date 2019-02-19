@@ -10,7 +10,7 @@ import UserHome from './pages/UserHome';
 import features from './features';
 import {user_permissions_read as getUserPermissions} from './features/requesters';
 import './App.css';
-console.log('should push to dev');
+
 /**
  * Checks if the user has the given permission.Note: MUST bind user as this.
  * @param {string} permissionName 
@@ -55,9 +55,13 @@ class App extends Component {
     
   }
 
+  onMessage(message){
+   this.setState({message:message});
+  }
+
   render() {
     const login = ()=>{return this.state.user?<Redirect to="/" />:<LoginPage onLogin={this.onLogin}/> }
-    const userHome = (props)=>{return this.state.user?<UserHome {...props} user={this.state.user} onLogout={this.onLogout}/>:<Redirect to="/login"/>}
+    const userHome = (props)=>{return this.state.user?<UserHome {...props} user={this.state.user} onLogout={this.onLogout} onMessage={this.state.message}/>:<Redirect to="/login"/>}
     const NOT_FOUND = ({history})=>{return(<div><h1>Page Not Found</h1></div>)}
     return (
      <Router>
