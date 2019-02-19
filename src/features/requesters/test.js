@@ -22,8 +22,10 @@ function Response(){
  this.data = {data:null};
 }
 
-export const authenticate = async (user)=>{
- return Promise.resolve({username: 'Test'});
+export const authenticate = async ()=>{
+ let response = new Response();
+ response.data.data = { user : {username : 'Test'}};
+ return Promise.resolve(response);
 }
 
 export const login = async (user)=>{

@@ -24,7 +24,7 @@ const inputStyle = {
   
 }
 const buttonStyle = {
-  backgroundColor: "#4CAF50",
+  backgroundColor: "rgb(41, 149, 153)",
   border: "none",
   color: "white",
   fontSize: "1.5em",
