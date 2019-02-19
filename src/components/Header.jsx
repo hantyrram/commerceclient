@@ -8,7 +8,7 @@ const styles = {
   justifyContent:"space-between",
   // maxHeight: "7%",
   padding: "2px 20px 2px 20px",
-  backgroundColor:"rgb(34, 34, 34)",
+  // backgroundColor:"rgb(34, 34, 34)",
   color: "#d7d7d7",
   alignItems: "baseline"
 }
@@ -17,7 +17,7 @@ export default (props)=>{
    <div style={styles}> 
      <div className="image-container" style={{maxHeight:"100%"}}><img src="hantyr_icon.svg" alt="Logo" style={{maxHeight:"inherit",width:"auto",marginRight:"2em"}}/></div>
      <div>
-      <div id="welcome" style={{display:"inline-block"}}>{props.user.username}</div>
+      <div id="greetings" style={{display:"inline-block",color:"#4a4646",fontWeight:"bold",marginRight:"2em"}}>Hello, {props.user.username} !</div>
       <Logout {...props}/>
      </div>
    </div>

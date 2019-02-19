@@ -106,7 +106,7 @@ class EntityBrowser extends Component{
                  return <th key={i}>{columnName}</th>
                }):null
              }
-             <th className="fixed-column" colSpan={actions.length}>Action</th>
+             <th className="fixed-column" colSpan={actions.length} style={{minWidth:"80px"}}>Action</th>
            </tr>
          </thead>
          <tbody ref="ebTableTbody">
@@ -131,7 +131,7 @@ class EntityBrowser extends Component{
                          <td className="fixed-column eb-entity eb-entity-action " style={{zIndex:"3"}} >
                           {/* by convention edit path = read path + /edit */}
                           {this.props.Editor?<Link className="eb-action-edit" style={actionStyleWidth}  to={{pathname:`${href}/edit`,state:{entity:entity}}}><span    className="fas fa-edit"  onClick={this.onEditActionHandler.bind(this,entity)}></span></Link>:null}
-                          {this.props.onDelete?<span  style={actionStyleWidth} className="eb-action-delete fas fa-trash" onClick={this.onDeleteActionHandler.bind(this,entity)}></span>:null}
+                          {this.props.onDelete?<button onClick={this.onDeleteActionHandler.bind(this,entity)} className="eb-action-delete"><span  style={actionStyleWidth} className="fas fa-trash" onClick={this.onDeleteActionHandler.bind(this,entity)}></span></button>:null}
                          </td>
                         :null
                       }

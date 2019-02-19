@@ -50,6 +50,7 @@ class PermissionBrowse extends Component {
   }
 
   onDelete(entity){
+   console.log('On Delete Called');
    let _self = this;
    if(this.state.permissions && Object.getOwnPropertyNames(this.state.permissions).length > 0){
      (async ()=>{
@@ -81,12 +82,11 @@ class PermissionBrowse extends Component {
       <React.Fragment>
          <Switch>
           <Route exact path={PermissionRead.path} render={(props)=>{return <PermissionRead {... props} entity={{}} /> }} />
-          <Route exact path={PermissionEdit.path} render={(props)=>{return <PermissionEdit {... props}  entity={{}} /> }} />
-          <Route exact path={PermissionAdd.path} render={(props)=>{return <PermissionAdd {... props}  /> }} />
+          <Route  exact path={PermissionEdit.path} render={(props)=>{return <PermissionEdit {... props}  entity={{}} /> }} />
+          <Route  exact path={PermissionAdd.path} render={(props)=>{return <PermissionAdd {... props}  /> }} />
          </Switch>
         <Card>
           {/* <EntityBrowser onEdit={onEdit} onAdd={onAdd} title={PermissionBrowse.name} entities={this.state.permissions} follow={{pathname:PermissionRead.path,column:'name',entityName:'permission'}}/> */}
-          <Link to={PermissionAdd.path} className="eb-action-add" >+</Link>
           <EntityBrowser Reader={PermissionRead} Editor={PermissionEdit} Adder={PermissionAdd} onDelete={this.onDelete.bind(this)}  title={PermissionBrowse.name} entities={this.state.permissions} />
         </Card>
       </React.Fragment>

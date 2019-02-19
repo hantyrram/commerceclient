@@ -59,7 +59,7 @@ export const permission_add = async(permission)=>{
  permissions.push(p);
  response.data.status = 'ok';
  response.data.data = {
-  permission: permission
+  permission: p
  }
  return Promise.resolve(response);
 }

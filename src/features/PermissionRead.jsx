@@ -6,7 +6,10 @@ class PermissionRead extends Component{
     render(){
      const schema = {
        'name':1,
-       'label': 1
+       'label': 1,
+       'createdBy':1,
+       'createdOn':1,
+       'modifiedOn':1
      }
      let entity = this.props.location && this.props.location.state && this.props.location.state.entity? this.props.location.state.entity:{}; //else fetch using paramname
      return(

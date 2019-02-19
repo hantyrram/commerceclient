@@ -33,6 +33,7 @@ const Content = style.div`
  max-width: 78%;
  padding-top: 5px;
  scroll:auto;
+ background-color:white;
 `
 export default (props)=>{
   return(

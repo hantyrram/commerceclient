@@ -30,7 +30,7 @@ export const permission_edit = async (permission)=>{
 }
 
 export const permission_delete = async (permission)=>{
- return await axios.delete('/apiv1/permissions'+permission.name,permission);
+ return await axios.delete('/apiv1/permissions/'+permission.name);
 }
 
 
