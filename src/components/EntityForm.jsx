@@ -18,6 +18,8 @@ const FormTitle = styled.div`
  color: #333131;
 `;
 
+
+
 const FormContent = styled.div`
  padding: 1em;
 `;
@@ -109,6 +111,20 @@ const EntityUpdateForm = (props)=>{
  * }
  */
 const EntityReadForm = (props)=>{
+
+  let generateElementForField = (schema,fieldName,entity)=>{//we can access props.entity here,but just depend on param 
+    
+    if(typeof schema[fieldName] === 'object'){
+      if(schema[fieldName]['editable']){//if schema field has editable property, {field:{editable:1}}
+        console.log(entity[fieldName]);
+        return <span>{entity[fieldName]}</span>
+      }
+      return !schema[fieldName]['editable'] ? <span>{entity[fieldName]}</span> : <Input id={fieldName} className="disabled" type="text" name={fieldName} value={entity[fieldName]}/> ;
+    }
+    //default
+    return <Input id={fieldName} className="disabled" type="text" name={fieldName} value={entity[fieldName]}/> 
+  }
+
   return(
     <Form action="" onSubmit={(e)=>{e.preventDefault()}}>
       {props.title?<FormTitle id="form-title">{props.title}</FormTitle>:null}
@@ -120,7 +136,10 @@ const EntityReadForm = (props)=>{
            <div className="col s8 offset-s2" style={{zIndex:3}}>
              <label htmlFor={fieldName}>{fieldName.replace(fieldName[0],fieldName[0].toUpperCase())}</label> 
              {/* setting value without onChange makes the input field readonly which is what we want on read */}
-             <input id={fieldName} type="text" name={fieldName} value={props.entity[fieldName]}/>
+             {
+               generateElementForField(props.schema,fieldName,props.entity)
+             }
+             
            </div>
           </div>
          )
