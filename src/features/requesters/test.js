@@ -22,8 +22,10 @@ function Response(){
  this.data = {data:null};
 }
 
-export const authenticate = async (user)=>{
- return Promise.resolve({username: 'Test'});
+export const authenticate = async ()=>{
+ let response = new Response();
+ response.data.data = { user : {username : 'Test'}};
+ return Promise.resolve(response);
 }
 
 export const login = async (user)=>{
@@ -58,6 +60,7 @@ export const permission_add = async(permission)=>{
  let p = Object.assign({_id: permissions.length + 1}, permission);
  permissions.push(p);
  response.data.status = 'ok';
+ response.data.message = {type: 'success', text: 'Permission Added Successfully'}
  response.data.data = {
   permission: p
  }

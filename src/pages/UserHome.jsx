@@ -4,6 +4,8 @@ import Permission from '../features/PermissionBrowse';
 import Header from '../components/Header';
 import SideNav from '../components/SideNav';
 import style from 'styled-components';
+import Message from '../components/Message';
+import {subscribe} from '../actionEvent';
 
 
 const styles = {
@@ -34,30 +36,58 @@ const Content = style.div`
  padding-top: 5px;
  scroll:auto;
  background-color:white;
+ padding-left: 1em;
+ padding-right: 1em;
 `
-export default (props)=>{
+class UserHome extends Component{
+ constructor(props){
+  super(props);
+  this.state = {}
+  this.actionEventListener = this.actionEventListener.bind(this);
+  this.unsubscribeToActionEvent = subscribe(this.actionEventListener);
+ }
+
+
+ actionEventListener(actionName,artifact){
+  if(artifact && artifact.message){
+   this.setState({message:artifact.message});
+  }else{
+   this.setState({message:null});
+  }
+ }
+
+ componentWillUnmount(){
+  this.unsubscribeToActionEvent();
+ }
+
+ render(){
+  console.log(this.messageConsumed);
   return(
-    <div id="page-userhome" className="page" style={styles}>
-      <Header {...props}/>
-      <div id="main-section" style={mainSectionStyles}>
-        <SideNavDiv id="nav" >
-          <SideNav features={props.user.permittedFeatures}/>
-        </SideNavDiv>
-        <Content id="content">
-          
-          <Switch>
-           {
-            props.user.permittedFeatures && props.user.permittedFeatures.length > 0 ? props.user.permittedFeatures.reduce((acc,Feature)=>{
-             //routable feature / feature with path
-             if(Feature.path){
-              acc.push(Feature);
-             }
-             return acc;
-            },[]).map(Feature=><Route path={Feature.path} render={(renderProps)=><Feature {...renderProps} {...props}/>}/>) : null 
-           }
+   <div id="page-userhome" className="page" style={styles}>
+     <Header {... this.props}/>
+     <div id="main-section" style={mainSectionStyles}>
+       <SideNavDiv id="nav" >
+         <SideNav features={this.props.user.permittedFeatures}/>
+       </SideNavDiv>
+       <Content id="content" >
+         {this.state.message && this.state.message !== null ? <Message type={this.state.message.type} text={this.state.message.text} />: null}
+         <Switch>
+          {
+           this.props.user.permittedFeatures && this.props.user.permittedFeatures.length > 0 ? this.props.user.permittedFeatures.reduce((acc,Feature)=>{
+            //routable feature / feature with path
+            if(Feature.path){
+             acc.push(Feature);
+            }
+            return acc;
+           },[]).map(Feature=><Route path={Feature.path} render={(renderProps)=><Feature {... renderProps} {... this.props} onMessage = {this.onMessage}/>}/>) : null 
+          }
           </Switch>
         </Content>
       </div>
     </div>
   );
+ }
+  
 }
+
+export default UserHome;

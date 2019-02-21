@@ -42,8 +42,12 @@ class Authenticate extends Component {
   }
   async componentDidMount(){
     try {
-      let response = await authenticate();
-      this.props.onAuth(response.data.data.user);//higher order component will take of unloading Authenticate
+      let response = await authenticate();      
+      let x = setTimeout(()=>{
+       this.props.onAuth(response.data.data.user);//higher order component will take of unloading Authenticate
+       clearTimeout(x);
+      },5000);
+      // this.props.onAuth(response.data.data.user);//higher order component will take of unloading Authenticate
     } catch (error) {
       this.props.onError(error);
     }

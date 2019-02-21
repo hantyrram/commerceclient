@@ -130,7 +130,7 @@ class EntityBrowser extends Component{
                         this.props.onEdit || this.props.onDelete?
                          <td className="fixed-column eb-entity eb-entity-action " style={{zIndex:"3"}} >
                           {/* by convention edit path = read path + /edit */}
-                          {this.props.Editor?<Link className="eb-action-edit" style={actionStyleWidth}  to={{pathname:`${href}/edit`,state:{entity:entity}}}><span    className="fas fa-edit"  onClick={this.onEditActionHandler.bind(this,entity)}></span></Link>:null}
+                          {this.props.Editor?<Link className="eb-action-edit" style={actionStyleWidth}  to={{pathname:`${href}/edit`,state:{entity:entity}}}><span    className="fas fa-edit" ></span></Link>:null}
                           {this.props.onDelete?<button onClick={this.onDeleteActionHandler.bind(this,entity)} className="eb-action-delete"><span  style={actionStyleWidth} className="fas fa-trash" onClick={this.onDeleteActionHandler.bind(this,entity)}></span></button>:null}
                          </td>
                         :null

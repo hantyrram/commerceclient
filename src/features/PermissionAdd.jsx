@@ -4,6 +4,7 @@ import EntityForm from '../components/EntityForm';
 import Card from '../components/styled_elements/Card';
 import PermissionRead from './PermissionRead';
 import {permission_add as addPermission} from './requesters';
+import {emit} from '../actionEvent';
 class PermissionAdd extends Component{
     constructor(props){
      super(props);
@@ -36,10 +37,9 @@ class PermissionAdd extends Component{
      addPermission(this.state.permission)
      .then(response=>{
       let artifact = response.data;
-      console.log(artifact);
+      emit('permission_add',artifact);
       if(artifact.status === 'ok'){
         this.setState({permission: artifact.data.permission})
-        console.log(PermissionRead.path.replace(":name",this.state.name));
       }
      }).catch(e=>console.log(e));
     }

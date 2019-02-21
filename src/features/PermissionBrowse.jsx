@@ -36,7 +36,9 @@ class PermissionBrowse extends Component {
 
   onAddResult(artifact){
    if(artifact.status === 'ok'){
-    this.setState({currentAction:'edit',currentActionableEntity:artifact.data.permission});
+    let permissions = Object.assign(this.state.permissions);
+    permissions.unshift(artifact.data.permission);
+    this.setState({currentAction:'read',currentActionableEntity:artifact.data.permission,permissions:permissions});
    }
   }
 
