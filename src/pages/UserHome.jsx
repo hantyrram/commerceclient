@@ -7,6 +7,8 @@ import style from 'styled-components';
 import Message from '../components/Message';
 import {subscribe} from '../actionEvent';
 
+import features from '../features';
+
 
 const styles = {
   
@@ -67,13 +69,13 @@ class UserHome extends Component{
      <Header {... this.props}/>
      <div id="main-section" style={mainSectionStyles}>
        <SideNavDiv id="nav" >
-         <SideNav features={this.props.user.permittedFeatures}/>
+         <SideNav features={this.props.user.features}/>
        </SideNavDiv>
        <Content id="content" >
          {this.state.message && this.state.message !== null ? <Message type={this.state.message.type} text={this.state.message.text} />: null}
          <Switch>
           {
-           this.props.user.permittedFeatures && this.props.user.permittedFeatures.length > 0 ? this.props.user.permittedFeatures.reduce((acc,Feature)=>{
+           this.props.user.features && this.props.user.features.length > 0 ? this.props.user.features.reduce((acc,Feature)=>{
             //routable feature / feature with path
             if(Feature.path){
              acc.push(Feature);

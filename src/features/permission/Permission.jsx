@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import featureGroups from '../featureGroups';
 import Bread from '../../components/bread/Bread';
 import Adder from '../../components/bread/Adder';
 import Editor from '../../components/bread/Editor';
@@ -12,20 +13,27 @@ class Permission extends Component {
     super(props);
     this.state = {  }
   }
-  render() { 
-    let PermissionAdder = this.props.user.hasPermission('permission_add')? Adder: null;
-    PermissionAdder.path = getRoute('permission_add');
-    let PermissionEditor = this.props.user.hasPermission('permission_edit')? Adder: null;
-    PermissionEditor.path = getRoute('permission_edit');
-    let PermissionRead = this.props.user.hasPermission('permission_read')? Adder: null;
-    PermissionRead.path = getRoute('permission_read');
-    let PermissionBrowse = this.props.user.hasPermission('permission_browse')? Adder: null;//use default browser
-    PermissionBrowse.path = getRoute('permission_browse');
 
+  componentDidMount(){}
+  
+  render() { 
     return ( 
-      <Bread Adder={PermissionAdder} Editor={PermissionEditor} Reader={PermissionRead} Entity={Permission} />
+      <Bread  Entity={Permission} />
      );
   }
 }
  
+let actions = [
+ 'permission_browse',
+ 'permission_read',
+ 'permission_edit',
+ 'permission_add',
+ 'permission_delete'
+];
+
+Object.defineProperty(Permission,'actions',{value: actions, writable:false, configurable:false});
+Object.defineProperty(Permission,'path',{value: '/permissions', writable:false, configurable:false});
+Object.defineProperty(Permission,'primaryLink',{get:()=>true});
+Object.defineProperty(Permission,'featureGroup',{get:()=>featureGroups.USER_MANAGEMENT});
+
 export default Permission;

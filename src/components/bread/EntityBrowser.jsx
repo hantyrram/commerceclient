@@ -34,7 +34,6 @@ const Div = styled.div`
 class EntityBrowser extends Component{
 
   componentDidMount(){
-    console.log('EntityBrowser',this.props);
   }
 
   componentDidUpdate(){
@@ -44,18 +43,14 @@ class EntityBrowser extends Component{
   initOnReadActionHandler(){
    let _self = this;
    let rows = document.getElementsByTagName("tr");
-   console.log(rows);
    for(let row of rows){
      row.addEventListener('click',function(e){
       if(e.eventPhase === Event.CAPTURING_PHASE && e.target.tagName.toLowerCase() === 'td'){
        if(e.target.className.includes("eb-entity-data")){
-        console.log('Clicked');
            //row.attributes[0] is the saved entity on tr ,MUST do additional check on attributes[0].name === ebentity
            //if additional attribute is added on the tr
-           let dataHref = JSON.parse(row.attributes["data-href"].value);
-           console.log(dataHref);
-           console.log(_self.props);
-           _self.props.history.push(dataHref.href,{entity:dataHref.entity});
+           let rowData = JSON.parse(row.attributes["row-data"].value);
+           _self.props.onRead(rowData.entity);
         e.stopImmediatePropagation();
        }
       }
@@ -63,19 +58,17 @@ class EntityBrowser extends Component{
    }
   }
 
-  onEditActionHandler(entity,event){
-    this.props.onEdit(entity);
+  deleteClicked(entity,event){
+   this.props.onDelete(entity);
     event.stopPropagation();
   }
 
-  onDeleteActionHandler(entity,event){
-    this.props.onDelete(entity);
+  editClicked(entity,event){
+   this.props.onEdit(entity);
     event.stopPropagation();
   } 
 
  render(){
-   let Editor = this.props.Editor?this.props.Editor:null;
-   let Deleter = this.props.Deleter? this.props.Deleter:null;
   let columnNames = [];
   if(this.props.entities && this.props.entities.length > 0){
    columnNames.push('#');//number column
@@ -96,7 +89,7 @@ class EntityBrowser extends Component{
    <Div>
     {this.props.title? <EntityBrowserTitle>{this.props.title}</EntityBrowserTitle>:null}
     <div id="main-actions-container"> &nbsp;
-     {this.props.Adder? <Link to={{pathname:this.props.Adder.path}} className="eb-action-add" >+</Link>:null}
+     {/* {this.props.Adder? <Link to={{pathname:this.props.Adder.path}} className="eb-action-add" >+</Link>:null} */}
     </div>
     {
      this.props.entities && this.props.entities.length > 0 ?
@@ -116,14 +109,7 @@ class EntityBrowser extends Component{
          <tbody ref="ebTableTbody">
            {
              this.props.entities.map((entity,index)=>{
-              let href = Object.getOwnPropertyNames(entity).reduce(function(acc,entityPropertyName){
-                if(acc.indexOf(":") !== -1 && acc.indexOf(entityPropertyName) !== -1){
-                  acc = acc.replace(`:${entityPropertyName}`,entity[entityPropertyName]);
-                }
-                return acc;
-              },this.props.Reader.path);
-              
-              return <tr key={index} data-href={JSON.stringify({href:href,entity:entity})}> {/** Row is clickable if there is onRead handler else default = empty function*/}
+              return <tr key={index} row-data={JSON.stringify({entity:entity})}> {/** Row is clickable if there is onRead handler else default = empty function*/}
                       <td >{index + 1}</td> 
                       {
                         Object.getOwnPropertyNames(entity).map((entityFieldName,i)=>{
@@ -134,8 +120,8 @@ class EntityBrowser extends Component{
                         this.props.onEdit || this.props.onDelete?
                          <td className="fixed-column eb-entity eb-entity-action " style={{zIndex:"3"}} >
                           {/* by convention edit path = read path + /edit */}
-                          {this.props.Editor?<Link className="eb-action-edit" style={actionStyleWidth}  to={{pathname:`${href}/edit`,state:{entity:entity}}}><span    className="fas fa-edit" ></span></Link>:null}
-                          {this.props.Deleter?<Deleter onClick={this.onDeleteActionHandler.bind(this,entity)} style={actionStyleWidth} className="eb-action-delete fas fa-trash" entity={entity}><span  style={this.props.style} className="fas fa-trash" onClick={this.onDeleteActionHandler.bind(this,entity)}></span></Deleter>:null}
+                          {this.props.onEdit?<span  className="eb-action-edit"  className="fas fa-edit" style={actionStyleWidth} onClick={this.editClicked.bind(this,entity)}></span>:null}
+                          {this.props.onDelete? <span  className="eb-action-delete fas fa-trash" style={actionStyleWidth} className="fas fa-trash" onClick={this.deleteClicked.bind(this,entity)}></span>:null}
                          </td>
                         :null
                       }

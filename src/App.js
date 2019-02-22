@@ -33,17 +33,22 @@ class App extends Component {
   onLogin(user){//after successful login
     user.hasPermission = hasPermission.bind(user);
     this.setState({user:user});
+    //replace with user.getOwnPermissions();
     getUserPermissions(this.state.user.username).then(response=>{
       let user = this.state.user;
       user.permissions = response.data.data.permissions;
-      user.permittedFeatures = [];
-      for(let feature of features){
-        if(user.permissions.find(permission=>permission.name === feature.requiredPermission)){
-          user.permittedFeatures.push(feature);
-        }
-      }
+      user.features = [];
+      features.forEach(feature=>{
+       let truthTable = user.permissions.map(permission=>{
+        return feature.actions.includes(permission);
+       });
+       if(truthTable.includes(true)){//the feature can handle at least one of the permission
+        //fetch the feature,add as a feature of user
+        user.features.push(feature);
+       }
+
+      });
       this.setState({user:user});
-      console.log(this.state.user);
     });
     
   }
