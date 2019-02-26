@@ -1,12 +1,17 @@
 import React, { Component } from 'react';
 import featureGroups from '../featureGroups';
+import Form from '../components/styled_elements/Form';
 import Bread from '../../components/bread/Bread';
 import Adder from '../../components/bread/Adder';
 import Editor from '../../components/bread/Editor';
 import Reader from '../../components/bread/Reader';
 import {getRoute} from '../routes';
 
-
+class Adder extends Component{
+ return(
+  <form action=""></form>
+ )
+}
 
 class Permission extends Component {
   constructor(props) {

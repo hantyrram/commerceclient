@@ -11,7 +11,6 @@ export const login = async (user)=>{
 export const logout = async ()=>{
   return await axios.get('/apiv1/logout');
  }
-
  
 export const user_permissions_read = async (username)=>{
   return await axios.get(`/apiv1/users/${username}/permissions`);
