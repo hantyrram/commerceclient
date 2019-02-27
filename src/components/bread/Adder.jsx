@@ -1,56 +1,75 @@
 import React, { Component } from 'react';
-import {Redirect} from 'react-router-dom';
-import EntityForm from '../components/EntityForm';
-import Card from '../components/styled_elements/Card';
-import PermissionRead from './PermissionRead';
-import {permission_add as addPermission} from './requesters';
-import {emit} from '../actionEvent';
+import Form from '../styled_elements/Form';
+import Button from '../styled_elements/Button';
 /**
- * The default Entity Adder to use when the adder.component prop of Bread is null or undefined.
+ * Form used to add an Entity. Has a Save button. Requires onSubmit props to handle form submittion.
+ * @param {object} props = {
+ *  schema = REQUIRED, defines the input fields of the form.
+ *  onSubmit = REQUIRED, A function that will handle the onSumbit event of the form.
+ *  onChange = REQUIRED, A function that will handle the onChange events of the input elements.
+ *  entity = [optional], the data to be displayed by the form by default.
+ * }
  */
-class Adder extends Component{
-    constructor(props){
-     super(props);
-     this.state = {
-      entity:null,
-     }
-     this.onChange = this.onChange.bind(this);
-     this.onSubmit = this.onSubmit.bind(this);
-    }
-    
-    componentDidMount(){
-    
-    }
-    
-    onChange(e){
-      let entity = Object.create(this.state.entity);
-      entity[e.target.name] = e.target.value;
-      this.setState({entity:entity});
-    }
+export default (props)=>{
+  return(
+    <Form action="" onSubmit={props.onSubmit}>
+      {props.title?<div id="form-title">{props.title}</div>:null}
+      <div>
+       {
+        Object.getOwnPropertyNames(props.schema).map((fieldName,i)=>{
+         return (
+          <div key={i} className="row">
+           <div className="col s8 offset-s2" style={{zIndex:3}}>
+             <label htmlFor={fieldName}>{fieldName.replace(fieldName[0],fieldName[0].toUpperCase())}</label> 
+             <input id={fieldName} type="text" name={fieldName} onChange={props.onChange} defaultValue={props.entity?props.entity[fieldName]||'':''}/>
+             {/* change the first letter to upperchase */}
+           </div>
+          </div>
+         )
+        })
+       }
+      </div>
+     <div className="form-action-wrapper">
+      <Button primary name="save">Save</Button>
+     </div>
+    </Form>
+  )
+}
 
-    onSubmit(e){
-     e.preventDefault();
-     entity.save().then()
-    }
 
-    render(){
-     let schema = this.state.entity;
-     return(
-      <React.Fragment>
-        {
-         this.state.permission._id? <Redirect to={{pathname:PermissionRead.path.replace(":name",this.state.permission.name),state:{entity:this.state.permission}}}/>:
-         <EntityForm title="Add Permission" formType="add" schema={this.state.entity} onSubmit={this.onSubmit} onChange={this.onChange}/>
-        }
-      </React.Fragment>
-      
-     )
-    }
+class Adder extends React.Component{
+  constructor(){
+    super();
+    this.state = {}
   }
 
-  Object.defineProperty(PermissionAdd,'path',{get:()=>'/permissions/add'});
-  Object.defineProperty(PermissionAdd,'requiredPermission',{get:()=>'permission_add'})
-
-  export default PermissionAdd;
-
+  onChange(){}
+  
+  render(){
+    return(
+      <Form action="" onSubmit={props.onSubmit}>
+        {props.title?<div id="form-title">{props.title}</div>:null}
+        <div>
+        {
+          Object.getOwnPropertyNames(props.schema).map((fieldName,i)=>{
+          return (
+            <div key={i} className="row">
+            <div className="col s8 offset-s2" style={{zIndex:3}}>
+              <label htmlFor={fieldName}>{fieldName.replace(fieldName[0],fieldName[0].toUpperCase())}</label> 
+              <input id={fieldName} type="text" name={fieldName} onChange={props.onChange} defaultValue={props.entity?props.entity[fieldName]||'':''}/>
+              {/* change the first letter to upperchase */}
+            </div>
+            </div>
+          )
+          })
+        }
+        </div>
+      <div className="form-action-wrapper">
+        <Button primary name="save">Save</Button>
+      </div>
+      </Form>
+    )
+  }
+}
   
   
