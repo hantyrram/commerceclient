@@ -5,7 +5,7 @@ import Card from '../components/styled_elements/Card';
 import PermissionRead from './PermissionRead';
 import {permission_add as addPermission} from './requesters';
 import {emit} from '../actionEvent';
-class PermissionAdd extends Component{
+class Adder extends Component{
     constructor(props){
      super(props);
      this.state = {
@@ -61,7 +61,7 @@ class PermissionAdd extends Component{
   Object.defineProperty(PermissionAdd,'path',{get:()=>'/permissions/add'});
   Object.defineProperty(PermissionAdd,'requiredPermission',{get:()=>'permission_add'})
 
-  export default PermissionAdd;
+  export default Adder;
 
   
   
