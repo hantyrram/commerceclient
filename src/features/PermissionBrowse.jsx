@@ -27,7 +27,7 @@ class PermissionBrowse extends Component {
   async componentDidMount(){
     console.log(this.props);
     let response = await getPermissions();
-    this.setState({permissions:response.data.data.permissions});
+    this.setState({permissions:response.data.data.entity});
   }
   
   onAdd(){
