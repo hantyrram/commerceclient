@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Class: EntityBrowser</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Class: EntityBrowser</h1>
+
+    
+
+
+
+
+<section>
+
+<header>
+    
+        <h2><span class="attribs"><span class="type-signature"></span></span>EntityBrowser<span class="signature">(props)</span><span class="type-signature"></span></h2>
+        
+            <div class="class-description">Used for tabular representation of Entities, supports pagination of data.props : { entities : The entities to tabulate and paginate follow : An object which represents a column value that is a Link to a path.            : {                 pathname: REQUIRED! The pathname e.g. /users/:username                paramName:  REQUIRED! The entity property  e.g. if entities contains array of users then setting this                         value to "username" will replace the :username on the path with "username".                         The column values of "username" will be a Link.                entityName: REQUIRED! The name of the entity e.g. user, This is used as property of the location.state.                 //entityName deprecated, all state will contain "entity" prop name              } remove : [OPTIONAL] A function that will handle the delete button click event. title: [OPTIONAL] The Title shown on top of the Entity Browser. onAdd: [OPTIONAL] The handler for the add button.Which is used to add a new Entity.}</div>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+
+    
+    <h2>Constructor</h2>
+    
+
+    
+    <h4 class="name" id="EntityBrowser"><span class="type-signature"></span>new EntityBrowser<span class="signature">(props)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>props</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>Entity</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Entity.html">Entity</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The Entity that this component will be working on.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="components_EntityBrowser.jsx.html">components/EntityBrowser.jsx</a>, <a href="components_EntityBrowser.jsx.html#line40">line 40</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    </div>
+
+    
+        <h3 class="subsection-title">Extends</h3>
+
+        
+
+
+    <ul>
+        <li>React.Component</li>
+    </ul>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Bread.html">Bread</a></li><li><a href="Entity.html">Entity</a></li><li><a href="EntityBrowser.html">EntityBrowser</a></li><li><a href="Permission.html">Permission</a></li><li><a href="PermissionBrowse.html">PermissionBrowse</a></li></ul><h3>Global</h3><ul><li><a href="global.html#EntityAddForm">EntityAddForm</a></li><li><a href="global.html#EntityReadForm">EntityReadForm</a></li><li><a href="global.html#EntityUpdateForm">EntityUpdateForm</a></li><li><a href="global.html#hasPermission">hasPermission</a></li><li><a href="global.html#subscribers">subscribers</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sat Mar 16 2019 03:30:07 GMT+0300 (Arabian Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

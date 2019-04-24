@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: components/bread/Bread.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: components/bread/Bread.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { Component } from 'react';
+import EntityBrowser from '../components/EntityBrowser';
+import Card from '../components/styled_elements/Card';
+import {Link,Route,Router} from 'react-router-dom';
+import axios from 'axios';
+import { isRegExp } from 'util';
+import { Switch, withRouter } from 'react-router-dom';
+/**
+ * 
+ */
+class Bread extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { 
+      entities:{},
+     }
+  }
+
+  /**
+   * The entity to add
+   * @param {*} entity 
+   */
+  onAdd(entity){
+   (async ()=>{
+    try {
+     let response = await entity.save();
+     if(response.status === 'ok'){
+      let entities = Object.create(this.state.entities);
+      entities.push(response.data.data.entity);
+      this.setState({entities: entities});
+     }
+    } catch (error) {
+      console.log(error);
+    }
+   })()
+  }
+
+
+  /**
+   * The entity to delete,
+   * @param {*} entity 
+   */
+  onDelete(entity){
+   (async ()=>{
+    try {
+     let response = await entity.delete();
+     if(response.status === 'ok'){
+      let entities = Object.create(this.state.entities);
+      let i = entities.findIndex(e => {
+       return e._id === entity._id;
+      });
+      entities.splice(i,1);
+      this.setState({entities: entities});
+     }
+    } catch (error) {
+     
+    }
+   })()
+  }
+
+  /**
+   * 
+   * @param {*} filter - The filter to be added as queries to browser path
+   */
+  onBrowse(filter = {}){//browser is shown ,table is shown,by default it's shown
+   (async ()=>{
+    try {
+     let response = await this.props.Entity.find(filter);
+     let entities = response.data.data.entity.map(e=>{
+      return new this.props.Entity.constructor(e);//instantiate
+     });
+     this.setState({entities: entities});
+    } catch (error) {
+     
+    }
+   })()
+  }
+
+  /**
+   * 
+   * @param {Entity} entity - the entity to edit.MUST have ._id
+   */
+  onEdit(entity){
+   (async ()=>{
+    try {
+     let response = await entity.save();
+     if(response.status === 'ok'){
+      let entities = Object.create(this.state.entities);
+      let i = entities.findIndex(e => {
+       return e._id === entity._id;
+      });
+      entities.splice(i,1,entity);//replace
+      this.setState({entities: entities});
+     }
+    } catch (error) {
+      console.log(error);
+    }
+   })()
+  }
+
+  render() { 
+    let Reader = this.props.Reader ? this.props.Reader : null;
+    let Editor = this.props.Editor ? this.props.Editor : null;
+    let Adder = this.props.Adder ? this.props.Adder : null;
+    return ( 
+      &lt;React.Fragment>
+        &lt;Card>
+          &lt;Switch>
+            {Reader?&lt;Route  exact path={Reader.path} render={(props)=>{return &lt;Reader {... props} editorPath={Editor &amp;&amp; Editor.path? Editor.path:null} onDelete={this.onDelete}/> }} />:null}
+            {Editor?&lt;Route  exact path={Editor.path} render={(props)=>{return &lt;Editor {... props}  onEdit={this.onEdit} /> }} /> :null}
+            {Adder?&lt;Route  exact path={Adder.path} render={(props)=>{return &lt;Adder {... props}  onAdd={this.onAdd}/> }} />:null}
+            &lt;Route render={()=>{return &lt;div>Page Not Found&lt;/div>}} />
+          &lt;/Switch>
+          {/* adder here */}
+          &lt;EntityBrowser view="browse" editorPath={Editor.path} readerPath={Reader.path} onDelete={this.onDelete} onBrowse={this.onBrowse} entities={this.state.entities}/>
+        &lt;/Card>
+      &lt;/React.Fragment>
+      
+     );
+  }
+}
+
+export default Bread;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Bread.html">Bread</a></li><li><a href="Entity.html">Entity</a></li><li><a href="EntityBrowser.html">EntityBrowser</a></li><li><a href="Permission.html">Permission</a></li><li><a href="PermissionBrowse.html">PermissionBrowse</a></li></ul><h3>Global</h3><ul><li><a href="global.html#EntityAddForm">EntityAddForm</a></li><li><a href="global.html#EntityReadForm">EntityReadForm</a></li><li><a href="global.html#EntityUpdateForm">EntityUpdateForm</a></li><li><a href="global.html#hasPermission">hasPermission</a></li><li><a href="global.html#subscribers">subscribers</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sat Mar 16 2019 03:30:06 GMT+0300 (Arabian Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

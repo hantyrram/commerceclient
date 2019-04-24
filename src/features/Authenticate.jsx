@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import {Redirect} from 'react-router-dom';
 import HTSpinner from '../components/HTSpinner';
 import {authenticate} from './requesters';
@@ -42,11 +41,12 @@ class Authenticate extends Component {
   }
   async componentDidMount(){
     try {
-      let response = await authenticate();      
-      let x = setTimeout(()=>{
-       this.props.onAuth(response.data.data.user);//higher order component will take of unloading Authenticate
-       clearTimeout(x);
-      },5000);
+      let response = await authenticate();    
+      this.props.onAuth(response.data.data.use);  
+      // let x = setTimeout(()=>{
+      //  this.props.onAuth(response.data.data.user);//higher order component will take of unloading Authenticate
+      //  clearTimeout(x);
+      // },5000);
       // this.props.onAuth(response.data.data.user);//higher order component will take of unloading Authenticate
     } catch (error) {
       this.props.onError(error);

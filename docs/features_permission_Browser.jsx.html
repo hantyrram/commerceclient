@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: features/permission/Browser.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: features/permission/Browser.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { Component } from 'react';
+import {permission_browse as getPermissions} from './requesters';
+import {permission_delete as deletePermission} from './requesters';
+import EntityBrowser from '../components/EntityBrowser';
+import PermissionAdd from './PermissionAdd';
+import PermissionRead from './PermissionRead';
+import PermissionEdit from './PermissionEdit';
+import FEATUREGROUPS from './featureGroups';
+import Card from '../components/styled_elements/Card';
+import {Link,Route,Router} from 'react-router-dom';
+import axios from 'axios';
+import { isRegExp } from 'util';
+import { Switch, withRouter } from '../../node_modules/react-router-dom';
+/**
+ * 
+ */
+class PermissionBrowse extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { 
+      permissions:null,
+      currentAction:null,
+      currentActionableEntity:null
+     }
+  }
+
+  async componentDidMount(){
+    console.log(this.props);
+    let response = await getPermissions();
+    this.setState({permissions:response.data.data.permissions});
+  }
+  
+  onAdd(){
+   this.setState({currentAction:'add',currentActionableEntity:null});
+  }
+
+  onAddResult(artifact){
+   if(artifact.status === 'ok'){
+    let permissions = Object.assign(this.state.permissions);
+    permissions.unshift(artifact.data.permission);
+    this.setState({currentAction:'read',currentActionableEntity:artifact.data.permission,permissions:permissions});
+   }
+  }
+
+  onRead(entity){
+    this.setState({currentAction:'read',currentActionableEntity:entity});
+  }
+
+  onEdit(entity){
+   this.setState({currentAction:'edit',currentActionableEntity:entity});
+    this.props.history.push(PermissionEdit.path.replace(":name",entity.name),{entity:entity});
+  }
+
+  onDelete(entity){
+   console.log('On Delete Called');
+   let _self = this;
+   if(this.state.permissions &amp;&amp; Object.getOwnPropertyNames(this.state.permissions).length > 0){
+     (async ()=>{
+       let deleteResponse = await deletePermission(entity);
+       console.log(deleteResponse);
+       if(deleteResponse.status === 'ok'){
+        console.log(deleteResponse.data);  
+       }
+       let {data} = await getPermissions();
+       console.log(data.data.permissions);
+       _self.setState({permissions:data.data.permissions});
+     })()
+     
+     
+   }
+  }
+
+  onClose(){
+   this.setState({currentAction:null});
+  }
+   
+  
+
+  render() { 
+    let onAdd = this.props.user.hasPermission(PermissionAdd.requiredPermission)?this.onAdd.bind(this):null;
+    let onRead = this.props.user.hasPermission(PermissionRead.requiredPermission)?this.onRead.bind(this):null;
+    let onEdit = this.props.user.hasPermission(PermissionEdit.requiredPermission)?this.onEdit.bind(this):null;
+    return ( 
+      &lt;React.Fragment>
+         &lt;Switch>
+          &lt;Route exact path={PermissionRead.path} render={(props)=>{return &lt;PermissionRead {... props} entity={{}} /> }} />
+          &lt;Route  exact path={PermissionEdit.path} render={(props)=>{return &lt;PermissionEdit {... props}  entity={{}} /> }} />
+          &lt;Route  exact path={PermissionAdd.path} render={(props)=>{return &lt;PermissionAdd {... props}  /> }} />
+         &lt;/Switch>
+        &lt;Card>
+          {/* &lt;EntityBrowser onEdit={onEdit} onAdd={onAdd} title={PermissionBrowse.name} entities={this.state.permissions} follow={{pathname:PermissionRead.path,column:'name',entityName:'permission'}}/> */}
+          &lt;EntityBrowser Reader={PermissionRead} Editor={PermissionEdit} Adder={PermissionAdd} onDelete={this.onDelete.bind(this)}  title={PermissionBrowse.name} entities={this.state.permissions} />
+        &lt;/Card>
+      &lt;/React.Fragment>
+      
+     );
+  }
+}
+Object.defineProperty(PermissionBrowse,'name',{get:()=>'Permissions'});
+Object.defineProperty(PermissionBrowse,'path',{get:()=>'/permissions'});
+Object.defineProperty(PermissionBrowse,'featureGroup',{get:()=>FEATUREGROUPS.USER_MANAGEMENT});
+Object.defineProperty(PermissionBrowse,'primaryLink',{get:()=>true});
+Object.defineProperty(PermissionBrowse,'requiredPermission',{get:()=>'permission_browse'});
+ 
+export default PermissionBrowse;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Bread.html">Bread</a></li><li><a href="Entity.html">Entity</a></li><li><a href="EntityBrowser.html">EntityBrowser</a></li><li><a href="Permission.html">Permission</a></li><li><a href="PermissionBrowse.html">PermissionBrowse</a></li></ul><h3>Global</h3><ul><li><a href="global.html#EntityAddForm">EntityAddForm</a></li><li><a href="global.html#EntityReadForm">EntityReadForm</a></li><li><a href="global.html#EntityUpdateForm">EntityUpdateForm</a></li><li><a href="global.html#hasPermission">hasPermission</a></li><li><a href="global.html#subscribers">subscribers</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sat Mar 16 2019 03:30:06 GMT+0300 (Arabian Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

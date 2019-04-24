@@ -1,8 +1,8 @@
-import axios from 'axios';
+import axios from '../../axios';
 import config from '../../config';
 
 export const authenticate = async()=>{
-  return await axios.get(`/${config.API_VERSION}/authenticate`);
+  return await axios.get(`/apiv1/authenticate`);
 }
 export const login = async (user)=>{
  return await axios.post('/apiv1/login',user);

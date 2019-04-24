@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import Authenticate from './Authenticate';
-import {login,authenticate} from './requesters';
+import {login} from './requesters';
 const API_ENDPOINT = '/apiv1/login';
 
 const formStyle = {
