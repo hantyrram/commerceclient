@@ -17,7 +17,7 @@ export default (props)=>{
    <div style={styles}> 
      <div className="image-container" style={{maxHeight:"100%"}}><img src="hantyr_icon.svg" alt="Logo" style={{maxHeight:"inherit",width:"auto",marginRight:"2em"}}/></div>
      <div>
-      <div id="greetings" style={{display:"inline-block",color:"#4a4646",fontWeight:"bold",marginRight:"2em"}}>Hello, {props.user.username} !</div>
+      <div id="greetings" style={{display:"inline-block",color:"#4a4646",fontWeight:"bold",marginRight:"2em"}}>Hello, {props.user.credential.username} !</div>
       <Logout {...props}/>
      </div>
    </div>
