@@ -1,12 +1,9 @@
 
 let proxy = require('http-proxy-middleware');
-// const config = require('./config');
-// if(config.env === 'prod'){
-//  console.log(config.env)
-//  proxy = require('http-proxy-middleware');
-// }
-
 //if multipart url does not work check this file
 module.exports = function(app){
-  app.use(proxy('/apiv1',{target:'http://localhost:1234/'}))
+  app.use(proxy('/apiv1',{
+   target:'http://localhost:1234/',
+   logLevel:"debug"
+  }))
 }

@@ -1,5 +1,4 @@
 import axios from '../../axios';
-import config from '../../config';
 
 export const authenticate = async()=>{
   return await axios.get(`/apiv1/authenticate`);
