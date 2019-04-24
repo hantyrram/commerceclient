@@ -13,7 +13,7 @@ export const logout = async ()=>{
 
  
 export const user_permissions_read = async (username)=>{
-  return await axios.get(`/apiv1/users/${username}/permissions`);
+  return await axios.get(`/apiv1/employees/credential/${username}/permissions`);
 }
 
 export const permission_browse = async ()=>{
