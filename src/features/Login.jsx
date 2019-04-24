@@ -59,7 +59,7 @@ class Login extends Component {
   onSubmit(e){
     e.preventDefault();
     login({username:this.state.username,password:this.state.password}).then(response=>{
-     let user = response.data.data.user;
+     let user = response.data.data.entity;
      this.props.onLogin(user);
     }).catch(e=>{
      console.log(e);
