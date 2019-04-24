@@ -31,10 +31,12 @@ class App extends Component {
 
   onLogin(user){//after successful login
     user.hasPermission = hasPermission.bind(user);
+    
     this.setState({user:user});
-    getUserPermissions(this.state.user.username).then(response=>{
+    getUserPermissions(this.state.user.credential.username).then(response=>{
       let user = this.state.user;
-      user.permissions = response.data.data.permissions;
+
+      user.permissions = response.data.data.entity;
       user.permittedFeatures = [];
       for(let feature of features){
         if(user.permissions.find(permission=>permission.name === feature.requiredPermission)){
