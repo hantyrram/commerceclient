@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import Authenticate from './Authenticate';
-import {login} from './requesters';
+import HTSpinner from '../components/HTSpinner';
+import {login,authenticate} from './requesters';
 const API_ENDPOINT = '/apiv1/login';
 
 const formStyle = {
@@ -45,7 +45,7 @@ class Login extends Component {
      }
     this.onSubmit = this.onSubmit.bind(this);
     this.onChange = this.onChange.bind(this);
-    this.onError = this.onError.bind(this);
+    this.onAuthenticationError = this.onAuthenticationError.bind(this);
   }
 
   onChange(e){
@@ -56,28 +56,43 @@ class Login extends Component {
     }
   }
 
-  onSubmit(e){
+  async onSubmit(e){
     e.preventDefault();
-    login({username:this.state.username,password:this.state.password}).then(response=>{
-     let user = response.data.data.entity;
-     this.props.onLogin(user);
-    }).catch(e=>{
-     console.log(e);
-    });
+    try {
+     let response = await login({ username: this.state.username, password: this.state.password }); 
+     let artifact = response.data;
+     this.props.onLogin(artifact.data.entity);
+    } catch (error) {
+     let artifact = error.response.data;
+     this.setState({ session:null, error: artifact.error.text});
+    }
   }
 
-  onError(error){
-    console.log('Logging Error');
-    console.log(error);
-    this.setState({session:null});
+  async componentDidMount(){
+   if(this.state.session){
+    try {
+     let response = await authenticate();
+     let artifact = response.data;
+     this.props.onLogin(artifact.data.entity);
+    } catch (error) {
+     let artifact = error.response.data;
+     this.setState({ session: null, error: artifact.error.text });
+    }
+   }
+  }
+
+ 
+  onAuthenticationError(error){
+   this.setState({ session:null, error: 'Session Expired!' });
   }
   
   render() { 
     if(this.state.session){
-      return <Authenticate onAuth={this.props.onLogin} onError={this.onError}/>
+      return <HTSpinner />
     }
     return ( 
       <form action="" style={formStyle} onSubmit={this.onSubmit}>
+          <div>{this.state.error? this.state.error: null}</div>
           <div style={{minWidth:"95%"}}>
             <label htmlFor="username" >Username</label>
             <input id="username" type="text" name="username" style={inputStyle} onChange={this.onChange}/>

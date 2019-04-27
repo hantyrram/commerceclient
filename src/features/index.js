@@ -1,11 +1,11 @@
-import PermissionAdd from './PermissionAdd';
+import PermissionCreate from './PermissionCreate';
 import PermissionBrowse from './PermissionBrowse';
 import PermissionRead from './PermissionRead';
 import UserBrowse from './UserBrowse';
 import ProductBrowse from './ProductBrowse';
 import OrderBrowse from './OrderBrowse';
 export default [
-  PermissionAdd,
+  PermissionCreate,
   PermissionBrowse,
   PermissionRead,
   UserBrowse,

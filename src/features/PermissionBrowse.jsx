@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {permission_browse as getPermissions} from './requesters';
 import {permission_delete as deletePermission} from './requesters';
 import EntityBrowser from '../components/EntityBrowser';
-import PermissionAdd from './PermissionAdd';
+import PermissionCreate from './PermissionCreate';
 import PermissionRead from './PermissionRead';
 import PermissionEdit from './PermissionEdit';
 import FEATUREGROUPS from './featureGroups';
@@ -10,7 +10,7 @@ import Card from '../components/styled_elements/Card';
 import {Link,Route,Router} from 'react-router-dom';
 import axios from 'axios';
 import { isRegExp } from 'util';
-import { Switch, withRouter } from '../../node_modules/react-router-dom';
+import { Switch, withRouter } from 'react-router-dom';
 /**
  * 
  */
@@ -77,7 +77,7 @@ class PermissionBrowse extends Component {
   
 
   render() { 
-    let onAdd = this.props.user.hasPermission(PermissionAdd.requiredPermission)?this.onAdd.bind(this):null;
+    let onAdd = this.props.user.hasPermission(PermissionCreate.requiredPermission)?this.onAdd.bind(this):null;
     let onRead = this.props.user.hasPermission(PermissionRead.requiredPermission)?this.onRead.bind(this):null;
     let onEdit = this.props.user.hasPermission(PermissionEdit.requiredPermission)?this.onEdit.bind(this):null;
     return ( 
@@ -85,11 +85,11 @@ class PermissionBrowse extends Component {
          <Switch>
           <Route exact path={PermissionRead.path} render={(props)=>{return <PermissionRead {... props} entity={{}} /> }} />
           <Route  exact path={PermissionEdit.path} render={(props)=>{return <PermissionEdit {... props}  entity={{}} /> }} />
-          <Route  exact path={PermissionAdd.path} render={(props)=>{return <PermissionAdd {... props}  /> }} />
+          <Route  exact path={PermissionCreate.path} render={(props)=>{return <PermissionCreate {... props}  /> }} />
          </Switch>
         <Card>
           {/* <EntityBrowser onEdit={onEdit} onAdd={onAdd} title={PermissionBrowse.name} entities={this.state.permissions} follow={{pathname:PermissionRead.path,column:'name',entityName:'permission'}}/> */}
-          <EntityBrowser Reader={PermissionRead} Editor={PermissionEdit} Adder={PermissionAdd} onDelete={this.onDelete.bind(this)}  title={PermissionBrowse.name} entities={this.state.permissions} />
+          <EntityBrowser Reader={PermissionRead} Editor={PermissionEdit} Adder={PermissionCreate} onDelete={this.onDelete.bind(this)}  title={PermissionBrowse.name} entities={this.state.permissions} />
         </Card>
       </React.Fragment>
       

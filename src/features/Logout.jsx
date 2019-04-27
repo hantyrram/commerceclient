@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import style from 'styled-components';
+import {logout} from './requesters';
 
 const Button = style.button`
  display:inline-block; 
@@ -12,14 +13,23 @@ const Button = style.button`
 `;
 
 export default (props)=>{
-  const onClick = async (e)=>{
-    try {
-      let response = await axios.get('/apiv1/logout');
-      props.onLogout(response);
-    } catch (error) {
-      props.onLogout(error);
-    }
+  
+  const onClick = (e)=>{
+   logout().then(response=>{
+    props.onLogout(response);
+   }).catch(e=>props.onLogout(e));
   }
+
+  // const onClick = async (e) => {
+  //  try {
+  //   let response = await logout(); 
+  //   let artifact = response.data;
+  //  } catch (error) {
+  //   let artifact = error.response.data;
+  //  }
+   
+  // }
+
   return(
     <Button onClick={onClick}> Logout </Button>
   )

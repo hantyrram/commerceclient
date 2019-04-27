@@ -20,7 +20,7 @@ export const permission_browse = async ()=>{
  return await axios.get('/apiv1/permissions');
 }
 
-export const permission_add = async (permission)=>{
+export const permission_create = async (permission)=>{
   return await axios.post('/apiv1/permissions',permission);
  }
 

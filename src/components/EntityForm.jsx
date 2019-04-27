@@ -2,9 +2,9 @@
 //onSubmit handler
 import React from 'react';
 import styled from 'styled-components';
-import {PrimaryButton} from '../components/styled_elements/Button';
-import Form from '../components/styled_elements/Form';
-import Input from '../components/styled_elements/Input';
+import {PrimaryButton} from './styled_elements/Button';
+import Form from './styled_elements/Form';
+import Input from './styled_elements/Input';
 
 const FormTitle = styled.div`
  background-color: #e7ebef;

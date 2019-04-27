@@ -31,11 +31,9 @@ class App extends Component {
 
   onLogin(user){//after successful login
     user.hasPermission = hasPermission.bind(user);
-    
-    this.setState({user:user});
+    this.setState({ user });
     getUserPermissions(this.state.user.credential.username).then(response=>{
       let user = this.state.user;
-
       user.permissions = response.data.data.entity;
       user.permittedFeatures = [];
       for(let feature of features){
@@ -43,8 +41,9 @@ class App extends Component {
           user.permittedFeatures.push(feature);
         }
       }
-      this.setState({user:user});
+      this.setState({ user });
       console.log(this.state.user);
+      console.log(`Check hasPermission`, user.hasPermission('permission_create'));
     });
     
   }

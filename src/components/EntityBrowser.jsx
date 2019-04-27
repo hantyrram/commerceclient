@@ -18,7 +18,6 @@
  */
 
 import React,{Component} from 'react';
-import ReactDOM from 'react-dom';
 import {Link,withRouter} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Table from './styled_elements/Table';

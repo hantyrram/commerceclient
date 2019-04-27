@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Logout from '../features/Logout';
-import style from 'styled-components';
 
 const styles = {
   display:"flex",

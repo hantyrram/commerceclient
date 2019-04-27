@@ -5,7 +5,7 @@ import Header from '../components/Header';
 import SideNav from '../components/SideNav';
 import style from 'styled-components';
 import Message from '../components/Message';
-import {subscribe} from '../actionEvent';
+import { subscribe } from '../actionEvent';
 
 
 const styles = {
@@ -49,6 +49,7 @@ class UserHome extends Component{
 
 
  actionEventListener(actionName,artifact){
+  console.log(`Artifact Received`,artifact);
   if(artifact && artifact.message){
    this.setState({message:artifact.message});
   }else{
