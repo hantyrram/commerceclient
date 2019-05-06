@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import EntityBrowser from '../components/EntityBrowser';
 import FEATUREGROUPS from './featureGroups';
+import { user_browse as get_users} from './requesters';
 import axios from 'axios';
 class UserBrowse extends Component {
   constructor(props) {
@@ -11,7 +12,12 @@ class UserBrowse extends Component {
   }
 
   async componentDidMount(){
-    // let permissions = await axios.get('/apiv1/permissions');
+    try {
+     let response = await get_users(); 
+     console.log(response);
+    } catch (error) {
+     
+    }
   }
   
   render() { 
