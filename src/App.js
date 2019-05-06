@@ -44,7 +44,7 @@ class App extends Component {
       this.setState({ user });
       console.log(this.state.user);
       console.log(`Check hasPermission`, user.hasPermission('permission_create'));
-    });
+    }).catch(error=>console.log(error));
     
   }
 
