@@ -32,6 +32,10 @@ export const permission_delete = async (permission)=>{
  return await axios.delete('/apiv1/permissions/'+permission.name);
 }
 
+export const user_browse = async ()=>{
+ return await axios.get('/apiv1/users');
+}
+
 
  
  
