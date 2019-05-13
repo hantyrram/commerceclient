@@ -63,8 +63,14 @@ class Login extends Component {
      let artifact = response.data;
      this.props.onLogin(artifact.data.entity);
     } catch (error) {
-     let artifact = error.response.data;
-     this.setState({ session:null, error: artifact.error.text});
+     let artifact;
+     if(error.response){
+      artifact = error.response.data;
+      console.log(error);
+      this.setState({ session:null, error: artifact.error.text});
+      return;
+     }
+     this.setState({session:null, error: 'Request Timeout! Please try again later!'});    
     }
   }
 
@@ -76,8 +82,13 @@ class Login extends Component {
      let artifact = response.data;
      this.props.onLogin(artifact.data.entity);
     } catch (error) {
-     let artifact = error.response.data;
-     this.setState({ session: null, error: artifact.error.text });
+     let artifact;
+     if(error.response){
+      artifact = error.response.data;
+      this.setState({ session:null, error: artifact.error.text});
+      return;
+     }
+     this.setState({session:null, error: 'Request Timeout! Please try again later!'});    
     }
    }
   }
