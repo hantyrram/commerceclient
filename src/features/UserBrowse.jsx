@@ -7,13 +7,14 @@ class UserBrowse extends Component {
   constructor(props) {
     super(props);
     this.state = { 
-      permissions:null
+      users:null
      }
   }
 
   async componentDidMount(){
     try {
      let response = await get_users(); 
+     this.setState({users: response.data.data.entity});
      console.log(response);
     } catch (error) {
      
@@ -23,7 +24,7 @@ class UserBrowse extends Component {
   render() { 
     
     return ( 
-      <EntityBrowser />
+      <EntityBrowser entities={this.state.users}/>
      );
   }
 }
