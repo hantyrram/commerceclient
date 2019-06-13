@@ -42,10 +42,7 @@ class App extends Component {
         }
       }
       this.setState({ user });
-      console.log(this.state.user);
-      console.log(`Check hasPermission`, user.hasPermission('permission_create'));
     }).catch(error=>console.log(error));
-    
   }
 
   onLogout(result){
@@ -59,15 +56,23 @@ class App extends Component {
    this.setState({message:message});
   }
 
+  get LoginPage(){
+   return (props) => this.state.user? <Redirect to="/" /> : <LoginPage onLogin={this.onLogin} /> 
+  }
+  
+  get HomePage(){
+   return (props) => this.state.user?<UserHome {...props} user={this.state.user} onLogout={this.onLogout} onMessage={this.state.message}/>:<Redirect to="/login"/>
+  }
+
   render() {
-    const login = ()=>{return this.state.user?<Redirect to="/" />:<LoginPage onLogin={this.onLogin}/> }
-    const userHome = (props)=>{return this.state.user?<UserHome {...props} user={this.state.user} onLogout={this.onLogout} onMessage={this.state.message}/>:<Redirect to="/login"/>}
+    // const login = ()=>{return this.state.user?<Redirect to="/" />:<LoginPage onLogin={this.onLogin}/> }
+    // const userHome = (props)=>{return this.state.user?<UserHome {...props} user={this.state.user} onLogout={this.onLogout} onMessage={this.state.message}/>:<Redirect to="/login"/>}
     const NOT_FOUND = ({history})=>{return(<div><h1>Page Not Found</h1></div>)}
     return (
      <Router>
       <Switch>
-        <Route path="/login" render={login} />
-        <Route path="/" render={userHome} />
+        <Route path="/login" render={this.LoginPage} />
+        <Route path="/" render={this.HomePage} />
       </Switch>
      </Router>
     );
