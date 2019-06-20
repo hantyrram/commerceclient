@@ -3,7 +3,7 @@ import {BrowserRouter as Router,Route} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import featureGroups from '../featureGroups';
 import components from '../../comps';
-
+import PermissionUISchema from '../uischemas/Permission';
 
 import {
  permission_create as addPermission,
@@ -12,29 +12,29 @@ import {
  permission_browse as fetchPermissions,
 } from '../requesters';
 
-import samples from '../../comps/sample_entities/Products.json';
-import productSchema from '../../comps/schemas/ProductUISchema';
 
 const { EBread } = components; 
+
+/**
+ * 
+ * @param {Object} props.parentContainerRef - The parent container ref object. This will be used in calculating the
+ */
 function Permissions(props){
 
  const [permissions,setPermissions] = useState([]);
 
  useEffect(()=>{
-  fetchPermissions().then(artifact=> console.log(artifact)).catch(e=>console.log(e));
+  fetchPermissions().then( artifact => {
+   console.log(artifact.data.data.entity);
+   if(JSON.stringify(permissions) !== JSON.stringify(artifact.data.data.entity)){
+    setPermissions(artifact.data.data.entity);
+   }
+  }
+   
+  ).catch(e=>console.log(e));
  });
 
- const onAdd = async (permission)=>{
-  try {
-   let artifact = await addPermission(permission);   
-   permissions.splice(0,0,permission);
-   setPermissions(permissions);
-   
-   console.log(artifact);
-  } catch (error) {
-   
-  }
- }
+
 
 
  const onSave = permission => console.log('Saving Permission');
@@ -46,14 +46,15 @@ function Permissions(props){
     <Route render={mlh=>
      <EBread 
       {...mlh}
-      UISchema={productSchema} 
-      entities={samples}
+      identifier={"name"}
+      UISchema={PermissionUISchema} 
+      entities={permissions}
       addPath="/add" 
-      readPath="/:id" 
-      editPath="/:id/edit" 
+      readerPath="/:identifier" 
+      editorPath="/:identifier/edit" 
       onSave={onSave} 
       onDelete={onDelete} 
-      onAdd={onAdd} 
+      // onAdd={onAdd} 
      />
     }/>
    </div>

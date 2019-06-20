@@ -12,6 +12,10 @@
  margin:.5em;
 }
 
+a .action-button{
+ text-decoration: none;
+}
+
 .ebrowser {
  padding: .5em;
  font-family: sans-serif;

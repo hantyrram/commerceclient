@@ -158,7 +158,6 @@ class EntityBrowser extends Component{
  renderActions(entity){
 
   let actionStyleWidth = this.actionsAndActionStyleWidth[1];
-  console.log(actionStyleWidth);
   let edit = ()=>{
    return this.props.onEdit?<a key="edit" style={actionStyleWidth} href=""  onClick={this.onEditMiddleware.bind(this,entity)} className="ebrowser-action ebrowser-action-edit" >Edit</a>:null
   }
@@ -182,13 +181,11 @@ class EntityBrowser extends Component{
  render(){
   
   return(     
-   <div className="ebrowser boxed">
-    <div id="main-actions-container"> &nbsp;
-     
-    </div>
-    {
+   // <div className="ebrowser boxed">
+    
      this.props.entities && this.props.entities.length > 0 ?
-     <div id="table-container">
+     
+     <div id="table-container" className="ebrowser boxed">
       <div id="table-wrapper">
         <div className = "ebrowser-title">
           {this.renderTitle.bind(this)()}
@@ -208,9 +205,9 @@ class EntityBrowser extends Component{
      
     </div>
     : <div style={{textAlign:"center"}}>No available data</div>
-    }
+    
    
-   </div>
+   // </div>
   )
  }
 }
