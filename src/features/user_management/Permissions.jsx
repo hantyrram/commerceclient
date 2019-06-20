@@ -43,6 +43,7 @@ function Permissions(props){
  return (
   <Router basename="/permissions">
    <div className="feature">
+    <div>Permissions</div>
     <Route render={mlh=>
      <EBread 
       {...mlh}
