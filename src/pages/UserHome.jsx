@@ -33,11 +33,8 @@ const SideNavDiv = style.div`
 const Content = style.div`
  min-width: 78%;
  max-width: 78%;
- padding-top: 5px;
  scroll:auto;
  background-color:white;
- padding-left: 1em;
- padding-right: 1em;
 `
 class UserHome extends Component{
  constructor(props){

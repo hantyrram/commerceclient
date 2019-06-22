@@ -14,12 +14,22 @@
  justify-content: space-between;
  align-items:center;
  margin: .5em;
- max-width:50%;
+ color: #555965;
+}
+
+.eform .eform-inputgroup label{
+ font-size: 1.2em;
+ color: #555965;
+}
+
+.eform .eform-inputgroup input[readonly]{
+ background-color:#eee9e9;
+ border:none;
 }
 
 .eform  input{
  min-height: 1.5em;
- padding:.2em;
+ padding:.2em .2em .2em .5em;
  min-width: 80%;
 }
 

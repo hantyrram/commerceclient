@@ -9,15 +9,16 @@
  font-weight: bolder;
  color: white;
  background-color: #758793;
- margin:.5em;
+ margin: .5em;
+ text-decoration: none;
+ font-size: medium;
 }
 
-a .action-button{
+/* a .action-button{
  text-decoration: none;
-}
+} */
 
 .ebrowser {
- padding: .5em;
  font-family: sans-serif;
  color:#727976;
 }
@@ -25,17 +26,20 @@ a .action-button{
 .ebrowser #table-container{
  position:relative;
  overflow: hidden;
- width:98%;
+ /* width:98%; */
 }
 
 .ebrowser #table-wrapper{
  overflow-x: auto;
- width: 95%;
+ overflow-y: scroll;
+ width: 100%;
+ max-height: 400px;
  position:relative; 
 }
 
 .ebrowser table{
- min-width: 95%;
+ /* 100% of the table wrapper */
+ min-width: 100%; 
  border-collapse: collapse;
 }
 
@@ -70,7 +74,7 @@ a .action-button{
  color:#312f2f;
 }
 /* redundant to include action header  */
-.ebrowser thead th {
+.ebrowser th.fixed-column {
  background-color:#f3f4f9;
 }
 

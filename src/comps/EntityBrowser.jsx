@@ -185,12 +185,9 @@ class EntityBrowser extends Component{
     
      this.props.entities && this.props.entities.length > 0 ?
      
-     <div id="table-container" className="ebrowser boxed">
+     <div id="table-container" className="ebrowser">
       <div id="table-wrapper">
-        <div className = "ebrowser-title">
-          {this.renderTitle.bind(this)()}
-          <Link to="/add" id="ebrowser-action ebrowser-action-add"  >Add New {this.props.title} +</Link>
-        </div>          
+             
         <table id="entitybrowser-table" >       
          <thead>          
           {this.renderColumnHeaders.bind(this)()}

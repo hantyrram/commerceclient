@@ -5,12 +5,14 @@ import Permissions from './user_management/Permissions';
 import UserBrowse from './UserBrowse';
 import ProductBrowse from './ProductBrowse';
 import OrderBrowse from './OrderBrowse';
+import Users from './user_management/Users';
 export default [
   // PermissionCreate,
   // PermissionBrowse,
   // PermissionRead,
   Permissions,
-  UserBrowse,
-  ProductBrowse,
-  OrderBrowse
+  Users,
+  // UserBrowse,
+  // ProductBrowse,
+  // OrderBrowse
 ]

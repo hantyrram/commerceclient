@@ -3,17 +3,16 @@ import {BrowserRouter as Router,Route} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import featureGroups from '../featureGroups';
 import components from '../../comps';
-import PermissionUISchema from '../uischemas/Permission';
+import UserUISchema from '../uischemas/User';
 import FeatureTitle from '../../comps/FeatureTitle';
 
 
 import {
- permission_create as addPermission,
- permission_edit as updatePermission,
- permission_delete as removePermission,
- permission_browse as fetchPermissions,
+ user_create as addUser,
+ user_edit as updateUser,
+ user_delete as removeUser,
+ user_browse as fetchUsers,
 } from '../requesters';
-import Feature from '../../comps/Feature';
 
 
 const { EBread } = components; 
@@ -22,15 +21,15 @@ const { EBread } = components;
  * 
  * @param {Object} props.parentContainerRef - The parent container ref object. This will be used in calculating the
  */
-function Permissions(props){
+function Users(props){
 
- const [permissions,setPermissions] = useState([]);
+ const [users,setUsers] = useState([]);
 
  useEffect(()=>{
-  fetchPermissions().then( artifact => {
+  fetchUsers().then( artifact => {
    console.log(artifact.data.data.entity);
-   if(JSON.stringify(permissions) !== JSON.stringify(artifact.data.data.entity)){
-    setPermissions(artifact.data.data.entity);
+   if(JSON.stringify(users) !== JSON.stringify(artifact.data.data.entity)){
+    setUsers(artifact.data.data.entity);
    }
   }
    
@@ -40,19 +39,19 @@ function Permissions(props){
 
 
 
- const onSave = permission => console.log('Saving Permission');
- const onDelete = permission => console.log('Deleting Permission');
+ const onSave = user => console.log('Saving User');
+ const onDelete = user => console.log('Deleting User');
 
  return (
-  <Router basename="/permissions">
+  <Router basename="/users">
    <div className="feature">
      <FeatureTitle>Permissions</FeatureTitle>
     <Route render={mlh=>
      <EBread 
       {...mlh}
-      identifier={"name"}
-      UISchema={PermissionUISchema} 
-      entities={permissions}
+      identifier={"_id"}
+      UISchema={UserUISchema} 
+      entities={users}
       addPath="/add" 
       readerPath="/:identifier" 
       editorPath="/:identifier/edit" 
@@ -68,9 +67,9 @@ function Permissions(props){
 }
 
 //Minimum Required Permission for the feature to be available
-Object.defineProperty(Permissions,'path',{ get: () => '/permissions'});
-Object.defineProperty(Permissions,'featureGroup',{ get: () => featureGroups.USER_MANAGEMENT});
+Object.defineProperty(Users,'path',{ get: () => '/users'});
+Object.defineProperty(Users,'featureGroup',{ get: () => featureGroups.USER_MANAGEMENT});
 // Object.defineProperty(Permissions,'primaryLink',{ get: () => true});
-Object.defineProperty(Permissions,'requiredPermission',{ get: () => 'permission_read' });
+Object.defineProperty(Users,'requiredPermission',{ get: () => 'user_read' });
 
-export default Permissions;
+export default Users;

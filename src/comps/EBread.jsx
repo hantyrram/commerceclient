@@ -7,6 +7,7 @@ import EBreadForm from './EBreadForm';
 import './styles/eform.css';
 import PropTypes from 'prop-types';
 import { jsxAttribute } from '../../node_modules/@babel/types';
+import { checkServerIdentity } from 'tls';
 
 /**
  * EFormRead supports the Read functionality of BREAD.
@@ -31,7 +32,7 @@ export function EForm(props){
   if(entity[IDENTIFIER] !== props.entity[IDENTIFIER]){
    setEntity(Object.assign({},props.entity));
   }
- });
+ },[entity,IDENTIFIER,props.entity]);
  
  if(!props.UISchema) return "No Schema";
 
@@ -43,7 +44,7 @@ export function EForm(props){
 
  const renderSaveButton = ()=> props.onSave ? <button className="action-button">Save</button>:null;
 
- const readerActions = ()=>[renderEditButton(),renderDeleteButton()];
+ const readerActions = ()=> <div className="eform-actions" style={{textAlign:"right"}}>{[renderEditButton(),renderDeleteButton()]}</div>;
 
  const editorActions = ()=> [renderSaveButton(),renderDeleteButton()];
 
@@ -130,7 +131,7 @@ export default function EBread(props) {
  const editor = mlh => <div> {JSON.stringify(mlh.location.state.entity)} </div>
 
  return(
-  <div className="boxed">
+  <div className="ebread boxed">
       <Switch>
        <Route path={props.addPath} exact render={mlh=>
         <EFormAdd UISchema={props.UISchema} onSave={onSave} {...mlh}/>} 
@@ -150,7 +151,6 @@ export default function EBread(props) {
         addPath={props.addPath} 
         onRead={onRead} 
         />
-      
   </div>
  )
 }
