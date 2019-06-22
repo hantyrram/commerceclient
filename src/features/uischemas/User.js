@@ -25,13 +25,14 @@ export default {
   el : "input",
   label: "Created On",
   attributes : {
-   name : "name",
+   name : "createdOn",
    id:"created-on",
    type:"text",
    minLength: 1,
    maxLength: 35,
-   readOnly:true
-  }
+   disabled:true
+  },
+  transform: v => new Date(v).toUTCString()
  }
- }
+}
  

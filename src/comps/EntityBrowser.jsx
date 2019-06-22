@@ -136,8 +136,13 @@ class EntityBrowser extends Component{
           <tr id={`eb-row-${index}`} className="eb-row" key={index} tr-entity={JSON.stringify({entity})}>{/** Row is clickable if there is onRead handler else default = empty function*/}
            <td className="eb-data">{index + 1}</td> 
            {
-             Object.getOwnPropertyNames(this.props.UISchema).map((col,i)=>{
-               return <td key={i} className="eb-entity eb-entity-data">{entity[col]}</td>
+             Object.getOwnPropertyNames(this.props.UISchema).map((uiSchemaProp,i)=>{
+               let transform = this.props.UISchema[uiSchemaProp].transform;
+               let data = entity[uiSchemaProp];
+               if(data && transform){
+                data = transform(data);
+               }
+               return <td key={i} className="eb-entity eb-entity-data">{data}</td>
              })
            }
            {

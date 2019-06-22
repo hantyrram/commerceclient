@@ -75,17 +75,25 @@ export function EForm(props){
     let value = entity && entity[uiSchemaProp]? entity[uiSchemaProp] : null;
 
     let attributes = { ...element.attributes }; //add the onChange prop as additional attribute
-
+    
     //the reason value is checked is value won't exist on type 'adder';
     if(props.type === 'editor') {
      attributes.onChange = onChange; //add onChange handler if editor
+     attributes.defaultValue = ""; //clear by default, to clear previous value
      if(value) attributes.defaultValue = value;
     }
 
     if(props.type === 'reader'){
+     attributes.value = ""; //clear by default, to clear previous value
      if(value) attributes.value = value; //makes readOnly
      attributes.readOnly = true;
     }
+    
+    //transform on none zero length value && if transform is available on UISchema
+    if(attributes.value && String(attributes.value).length > 0 && props.UISchema[uiSchemaProp].transform){
+     attributes.value = props.UISchema[uiSchemaProp].transform(value);
+    }
+
 
     let children = null;
     //for select input element, add options as children
