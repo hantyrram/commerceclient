@@ -78,7 +78,6 @@ class Login extends Component {
    if(this.state.session){
     try {
      let response = await authenticate();
-     console.log(response);
      let artifact = response.data;
      this.props.onLogin(artifact.data.entity);
     } catch (error) {

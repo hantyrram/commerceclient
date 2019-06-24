@@ -1,11 +1,15 @@
 import React, { useState, useEffect} from 'react';
-import {BrowserRouter as Router,Route} from 'react-router-dom';
+import {BrowserRouter as Router,Route,Link,Switch} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import featureGroups from '../featureGroups';
-import components from '../../comps';
 import PermissionUISchema from '../uischemas/Permission';
 import FeatureTitle from '../../comps/FeatureTitle';
+import EBread from '../../comps/EBread';
 
+
+//Graphical Components
+import AddBox from '@material-ui/icons/AddBox';
+import AddButton from '../../comps/EBread/AddButton';
 
 import {
  permission_create as addPermission,
@@ -16,7 +20,6 @@ import {
 import Feature from '../../comps/Feature';
 
 
-const { EBread } = components; 
 
 /**
  * 
@@ -28,7 +31,7 @@ function Permissions(props){
 
  useEffect(()=>{
   fetchPermissions().then( artifact => {
-   console.log(artifact.data.data.entity);
+   
    if(JSON.stringify(permissions) !== JSON.stringify(artifact.data.data.entity)){
     setPermissions(artifact.data.data.entity);
    }
@@ -37,30 +40,34 @@ function Permissions(props){
   ).catch(e=>console.log(e));
  });
 
-
-
-
  const onSave = permission => console.log('Saving Permission');
  const onDelete = permission => console.log('Deleting Permission');
 
  return (
   <Router basename="/permissions">
    <div className="feature">
-     <FeatureTitle>Permissions</FeatureTitle>
-    <Route render={mlh=>
-     <EBread 
-      {...mlh}
-      identifier={"name"}
-      UISchema={PermissionUISchema} 
-      entities={permissions}
-      addPath="/add" 
-      readerPath="/:identifier" 
-      editorPath="/:identifier/edit" 
-      onSave={onSave} 
-      onDelete={onDelete} 
-      // onAdd={onAdd} 
-     />
-    }/>
+     <FeatureTitle>
+      <span>Permissions</span>
+      {/* <Link to="/add"><AddBox /><span>Add New User</span></Link> */}
+      <AddButton adderPath={"/add"} text="Add New Permission"/>
+     </FeatureTitle>
+     <Route render={mlh=>
+      permissions?
+      <EBread 
+       {...mlh}
+       identifier={"name"}
+       UISchema={PermissionUISchema} 
+       entities={permissions}
+       adderPath="/add" 
+       readerPath="/:identifier" 
+       editorPath="/:identifier/edit"
+       browserPath="/"
+       onSave={onSave} 
+       onDelete={onDelete} 
+       // onAdd={onAdd} 
+      />:null
+     }/>
+    
    </div>
   </Router>
  );

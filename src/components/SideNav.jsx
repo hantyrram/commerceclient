@@ -20,7 +20,6 @@ class SideNav extends Component {
   }
 
   componentDidUpdate(){
-    console.log(this.refs);
     this.refs.dropdownTrigger.addEventListener('click',function(e){
       if(e.target.className === 'dropdown-trigger'){
         let contentId = e.target.getAttribute("content");

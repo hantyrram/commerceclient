@@ -59,7 +59,6 @@ class UserHome extends Component{
  }
 
  render(){
-  console.log(this.props.user);
   return(
    <div id="page-userhome" className="page" style={styles}>
      <Header {... this.props}/>

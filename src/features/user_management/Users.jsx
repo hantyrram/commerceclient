@@ -1,5 +1,5 @@
 import React, { useState, useEffect} from 'react';
-import {BrowserRouter as Router,Route} from 'react-router-dom';
+import {BrowserRouter as Router,Route,Link} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import featureGroups from '../featureGroups';
 import components from '../../comps';
@@ -45,7 +45,10 @@ function Users(props){
  return (
   <Router basename="/users">
    <div className="feature">
-     <FeatureTitle>Permissions</FeatureTitle>
+     <FeatureTitle>
+      <span>Users</span>
+      <Link to="/add">Add New User</Link>
+     </FeatureTitle>
     <Route render={mlh=>
      <EBread 
       {...mlh}
