@@ -5,6 +5,7 @@ import featureGroups from '../featureGroups';
 import components from '../../comps';
 import UserUISchema from '../uischemas/User';
 import FeatureTitle from '../../comps/FeatureTitle';
+import AddButton from '../../comps/EBread/AddButton';
 
 
 import {
@@ -47,22 +48,26 @@ function Users(props){
    <div className="feature">
      <FeatureTitle>
       <span>Users</span>
-      <Link to="/add">Add New User</Link>
+      {/* <Link to="/add"><AddBox /><span>Add New User</span></Link> */}
+      <AddButton adderPath={"/add"} text="Add New Permission"/>
      </FeatureTitle>
-    <Route render={mlh=>
-     <EBread 
-      {...mlh}
-      identifier={"_id"}
-      UISchema={UserUISchema} 
-      entities={users}
-      addPath="/add" 
-      readerPath="/:identifier" 
-      editorPath="/:identifier/edit" 
-      onSave={onSave} 
-      onDelete={onDelete} 
-      // onAdd={onAdd} 
-     />
-    }/>
+     <Route render={mlh=>
+      users?
+      <EBread 
+       {...mlh}
+       identifier={"_id"}
+       UISchema={UserUISchema} 
+       entities={users}
+       adderPath="/add" 
+       readerPath="/:identifier" 
+       editorPath="/:identifier/edit"
+       browserPath="/"
+       onSave={onSave} 
+       onDelete={onDelete} 
+       // onAdd={onAdd} 
+      />:null
+     }/>
+    
    </div>
   </Router>
  );

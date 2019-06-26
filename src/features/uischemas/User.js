@@ -7,7 +7,8 @@ export default {
    id:"user-id",
    type: "text",
    minLength: 1,
-   maxLength: 30
+   maxLength: 30,
+   disabled:true
   }
  },
  username : {

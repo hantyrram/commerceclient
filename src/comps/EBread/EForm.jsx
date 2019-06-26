@@ -1,5 +1,7 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState,useEffect} from 'react';
 import {Link} from 'react-router-dom';
+import Button from '@material-ui/core/Button';
+import DeleteIcon from '@material-ui/icons/Delete';
 /**
  * EFormRead supports the Read functionality of BREAD.
  * @constructor
@@ -8,7 +10,9 @@ import {Link} from 'react-router-dom';
  * @param {Entity} [props.Entity] - The Entity that is being presented by the Form.
  * @param {Entity} props.entity - The entity instance/object that is being presented by the Form.
  * @param {Number} [props.editorPath] - If 1 the Edit button is enabled.
- * @param {function} [props.onDelete] - If 1 the Delete button is enabled.
+ * @param {function} [props.onEdit] - Handler for edit button, accepts entity as param.
+ * @param {function} [props.onDelete] - Handler for delete button, accepts entity as param..
+ * @param {function} [props.onSave] - Handler for save button, accepts entity as param..
  * @param {string} props.identifier - Part of the entity that will be used as identifier. e.g _id
  */
 export default function EForm(props){
@@ -48,9 +52,9 @@ export default function EForm(props){
    </Link> 
   : null;
   
- const renderDeleteButton = () => props.onDelete ? <button className="action-button"> Delete </button> : null;
+ const renderDeleteButton = () => props.onDelete ? <Button variant="contained" size="medium" color="secondary" > Delete <DeleteIcon /></Button> : null;
 
- const renderSaveButton = () => props.onSave ? <button className="action-button" onClick={saveButtonClickHandler}>Save</button>:null;
+ const renderSaveButton = () => props.onSave ? <Button variant="contained" size="medium" color="primary" className="action-button" onClick={saveButtonClickHandler}>Save</Button>:null;
 
  const readerActions = ()=> 
   <div className="eform-actions" style={{textAlign:"right"}}>
@@ -110,8 +114,13 @@ export default function EForm(props){
      attributes.readOnly = true;
     }
     //transform on none zero length value && if transform is available on UISchema
-    if(attributes.value && String(attributes.value).length > 0 && props.UISchema[key].transform){
-     attributes.value = props.UISchema[key].transform(value);
+    if(String(attributes.value).length > 0 && props.UISchema[key].transform){
+     if(attributes.value){
+      attributes.value = props.UISchema[key].transform(attributes.value);
+     }
+     if(attributes.defaultValue){
+      attributes.defaultValue = props.UISchema[key].transform(attributes.defaultValue);
+     }
     }
    }
 

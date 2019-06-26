@@ -14,6 +14,10 @@
  font-size: medium;
 }
 
+.ebread{
+ margin-left:.5em;
+ margin-right:.5em;
+}
 /* a .action-button{
  text-decoration: none;
 } */
@@ -21,6 +25,7 @@
 .ebrowser {
  font-family: sans-serif;
  color:#727976;
+ margin-top: .3em;
 }
 
 .ebrowser #table-container{

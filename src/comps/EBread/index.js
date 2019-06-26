@@ -38,26 +38,33 @@ export default function EBread(props) {
   }
  },[]);
 
+ /**
+  * Track the current active entity that the user is working on, e.g. The current entity on an edit form.
+  */
+ const [activeEntity,setActiveEntity] = useState(null);
+
 
  useEffect(()=>{
-  // if(JSON.stringify(props.entities) !== JSON.stringify(entities)){
-  //  setEntities(props.entities); 
-  // }
-  dispatch({type:'browse',payload: props.entities});
+    dispatch({type:'browse',payload: props.entities});
  },[props.entities]);
+
+ useEffect(()=>{
+  console.log('Tracking Current Active Entity',activeEntity);
+ });
 
  //middleware, we still have to delegate this to higher order component, used only on currently managed entities
  const onSave = (entity) => {
   console.log('Saving Entity',entity);
   dispatch({type:'save', payload:entity});
+  props.onSave(entity);
   //???delegate to feature props.onSave();
  }
 
  //middleware, we still have to delegate this to higher order component, used only on currently managed entities
  const onDelete = (entity)=>{
-  console.log('Deleting Entity',entity);
   dispatch({type:'delete',payload:entity});
   //???delegate to feature, props.onDelete(entity);
+  props.onDelete(entity);
  }
 
  const onRead = entity =>history.push(`${props.readerPath.replace(":identifier",entity[IDENTIFIER])}`,{entity});
@@ -82,7 +89,7 @@ export default function EBread(props) {
  const adder = mlh => <EAdder UISchema={props.UISchema} onSave={onSave} />
 
  return(
-  <div className="ebread boxed">
+  <div className="ebread">
       <Switch>
        <Route path={props.adderPath} exact render={ adder }/> 
        <Route path={props.editorPath} exact render={ editor}/> 
