@@ -1,0 +1,8 @@
+.feature-title{
+ background-color: #ada2f1;
+ font-size: medium;
+ padding: .2em .2em .2em .5em;
+ color: white;
+ min-height: 2em;
+ justify-content: left;
+}

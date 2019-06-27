@@ -1,20 +1,68 @@
-/**
- * @namespace apis
- */
+import {emit} from './event';
+import axios from './axios';
 
-/**
- * @type {string} 
- * @const 
- */ 
-const VER = 'apiv1';
+export async function permission_browse(permission){
+ const PATH = `/apiv1/permissions`;
+ let source = '';
+ try {
+  
+  let response = await axios.get(PATH);
+  let artifact = response.data;
+  source = artifact.source;
+  emit({type:'artifact',source:source, artifact:artifact});
+  if(artifact.message) emit({type:'message',source:source, message: artifact.message});
 
-/**
- * @type {Array}
- */
-const APIS = [];
+ } catch (error) {
+  let artifact;
+  if(error.response){
+   artifact = error.response.data;
+  }
+  //use artifact.error if server error response was received, 
+  //error on request error e.g timeout
+  emit({type:'error',source: source, error: artifact.error || error}); 
+ }
+}
 
-APIS['authenticate'] = `/${VER}/authenticate`;
-APIS['login'] = `/${VER}/login`;
-APIS['logout'] = `/${VER}/logout`;
+export async function permission_create(permission){
+ const PATH = `/apiv1/permissions`;
+ let source = '';
+ try {
+  
+  let response = await axios.post(PATH,permission);
+  let artifact = response.data;
+  source = artifact.source;
+  emit({type:'artifact',source:source, artifact:artifact});
+  if(artifact.message) emit({type:'message',source:source, message: artifact.message});
 
-export default APIS;
+ } catch (error) {
+  let artifact;
+  if(error.response){
+   artifact = error.response.data;
+  }
+  //use artifact.error if server error response was received, 
+  //error on request error e.g timeout
+  emit({type:'error',source: source, error: artifact.error || error}); 
+ }
+}
+
+export async function permission_delete(permission){
+ const PATH = `/apiv1/permissions/${permission.name}`;
+ let source = '';
+ try {
+  
+  let response = await axios.delete(PATH);
+  let artifact = response.data;
+  source = artifact.source;
+  emit({type:'artifact',source:source, artifact:artifact});
+  if(artifact.message) emit({type:'message',source:source, message: artifact.message});
+
+ } catch (error) {
+  let artifact;
+  if(error.response){
+   artifact = error.response.data;
+  }
+  //use artifact.error if server error response was received, 
+  //error on request error e.g timeout
+  emit({type:'error',source: source, error: artifact.error || error}); 
+ }
+}

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {Switch,Route,Link} from 'react-router-dom';
 import Permission from '../features/PermissionBrowse';
-import Header from '../components/Header';
+import Header from '../comps/Header';
 import SideNav from '../components/SideNav';
 import style from 'styled-components';
 import Message from '../components/Message';
@@ -33,11 +33,8 @@ const SideNavDiv = style.div`
 const Content = style.div`
  min-width: 78%;
  max-width: 78%;
- padding-top: 5px;
  scroll:auto;
  background-color:white;
- padding-left: 1em;
- padding-right: 1em;
 `
 class UserHome extends Component{
  constructor(props){

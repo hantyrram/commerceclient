@@ -1,0 +1,119 @@
+
+.boxed{
+ border: 1px solid #ece6e6;
+}
+
+.action-button{
+ border: none;
+ padding: .5em 1em .5em 1em;
+ font-weight: bolder;
+ color: white;
+ background-color: #758793;
+ margin: .5em;
+ text-decoration: none;
+ font-size: medium;
+}
+
+.ebread{
+ margin-left:.5em;
+ margin-right:.5em;
+}
+/* a .action-button{
+ text-decoration: none;
+} */
+
+.ebrowser {
+ font-family: sans-serif;
+ color:#727976;
+ margin-top: .3em;
+}
+
+.ebrowser #table-container{
+ position:relative;
+ overflow: hidden;
+ /* width:98%; */
+}
+
+.ebrowser #table-wrapper{
+ overflow-x: auto;
+ overflow-y: scroll;
+ width: 100%;
+ max-height: 400px;
+ position:relative; 
+}
+
+.ebrowser table{
+ /* 100% of the table wrapper */
+ min-width: 100%; 
+ border-collapse: collapse;
+}
+
+.ebrowser .ebrowser-title{
+ display: flex;
+ justify-content: space-between;
+}
+
+.ebrowser #ebrowser-action-add{
+ text-decoration: none;
+ color: #15a915;
+}
+
+.ebrowser table caption {
+  text-align: left;
+  font-size: medium;
+  color: #727976;
+  font-weight: bold;
+  margin-bottom: .3em;
+}
+
+.ebrowser table tbody tr{
+ border-bottom: 1px solid #eef1f1;
+}
+.ebrowser table tbody tr:hover{
+ background-color:rgb(211, 235, 209);
+ /* color:white; */
+}
+
+.ebrowser thead{
+ background-color:#f3f4f9;
+ color:#312f2f;
+}
+/* redundant to include action header  */
+.ebrowser th.fixed-column {
+ background-color:#f3f4f9;
+}
+
+.ebrowser table th,td{
+ text-align:left;
+ padding: .5em;
+}
+
+.ebrowser table td{
+ font-size: 12px;
+}
+
+.ebrowser .ebrowser-action{
+ text-decoration: none;
+ padding:.5em;
+ color:black;
+}
+
+.ebrowser-action-edit{
+ background-color:#b2d0ef;
+ /* margin-right:.4em; */
+}
+
+.ebrowser-action-delete{
+ background-color:#f16f6f;
+}
+
+
+.ebrowser .fixed-column{
+ position: absolute;
+ background-color: white;
+ top:auto;
+ right:0px;
+ min-width: 70px;
+ max-width: 70px;
+ padding-left: 0;
+}

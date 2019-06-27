@@ -43,9 +43,3 @@ body{
   font-size: .9em;
 }
 
-input{
- margin-left: 1em;
- min-height: 1.5em;
- display: inline-block;
- margin-bottom: 1em;
-}
