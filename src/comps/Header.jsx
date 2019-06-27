@@ -12,7 +12,10 @@ const styles = {
   padding: "2px 20px 2px 20px",
   // backgroundColor:"rgb(34, 34, 34)",
   color: "#d7d7d7",
-  alignItems: "baseline"
+  alignItems: "baseline",
+  display: "flex",
+  justifyContent:"space-between"
+
 }
 export default (props)=>{
   return (

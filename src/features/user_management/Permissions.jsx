@@ -12,14 +12,13 @@ import AddButton from '../../comps/EBread/AddButton';
 import Message from '../../comps/Message';
 
 import {
- permission_create as createPermission,
  permission_browse as fetchPermissions,
- permission_delete as deletePermission
 } from '../requesters';
 
 import {
- permission_create as cp
-} from '../../apiCallers';
+ permission_create as createPermission,
+ permission_delete as deletePermission
+} from '../../apis';
 
 
 
@@ -59,25 +58,11 @@ function Permissions(props){
  },[permissions]);
 
  const onSave = async permission => {
-  console.log(permission);
-  // let artifact = await cp(permission);
-  cp(permission);
-  // console.log(artifact);
+  createPermission(permission);
  };
 
  const onDelete = async permission=>{
-  console.log('On Delete',permission);
-  
-  // try {
-  //  let response = await deletePermission(permission); 
-  //  let successArtifact = response.data;
-  //  setMessage({text: successArtifact.message.text,type:successArtifact.message.type});
-  // } catch (error) {
-  //  let errArtifact = error.response.data;
-  //  console.log(error.response);
-  //  setMessage({text: errArtifact.error.message, type: errArtifact.error.type});
-  // }
-  
+  deletePermission(permission);
  }
 
  return (

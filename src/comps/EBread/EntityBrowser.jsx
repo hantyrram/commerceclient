@@ -18,7 +18,6 @@
  */
 
 import React,{Component} from 'react';
-import {Link,withRouter,BrowserRouter as Router} from 'react-router-dom';
 import PropTypes from 'prop-types';
 // import pluralize from 'pluralize';
 import './styles/index.css';
