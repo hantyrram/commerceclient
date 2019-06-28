@@ -24,14 +24,14 @@
  * @typedef actionEvent.eventResultSubscriber
  * @desc A callback function that subscribes to an event
  * @type {function}
- * @param actionEvent.payload
+ * @param actionEvent.eventResult
  */ 
 
 let subscribers = [];
 
-export const emit = (payload)=>{
+export const emit = (eventResult)=>{
  for(let i in subscribers){
-  subscribers[i](payload);
+  subscribers[i](eventResult);
  }
 }
 

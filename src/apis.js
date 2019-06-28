@@ -1,7 +1,7 @@
 import {emit} from './event';
 import axios from './axios';
 
-export async function permission_browse(permission){
+export async function permission_browse(){
  const PATH = `/apiv1/permissions`;
  let source = '';
  try {
@@ -51,6 +51,28 @@ export async function permission_delete(permission){
  try {
   
   let response = await axios.delete(PATH);
+  let artifact = response.data;
+  source = artifact.source;
+  emit({type:'artifact',source:source, artifact:artifact});
+  if(artifact.message) emit({type:'message',source:source, message: artifact.message});
+
+ } catch (error) {
+  let artifact;
+  if(error.response){
+   artifact = error.response.data;
+  }
+  //use artifact.error if server error response was received, 
+  //error on request error e.g timeout
+  emit({type:'error',source: source, error: artifact.error || error}); 
+ }
+}
+
+export async function role_browse(){
+ const PATH = `/apiv1/roles`;
+ let source = '';
+ try {
+  
+  let response = await axios.get(PATH);
   let artifact = response.data;
   source = artifact.source;
   emit({type:'artifact',source:source, artifact:artifact});
