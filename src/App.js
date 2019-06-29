@@ -65,6 +65,7 @@ class App extends Component {
   }
 
   render() {
+   console.log(this.state.user);
     // const login = ()=>{return this.state.user?<Redirect to="/" />:<LoginPage onLogin={this.onLogin}/> }
     // const userHome = (props)=>{return this.state.user?<UserHome {...props} user={this.state.user} onLogout={this.onLogout} onMessage={this.state.message}/>:<Redirect to="/login"/>}
     const NOT_FOUND = ({history})=>{return(<div><h1>Page Not Found</h1></div>)}

@@ -123,7 +123,10 @@ class EntityBrowser extends Component{
         return <th key={i}>{columnName}</th>
       }):null
     }
-    <th className="fixed-column" colSpan={actions.length} style={{minWidth:"80px"}}>Action</th>
+    {
+     actions.length > 0 ? 
+      <th className="fixed-column" colSpan={actions.length} style={{minWidth:"80px"}}>Action</th>
+     : null }
   </tr>
   )
  }
@@ -138,6 +141,9 @@ class EntityBrowser extends Component{
                let data = entity[uiSchemaProp];
                if(data && transform){
                 data = transform(data);
+               }
+               if(data instanceof Array){
+                data = <a href="">Test Link To An Array Value</a>
                }
                return <td key={i} className="eb-entity eb-entity-data">{data}</td>
              })
