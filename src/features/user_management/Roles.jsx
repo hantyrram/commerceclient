@@ -1,6 +1,6 @@
 import React, { useState,useEffect,useReducer } from 'react';
 import featureGroups from '../featureGroups';
-import EntityBrowser from '../../comps/EBread/EntityBrowser';
+import EBrowser from '../../comps/EBread/EBrowser';
 import RoleUISchema from '../uischemas/Role';
 
 
@@ -29,10 +29,16 @@ function Roles({user}){
 
  useEffect(()=>{
   fetchRoles();
+  return unsubscribe;
  },[]);
 
  return(
-  <EntityBrowser entities={roles} UISchema={RoleUISchema}/>
+  <EBrowser 
+   UISchema={RoleUISchema}
+   entities={roles}
+   onDelete={(entity)=>console.log('Deleting ',entity)}
+   onReady = {(entity)=>console.log('Reading ',entity)}
+  />
  
  )
 }
