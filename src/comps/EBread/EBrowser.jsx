@@ -37,6 +37,7 @@ const Table = styled.table`
 const Th = styled.th`
  white-space:nowrap;
  padding: .5em;
+ text-align:left;
 `;
 
 //border-box,because the DummyTd width depends on the computed style of Fixed
@@ -80,7 +81,8 @@ const StyledDeleteIcon = styled(DeleteIcon)`
 
 
 function EBrowser(props){
- let [entities,setEntities] = useState(props.entities);
+ console.log(props.entities)
+ let [entities,setEntities] = useState([]);
  let [filteredEntities,setFilteredEntities] = useState([]);
  
  function onChangeHandler(e){
@@ -108,25 +110,28 @@ function EBrowser(props){
  }
 
  function initOnReadActionHandler(){
-  let rows = document.getElementsByTagName("tr");
-  for(let row of rows){
-    row.addEventListener('click',function(e){
-     if(e.eventPhase === Event.CAPTURING_PHASE && e.target.tagName.toLowerCase() === 'td'){
-      if(e.target.className.includes("ebrowser-entity-data")){
-          //row.attributes[0] is the saved entity on tr ,MUST do additional check on attributes[0].name === ebentity
-          //if additional attribute is added on the tr
-          let {entity}= JSON.parse(row.attributes["row-entity"].value);
-          // let href = `/${pluralize(_self.props.Entity.name.toLowerCase())}/${entity[_self.props.entityPrimaryKey]}`;
-          // _self.props.history.push(href,{entity});
-          props.onRead(entity);
-          // _self.props.history.replace(_self.props.readPath.replace(":id",entity._id),{entity});
-          // console.log(_self.props.readPath.replace(":id",entity._id));
-          // _self.props.history.push(_self.props.readPath.replace(":id",entity._id),{entity});
-       e.stopImmediatePropagation();
-      }
-     }
-    },true);
-  }
+  if(props.onRead){
+    let rows = document.getElementsByTagName("tr");
+    for(let row of rows){
+      row.addEventListener('click',function(e){
+       if(e.eventPhase === Event.CAPTURING_PHASE && e.target.tagName.toLowerCase() === 'td'){
+        if(e.target.className.includes("ebrowser-entity-data")){
+            //row.attributes[0] is the saved entity on tr ,MUST do additional check on attributes[0].name === ebentity
+            //if additional attribute is added on the tr
+            let {entity}= JSON.parse(row.attributes["row-entity"].value);
+            // let href = `/${pluralize(_self.props.Entity.name.toLowerCase())}/${entity[_self.props.entityPrimaryKey]}`;
+            // _self.props.history.push(href,{entity});
+            props.onRead(entity);
+            // _self.props.history.replace(_self.props.readPath.replace(":id",entity._id),{entity});
+            // console.log(_self.props.readPath.replace(":id",entity._id));
+            // _self.props.history.push(_self.props.readPath.replace(":id",entity._id),{entity});
+         e.stopImmediatePropagation();
+        }
+       }
+      },true);
+    }
+   }
+  
  }
 
  function onEditClickHandler(entity,e){
@@ -140,8 +145,8 @@ function EBrowser(props){
 
 
  const renderRows = ()=>{
-  console.log(entities);
-  return entities.map((entity,index)=>
+  let activeEntities = filteredEntities.length > 0?filteredEntities:entities;
+  return activeEntities.map((entity,index)=>
           <tr id={`ebrowser-row-${index}`} className="ebrowser-row" key={index} row-entity={JSON.stringify({entity})}>{/** Row is clickable if there is onRead handler else default = empty function*/}
            <Td className="ebrowser-entity-data">{index + 1}</Td> 
            {
@@ -189,11 +194,10 @@ function EBrowser(props){
  }
 
  useEffect(()=>{
-  
+  setEntities(props.entities);
   modifyActionColumn();
   initOnReadActionHandler();
-
- },[]);
+ });
 
 
 
