@@ -32,13 +32,13 @@ export default {
    maxLength: 35
   }
  },
- // permissions : {
- //  el: "select",
- //  label: "Permissions",
- //  attributes: {
- //   name: "permissions",
- //   id: "role-permissions",
- //  },
- //  options: [ ]
- // }
+ permissions : {
+  el: "select",
+  label: "Permissions",
+  attributes: {
+   name: "permissions",
+   id: "role-permissions",
+  },
+  options: [ ]
+ }
 }
