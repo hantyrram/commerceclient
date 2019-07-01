@@ -6,7 +6,7 @@ import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import SvgIcon from '@material-ui/core/SvgIcon';
 import IconButton from '@material-ui/core/IconButton';
-
+import {ComponentContainer} from '../styled';
 
 const TableContainer = styled.div`
  font-family: 'Roboto Slab',sans-serif;
@@ -25,7 +25,7 @@ const TableWrapper = styled.div`
 const Table = styled.table`
  border-collapse: collapse;
  min-width:100%;
- margin-bottom: .5em;
+ // margin-bottom: .5em;
  & tr {
   border-top: 1px solid #d6cccc;
  }
@@ -145,18 +145,28 @@ function EBrowser(props){
 
 
  const renderRows = ()=>{
+  
   let activeEntities = filteredEntities.length > 0?filteredEntities:entities;
-  return activeEntities.map((entity,index)=>
+  return activeEntities && activeEntities.length> 0 ? activeEntities.map((entity,index)=>
           <tr id={`ebrowser-row-${index}`} className="ebrowser-row" key={index} row-entity={JSON.stringify({entity})}>{/** Row is clickable if there is onRead handler else default = empty function*/}
            <Td className="ebrowser-entity-data">{index + 1}</Td> 
            {
              Object.getOwnPropertyNames(props.UISchema).map((uiSchemaProp,i)=>{
                let transform = props.UISchema[uiSchemaProp].transform;
                let data = entity[uiSchemaProp];
-               if(data && transform){
-                data = transform(data);
+               let cellValue = data;
+               if(data instanceof Array){
+                // just an ellipse,indicating that the value is an array
+                // perhaps will improve on this.
+                cellValue = <i>{`[...${uiSchemaProp}]`}</i>
+               }else{
+                cellValue = data && transform? transform(data): data;
                }
-               return <Td key={i} className="ebrowser-entity-data">{data}</Td>
+
+               // if(data && transform){
+               //  data = transform(data);
+               // }
+               return <Td key={i} className="ebrowser-entity-data">{cellValue}</Td>
              })
            }
            {
@@ -166,7 +176,8 @@ function EBrowser(props){
              </>:null
             }
          </tr>
-        )
+        )  //.map
+        :null
  }
 
 
@@ -204,11 +215,10 @@ function EBrowser(props){
 
 
  let columns = Object.keys(props.UISchema);
- 
  return(
-  <div>
-   
-  <div style={{textAlign:"right"}}>
+  <ComponentContainer>
+  {props.title ? props.title :null}
+  <div style={{textAlign:"right",margin:"1em"}}>
     <TextField 
      label="Search" onChange={onChangeHandler}
      InputProps={
@@ -237,17 +247,14 @@ function EBrowser(props){
         {props.onEdit || props.onDelete ?<ThFixed className="ThFixed" colSpan="2">Action</ThFixed>:null}
        </thead>
        <tbody>
-
         {
          renderRows()
         }
-        
-        
        </tbody>
       </Table>
      </TableWrapper>
    </TableContainer>
-  </div>
+  </ComponentContainer>
  )
 }
 
