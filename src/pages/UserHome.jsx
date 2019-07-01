@@ -13,7 +13,7 @@ const styles = {
   display:"flex",
   flexDirection: "column",
   justifyContent:"flex-start",
-  height:"100vh",
+  minHeight:"100%",
   backgroundColor:"rgb(231, 235, 242)",
   backgroundImage: "linear-gradient(to bottom right, #E9ECF1, #e9ecf0)" 
   
@@ -23,7 +23,8 @@ const mainSectionStyles = {
   display:"flex",
   flexDirection: "row",
   justifyContent:"flex-start",
-  minHeight:"87%"
+  minHeight:"87%",
+  height:"87%"
 }
 
 const SideNavDiv = style.div`
@@ -32,7 +33,7 @@ const SideNavDiv = style.div`
 
 const Content = style.div`
  min-width: 78%;
- max-width: 78%;
+ 
  scroll:auto;
  background-color:white;
 `
