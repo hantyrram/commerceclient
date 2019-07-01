@@ -7,8 +7,12 @@ export default {
    id:"role-id",
    type: "text",
    minLength: 1,
+<<<<<<< HEAD
    maxLength: 30,
    hidden:true
+=======
+   maxLength: 30
+>>>>>>> dev
   }
  },
  name : {
@@ -33,6 +37,7 @@ export default {
    maxLength: 35
   }
  },
+<<<<<<< HEAD
  permissions: {
   el: "select",
   label: "Permissions",
@@ -47,4 +52,15 @@ export default {
   dontShowOnBrowser: true //dont include the data on entityBrowser
  }
  
+=======
+ permissions : {
+  el: "select",
+  label: "Permissions",
+  attributes: {
+   name: "permissions",
+   id: "role-permissions",
+  },
+  options: [ ]
+ }
+>>>>>>> dev
 }

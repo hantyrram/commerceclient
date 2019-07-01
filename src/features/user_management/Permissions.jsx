@@ -69,9 +69,7 @@ function Permissions(props){
   <Router basename="/permissions">
    <div className="feature">
      <FeatureTitle>
-     
       <span>Permissions</span>
-      {/* <Link to="/add"><AddBox /><span>Add New User</span></Link> */}
       <AddButton adderPath={"/add"} text="Add New Permission"/>
      </FeatureTitle>
      <Message />

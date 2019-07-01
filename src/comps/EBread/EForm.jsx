@@ -2,6 +2,7 @@ import React, { useState,useEffect} from 'react';
 import {Link} from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import DeleteIcon from '@material-ui/icons/Delete';
+import {ComponentContainer} from '../styled';
 /**
  * EFormRead supports the Read functionality of BREAD.
  * @constructor
@@ -47,9 +48,12 @@ export default function EForm(props){
  
  const renderEditButton = () => 
   props.editorPath ? 
-   <Link className="action-button" to = { {pathname:props.editorPath.replace(":identifier",entity[IDENTIFIER]),state:{entity}} }> 
-    Edit 
-   </Link> 
+   <Button variant="contained" size="medium" color="primary">
+    <Link style={{textDecoration:"none",color:"inherit"}} to = { {pathname:props.editorPath.replace(":identifier",entity[IDENTIFIER]),state:{entity}} }> 
+     Edit 
+    </Link> 
+   </Button>
+   
   : null;
   
  const renderDeleteButton = () => props.onDelete ? <Button variant="contained" size="medium" color="secondary" > Delete <DeleteIcon /></Button> : null;
@@ -90,7 +94,23 @@ export default function EForm(props){
 
   let elements = [];
 
+  
   for(let key of Object.keys(props.UISchema)){
+   //if prop contains the current key,use that as the component.
+   if(props[key]){
+    let Element = props[key];
+           
+    elements.push(
+          <>
+           <div className="eform-inputgroup">
+            <label htmlFor={key}>{key.replace(/^[a-z]/,key.charAt(0).toUpperCase())}</label>
+           </div>
+           <Element />
+          </>
+           );
+    continue;
+   }
+
    let element;
    let attributes;
    if(props.type === 'adder' || !props.type){
@@ -140,10 +160,10 @@ export default function EForm(props){
  }
  
  return(
-  <div id="eform-container" className="eform boxed">
+  <ComponentContainer id="eform-container" className="eform boxed">
   {renderElements()}
   {renderActions()}
- </div>
+ </ComponentContainer>
  
  )
 }

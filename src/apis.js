@@ -67,6 +67,10 @@ export async function permission_delete(permission){
  }
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> dev
 export async function role_browse(){
  const PATH = `/apiv1/roles`;
  let source = '';
@@ -87,4 +91,9 @@ export async function role_browse(){
   //error on request error e.g timeout
   emit({type:'error',source: source, error: artifact.error || error}); 
  }
+<<<<<<< HEAD
 }
+=======
+}
+
+>>>>>>> dev

@@ -2,7 +2,9 @@
  font-family: sans-serif;
  font-size: .8em;
  color: #252323;
- min-width:100%;
+ min-width:60%;
+ padding: 1em;
+
 }
 
 .eform label{
@@ -12,7 +14,7 @@
 .eform .eform-inputgroup{
  display: flex;
  justify-content: space-between;
- align-items:center;
+ /* align-items:center; */
  margin: .5em;
  color: #555965;
 }
@@ -30,7 +32,7 @@
 .eform  input{
  min-height: 1.5em;
  padding:.2em .2em .2em .5em;
- min-width: 80%;
+ min-width: 50%;
 }
 
 .eform  select{

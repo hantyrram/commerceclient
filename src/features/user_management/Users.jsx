@@ -49,7 +49,7 @@ function Users(props){
      <FeatureTitle>
       <span>Users</span>
       {/* <Link to="/add"><AddBox /><span>Add New User</span></Link> */}
-      <AddButton adderPath={"/add"} text="Add New Permission"/>
+      <AddButton adderPath={"/add"} text="Add New User"/>
      </FeatureTitle>
      <Route render={mlh=>
       users?

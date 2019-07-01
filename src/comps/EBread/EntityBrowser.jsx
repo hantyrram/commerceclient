@@ -123,7 +123,10 @@ class EntityBrowser extends Component{
         return <th key={i}>{columnName}</th>
       }):null
     }
-    <th className="fixed-column" colSpan={actions.length} style={{minWidth:"80px"}}>Action</th>
+    {
+     actions.length > 0 ? 
+      <th className="fixed-column" colSpan={actions.length} style={{minWidth:"80px"}}>Action</th>
+     : null }
   </tr>
   )
  }
@@ -139,12 +142,17 @@ class EntityBrowser extends Component{
                if(data && transform){
                 data = transform(data);
                }
+<<<<<<< HEAD
                if(this.props.UISchema[uiSchemaProp].el === "select"){
                 //for now if data is an array instead of simple string,hence the property being a "select" element.
                 //display the property name as link, later on this link should display a modal with the contents.
                 //e.g. role has permissions, "permissions" should be displayed as a link, clicking on the link
                 // should display the role's permission like an info box.
                 data = <a href="#">{uiSchemaProp}</a>
+=======
+               if(data instanceof Array){
+                data = <a href="">Test Link To An Array Value</a>
+>>>>>>> dev
                }
                return <td key={i} className="eb-entity eb-entity-data">{data}</td>
              })
