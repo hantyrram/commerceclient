@@ -6,6 +6,9 @@ import EAdder from '../../comps/EBread/EAdder';
 import EReader from '../../comps/EBread/EReader';
 import EEditor from '../../comps/EBread/EEditor';
 import RoleUISchema from '../uischemas/Role';
+import PermissionUISchema from '../uischemas/Permission';
+import FeatureTitle from '../../comps/FeatureTitle';
+import AddButton from '../../comps/EBread/AddButton';
 
 
 import {
@@ -38,9 +41,10 @@ function Roles({user,history}){
 
  const ADDER_PATH = '/roles/add';
  const EDITOR_PATH = '/roles/:identifier/edit';
- const READER_PATH = '/roles/:identitier';
+ const READER_PATH = '/roles/:identifier';
 
  const onRead = entity => {
+  console.log(entity);
   console.log(EDITOR_PATH.replace(":identifier",entity["_id"]));
   if(user.hasPermission('role_edit')){
    history.push(`${EDITOR_PATH.replace(":identifier",entity['_id'])}`,{entity});
@@ -49,15 +53,27 @@ function Roles({user,history}){
   history.push(`${READER_PATH.replace(":identifier",entity['_id'])}`,{entity});
  }
 
- const reader = mlh => 
-  <EReader 
-   identifier="_id"
-   UISchema={RoleUISchema} 
-   entity={mlh.location.state.entity} 
-   editorPath={EDITOR_PATH} 
-   onDelete={()=>{}} 
-  />
+ const reader = mlh => {
+  console.log(mlh.location.state.entity.permissions);
+  let role = mlh.location.state.entity;
+  return(
+    <React.Fragment>
+    <EReader 
+     identifier="_id"
+     UISchema={RoleUISchema} 
+     entity={mlh.location.state.entity} 
+     editorPath={EDITOR_PATH} 
+     onDelete={()=>{}} 
+     permissions = {
+       ()=><EBrowser UISchema={PermissionUISchema} entities={mlh.location.state.entity.permissions}/>
+      }
+    />
+    
+   </React.Fragment>
+   )
+  }
 
+  
   const editor = mlh => 
   <EEditor 
    identifier="_id"
@@ -70,6 +86,10 @@ function Roles({user,history}){
 
  return(
   <React.Fragment>
+   <FeatureTitle>
+    <span>Roles</span>
+    <AddButton adderPath="/roles/add" text="Add New Role"/>
+   </FeatureTitle>
    <Switch>
      <Route path={ADDER_PATH} exact render={ adder }/> 
      <Route path={EDITOR_PATH} exact render={ editor }/> 
