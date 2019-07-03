@@ -9,6 +9,8 @@ import RoleUISchema from '../uischemas/Role';
 import PermissionUISchema from '../uischemas/Permission';
 import FeatureTitle from '../../comps/FeatureTitle';
 import AddButton from '../../comps/EBread/AddButton';
+import DeleteIcon from '@material-ui/icons/DeleteSharp';
+import DeleteRole from './Roles/DeleteRole';
 
 
 import {
@@ -19,7 +21,7 @@ import { subscribe } from '../../event';
 
 function Roles({user,history}){
 
- const [roles,setRoles] = useState([]);
+ const [roles,setRoles] = useState(null);
 
  let unsubscribe = subscribe((eventResult)=>{
   switch(eventResult.source){
@@ -35,9 +37,12 @@ function Roles({user,history}){
  });
 
  useEffect(()=>{
-  fetchRoles();
+  if(!roles){
+   fetchRoles();
+  }
+  
   return unsubscribe;
- },[]);
+ },[unsubscribe]);
 
  const ADDER_PATH = '/roles/add';
  const EDITOR_PATH = '/roles/:identifier/edit';
@@ -84,6 +89,7 @@ function Roles({user,history}){
 
  const adder = mlh => <EAdder UISchema={RoleUISchema} onSave={()=>{}} /> 
 
+ 
  return(
   <React.Fragment>
    <FeatureTitle>
@@ -98,7 +104,7 @@ function Roles({user,history}){
    <EBrowser 
     UISchema={RoleUISchema}
     entities={roles}
-    onDelete={(entity)=>console.log('Deleting ',entity)}
+    actions={[DeleteRole]}
     onRead = {onRead}
    />
   </React.Fragment>

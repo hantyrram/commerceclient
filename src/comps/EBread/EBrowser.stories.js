@@ -2,7 +2,7 @@ import React from 'react';
 import { storiesOf } from '@storybook/react';
 import EBrowser from './EBrowser';
 import UISchema from '../../features/uischemas/Role';
-console.log(UISchema);
+import DeleteRole from '../../features/user_management/Roles/DeleteRole';
 const entities = [
  {_id:12,name:'permission_create',label:"Create Permission",createdOn:123123123131},
  {_id:13,name:'Permission_delete',label:"Delete A Permission",createdOn:123123123131},
@@ -14,9 +14,12 @@ function onRead(en,e){
  console.log(en);
 }
 
+function deleteAction(entity){return <button onClick={()=>console.log('Deleting',entity)}>Delete</button>}
+function editAction(entity){return <button onClick={()=>console.log('Deleting',entity)}>Edit</button>}
+
 const searchLookUpFields = [
  'name',
  'label'
 ]
 storiesOf('EBrowser', module)
-  .add('EBrowser', () =><EBrowser UISchema={UISchema} entities={entities} onEdit onDelete onRead={onRead} searchLookUpFields={searchLookUpFields}/>);
+  .add('EBrowser', () =><EBrowser UISchema={UISchema} entities={entities} actions={[DeleteRole]} onRead={onRead} searchLookUpFields={searchLookUpFields}/>);

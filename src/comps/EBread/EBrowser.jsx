@@ -7,6 +7,7 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import SvgIcon from '@material-ui/core/SvgIcon';
 import IconButton from '@material-ui/core/IconButton';
 import {ComponentContainer} from '../styled';
+import withEntity from '../withEntity';
 
 const TableContainer = styled.div`
  font-family: 'Roboto Slab',sans-serif;
@@ -76,12 +77,10 @@ const DummyTd = styled.td`
 
 const StyledDeleteIcon = styled(DeleteIcon)`
  color:#ec5141eb;
- 
 `;
 
 
 function EBrowser(props){
- console.log(props.entities)
  let [entities,setEntities] = useState([]);
  let [filteredEntities,setFilteredEntities] = useState([]);
  
@@ -142,14 +141,27 @@ function EBrowser(props){
   console.log('Deleting entity',entity);
  }
 
-
+ const renderHeaders = ()=>{
+  let columns = Object.keys(props.UISchema);
+  return (
+   <React.Fragment>
+    { props.numbered ? <Th>#</Th> :null }
+    {
+     columns.map((col,i)=> <Th key={i}>{col}</Th>)
+    }
+    { props.actions && props.actions.length > 0?<ThFixed className="ThFixed" colSpan="2">Action</ThFixed>:null }
+   </React.Fragment> 
+  )
+  
+ }
 
  const renderRows = ()=>{
-  
   let activeEntities = filteredEntities.length > 0?filteredEntities:entities;
   return activeEntities && activeEntities.length> 0 ? activeEntities.map((entity,index)=>
           <tr id={`ebrowser-row-${index}`} className="ebrowser-row" key={index} row-entity={JSON.stringify({entity})}>{/** Row is clickable if there is onRead handler else default = empty function*/}
-           <Td className="ebrowser-entity-data">{index + 1}</Td> 
+           {
+            props.numbered? <Td className="ebrowser-entity-data">{index + 1}</Td> :null
+           }
            {
              Object.getOwnPropertyNames(props.UISchema).map((uiSchemaProp,i)=>{
                let transform = props.UISchema[uiSchemaProp].transform;
@@ -170,10 +182,17 @@ function EBrowser(props){
              })
            }
            {
-             props.onDelete? <>
+             props.actions && props.actions.length > 0? 
+             <>
              <DummyTd className="DummyTd" /> 
-              <TdFixed className="TdFixed"><StyledDeleteIcon /></TdFixed>
-             </>:null
+             {/* /* <TdFixed className="TdFixed"><StyledDeleteIcon /></TdFixed> */}
+             <TdFixed className="TdFixed">
+              {
+               props.actions.map(ActionHandler=>withEntity(ActionHandler,entity))
+              }
+             </TdFixed>
+             </>
+             :null
             }
          </tr>
         )  //.map
@@ -214,8 +233,9 @@ function EBrowser(props){
 
 
 
- let columns = Object.keys(props.UISchema);
+ 
  return(
+  entities && entities.length > 0 ? 
   <ComponentContainer>
   {props.title ? props.title :null}
   <div style={{textAlign:"right",margin:"1em"}}>
@@ -240,11 +260,9 @@ function EBrowser(props){
      <TableWrapper >
       <Table>
        <thead>
-        <Th>#</Th>
         {
-         columns.map((col,i)=> <Th key={i}>{col}</Th>)
+         renderHeaders()
         }
-        {props.onEdit || props.onDelete ?<ThFixed className="ThFixed" colSpan="2">Action</ThFixed>:null}
        </thead>
        <tbody>
         {
@@ -255,12 +273,17 @@ function EBrowser(props){
      </TableWrapper>
    </TableContainer>
   </ComponentContainer>
+  : "No Data Or Spinner Here"
  )
 }
 
 EBrowser.propTypes = {
  /** The data to tabulate, the data will be shown in a Table */
  entities: PropTypes.array,
+
+ /** The components that will handle the entity of the current row*/
+ actions: PropTypes.array,
+
  /*
   * Uses the UISchema's properties index as bases in arranging the columns. Uses labels as column labels, these
   * are the only required properties.
@@ -294,7 +317,14 @@ EBrowser.propTypes = {
   /**
   * The title of the entity browser table.
   */
- searchLookUpFields: PropTypes.array
+ searchLookUpFields: PropTypes.array,
+
+ 
+  /**
+  * If present, rows will be numbered
+  */
+ numbered: PropTypes.bool
+
 }
 
 export default EBrowser;
