@@ -56,6 +56,7 @@ function Roles({user,history}){
  const reader = mlh => {
   console.log(mlh.location.state.entity.permissions);
   let role = mlh.location.state.entity;
+  
   return(
     <React.Fragment>
     <EReader 
@@ -65,7 +66,7 @@ function Roles({user,history}){
      editorPath={EDITOR_PATH} 
      onDelete={()=>{}} 
      permissions = {
-       ()=><EBrowser UISchema={PermissionUISchema} entities={mlh.location.state.entity.permissions}/>
+       ()=><EBrowser actions={[{icon:'',label:'Remove from Role'}]}UISchema={PermissionUISchema} entities={mlh.location.state.entity.permissions}/>
       }
     />
     
@@ -100,6 +101,10 @@ function Roles({user,history}){
     entities={roles}
     onDelete={(entity)=>console.log('Deleting ',entity)}
     onRead = {onRead}
+    actions = {[
+     {icon:'delete'},
+     {icon:'edit'}
+    ]}
    />
   </React.Fragment>
  )

@@ -17,6 +17,11 @@ function onRead(en,e){
 const searchLookUpFields = [
  'name',
  'label'
+];
+
+const actions = [
+ { icon: 'edit', onClick: ()=>{} },
+ { icon: '',label:'Delete Permission'},
 ]
 storiesOf('EBrowser', module)
-  .add('EBrowser', () =><EBrowser UISchema={UISchema} entities={entities} onEdit onDelete onRead={onRead} searchLookUpFields={searchLookUpFields}/>);
+  .add('EBrowser', () =><EBrowser UISchema={UISchema} actions={actions} entities={entities} onEdit onDelete onRead={onRead} searchLookUpFields={searchLookUpFields}/>);

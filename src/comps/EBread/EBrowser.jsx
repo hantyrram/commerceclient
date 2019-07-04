@@ -2,6 +2,7 @@ import React, { useState, useEffect, useReducer,useRef} from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import DeleteIcon from '@material-ui/icons/DeleteSharp';
+import EditIcon from '@material-ui/icons/Edit';
 import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import SvgIcon from '@material-ui/core/SvgIcon';
@@ -47,7 +48,7 @@ const ThFixed = styled(Th)`
  min-width:8%;
  background-color:white;
  box-sizing:border-box; 
- 
+ text-align:center;
 `;
 
 const Td = styled.td`
@@ -66,7 +67,6 @@ const TdFixed = styled(Td)`
  border-top:none;
  background-color:white;
  box-sizing:border-box; 
- 
 `;
 
 const DummyTd = styled.td`
@@ -75,13 +75,32 @@ const DummyTd = styled.td`
 `;
 
 const StyledDeleteIcon = styled(DeleteIcon)`
- color:#ec5141eb;
- 
+ &:hover {
+  background-color: #ebe4e4;
+  border-radius: 25px;
+  padding: .1em;
+ }
+ color:#118d08eb;
+ margin-left:.1em;
+ margin-right:.1em;
+`;
+
+const StyledEditIcon = styled(EditIcon)`
+ &:hover {
+  background-color: #ebe4e4;
+  border-radius: 25px;
+  padding: .1em;
+ }
+ color:#bd3d30eb;
+ margin-left:.1em;
+ margin-right:.1em;
 `;
 
 
+
+
 function EBrowser(props){
- console.log(props.entities)
+ let columns = Object.keys(props.UISchema);
  let [entities,setEntities] = useState([]);
  let [filteredEntities,setFilteredEntities] = useState([]);
  
@@ -143,9 +162,23 @@ function EBrowser(props){
  }
 
 
+ const renderHeaders = ()=>{
+  if(entities && entities.length > 0){
+  return( 
+   <thead>
+    {
+     props.numbered ? <Th>#</Th> : null
+    }
+    {
+     columns.map((col,i)=> <Th key={i}>{col}</Th>)
+    }
+    { props.onEdit || props.onDelete ?<ThFixed className="ThFixed" colSpan="2">Action</ThFixed> : null}
+   </thead>     
+   )
+   }
+ }
 
  const renderRows = ()=>{
-  
   let activeEntities = filteredEntities.length > 0?filteredEntities:entities;
   return activeEntities && activeEntities.length> 0 ? activeEntities.map((entity,index)=>
           <tr id={`ebrowser-row-${index}`} className="ebrowser-row" key={index} row-entity={JSON.stringify({entity})}>{/** Row is clickable if there is onRead handler else default = empty function*/}
@@ -170,9 +203,24 @@ function EBrowser(props){
              })
            }
            {
-             props.onDelete? <>
+             props.actions && props.actions.length > 0? <>
              <DummyTd className="DummyTd" /> 
-              <TdFixed className="TdFixed"><StyledDeleteIcon /></TdFixed>
+              <TdFixed className="TdFixed">
+               {
+                props.actions.map(action => {
+                 if(typeof action.icon === 'string'){
+                  switch(action.icon){
+                   case 'edit': return <StyledEditIcon />;
+                   case 'delete': return <StyledDeleteIcon />;
+                   default : return <button>{action.label}</button>;
+                  }
+                 }
+                 return action.icon;
+                })
+               }
+               {/* { props.onEdit ? <StyledEditIcon /> : null}
+               { props.onDelete ? <StyledDeleteIcon /> : null} */}
+              </TdFixed>
              </>:null
             }
          </tr>
@@ -180,12 +228,10 @@ function EBrowser(props){
         :null
  }
 
-
  /**
   * Modify Fixed Column / Action Column. 
   */
  const modifyActionColumn = ()=>{
-  
   let tdFixed = document.getElementsByClassName("TdFixed");
   
   if(tdFixed.length > 0){
@@ -209,13 +255,9 @@ function EBrowser(props){
   modifyActionColumn();
   initOnReadActionHandler();
  });
-
-
-
-
-
- let columns = Object.keys(props.UISchema);
+ 
  return(
+  entities && entities.length > 0 ?
   <ComponentContainer>
   {props.title ? props.title :null}
   <div style={{textAlign:"right",margin:"1em"}}>
@@ -239,13 +281,7 @@ function EBrowser(props){
    <TableContainer>
      <TableWrapper >
       <Table>
-       <thead>
-        <Th>#</Th>
-        {
-         columns.map((col,i)=> <Th key={i}>{col}</Th>)
-        }
-        {props.onEdit || props.onDelete ?<ThFixed className="ThFixed" colSpan="2">Action</ThFixed>:null}
-       </thead>
+      {renderHeaders()}
        <tbody>
         {
          renderRows()
@@ -255,6 +291,7 @@ function EBrowser(props){
      </TableWrapper>
    </TableContainer>
   </ComponentContainer>
+  : null
  )
 }
 
@@ -294,7 +331,9 @@ EBrowser.propTypes = {
   /**
   * The title of the entity browser table.
   */
- searchLookUpFields: PropTypes.array
+ searchLookUpFields: PropTypes.array,
+
+ actions: PropTypes.array
 }
 
 export default EBrowser;
