@@ -3,6 +3,7 @@ import {Link} from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import DeleteIcon from '@material-ui/icons/Delete';
 import {ComponentContainer} from '../styled';
+import PropTypes from 'prop-types';
 /**
  * EFormRead supports the Read functionality of BREAD.
  * @constructor
@@ -18,12 +19,17 @@ import {ComponentContainer} from '../styled';
  */
 export default function EForm(props){
 
+ if(!props.identifier && props.type !== 'adder'){
+  throw new Error('Identifier must be present on a non adder type');
+ }
+ 
  const IDENTIFIER = props.identifier;
 
  const [entity,setEntity] = useState(props.entity ? Object.assign({},props.entity): {});
 
  useEffect(()=> {
   if(props.type && props.type !== 'adder'){
+   
    if(entity[IDENTIFIER] !== props.entity[IDENTIFIER]){
     setEntity(Object.assign({},props.entity));
    }
@@ -166,4 +172,12 @@ export default function EForm(props){
  </ComponentContainer>
  
  )
+}
+
+EForm.propTypes = {
+ /**
+  * The identifier of the entity. e.g. _id
+  */
+ identifier: PropTypes.string,
+
 }

@@ -1,7 +1,7 @@
 import React, { useState,useEffect,useReducer } from 'react';
 import {Route,Switch} from 'react-router-dom';
 import featureGroups from '../featureGroups';
-import EBrowser from '../../comps/EBread/EBrowser';
+// import EBrowser from '../../comps/EBread/EBrowser';
 import EAdder from '../../comps/EBread/EAdder';
 import EReader from '../../comps/EBread/EReader';
 import EEditor from '../../comps/EBread/EEditor';
@@ -9,16 +9,21 @@ import RoleUISchema from '../uischemas/Role';
 import PermissionUISchema from '../uischemas/Permission';
 import FeatureTitle from '../../comps/FeatureTitle';
 import AddButton from '../../comps/EBread/AddButton';
+import EBrowser from 'react-components';
 
 
 import {
- role_browse as fetchRoles
+ role_browse as fetchRoles,
+ role_permissions_delete as removePermissionFromRole
 } from '../../apis';
 
 import { subscribe } from '../../event';
 
 function Roles({user,history}){
 
+ const ADDER_PATH = '/roles/add';
+ const EDITOR_PATH = '/roles/:identifier/edit';
+ const READER_PATH = '/roles/:identifier';
  const [roles,setRoles] = useState([]);
 
  let unsubscribe = subscribe((eventResult)=>{
@@ -39,9 +44,7 @@ function Roles({user,history}){
   return unsubscribe;
  },[]);
 
- const ADDER_PATH = '/roles/add';
- const EDITOR_PATH = '/roles/:identifier/edit';
- const READER_PATH = '/roles/:identifier';
+
 
  const onRead = entity => {
   console.log(entity);
@@ -54,9 +57,7 @@ function Roles({user,history}){
  }
 
  const reader = mlh => {
-  console.log(mlh.location.state.entity.permissions);
   let role = mlh.location.state.entity;
-  
   return(
     <React.Fragment>
     <EReader 
@@ -66,16 +67,29 @@ function Roles({user,history}){
      editorPath={EDITOR_PATH} 
      onDelete={()=>{}} 
      permissions = {
-       ()=><EBrowser actions={[{icon:'',label:'Remove from Role'}]}UISchema={PermissionUISchema} entities={mlh.location.state.entity.permissions}/>
+       ()=>
+        <EBrowser 
+         actions={
+          [
+           {
+            icon:'',label:'Remove from Role',onClick:(permission,event)=>{
+             removePermissionFromRole(permission);
+            }
+           }
+          ]
+         } 
+         UISchema={PermissionUISchema} 
+         entities={mlh.location.state.entity.permissions}
+        />
       }
     />
     
    </React.Fragment>
    )
-  }
+ }
 
   
-  const editor = mlh => 
+ const editor = mlh => 
   <EEditor 
    identifier="_id"
    UISchema={RoleUISchema} 
@@ -85,6 +99,15 @@ function Roles({user,history}){
 
  const adder = mlh => <EAdder UISchema={RoleUISchema} onSave={()=>{}} /> 
 
+   const onDelete = (entity)=>{
+   console.log('Deleting');
+   return new Promise((res,rej)=>{
+      let t = setTimeout(()=>{
+         rej(true);
+         clearTimeout(t);
+      },5000);
+   });
+   }
  return(
   <React.Fragment>
    <FeatureTitle>

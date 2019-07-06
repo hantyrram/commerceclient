@@ -1,4 +1,4 @@
-export default {
+const s = {
  _id : {
   el : "input",//element tag
   label: "ID",//label of the element
@@ -42,3 +42,11 @@ export default {
   options: [ ]
  }
 }
+
+const SIZE = 1;
+
+s.name.attributes.style = {width: String(s.name.attributes.maxLength * SIZE) + 'em'};
+s.label.attributes.style = {width: String(s.name.attributes.maxLength * SIZE) + 'em'};
+s.permissions.attributes.style = {width: String(s.name.attributes.maxLength * SIZE) + 'em'};
+
+export default s;

@@ -23,5 +23,11 @@ const actions = [
  { icon: 'edit', onClick: ()=>{} },
  { icon: '',label:'Delete Permission'},
 ]
+
+const entitiesPromise = new Promise((res)=>{
+ console.log('Promise Called');
+ res(entities);
+})
+
 storiesOf('EBrowser', module)
-  .add('EBrowser', () =><EBrowser UISchema={UISchema} actions={actions} entities={entities} onEdit onDelete onRead={onRead} searchLookUpFields={searchLookUpFields}/>);
+  .add('EBrowser', () =><EBrowser entities={entitiesPromise} UISchema={UISchema} actions={actions}  onEdit onDelete onRead={onRead} searchLookUpFields={searchLookUpFields}/>);
