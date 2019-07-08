@@ -1,7 +1,7 @@
 import React, { useState,useEffect,useReducer } from 'react';
 import {Route,Switch} from 'react-router-dom';
 import featureGroups from '../featureGroups';
-// import EBrowser from '../../comps/EBread/EBrowser';
+import EBrowser from '../../comps/EBread/EBrowser';
 import EAdder from '../../comps/EBread/EAdder';
 import EReader from '../../comps/EBread/EReader';
 import EEditor from '../../comps/EBread/EEditor';
@@ -9,11 +9,12 @@ import RoleUISchema from '../uischemas/Role';
 import PermissionUISchema from '../uischemas/Permission';
 import FeatureTitle from '../../comps/FeatureTitle';
 import AddButton from '../../comps/EBread/AddButton';
-import EBrowser from 'react-components';
+import Message from '../../comps/Message';
 
 
 import {
  role_browse as fetchRoles,
+ role_delete as deleteRole,
  role_permissions_delete as removePermissionFromRole
 } from '../../apis';
 
@@ -26,27 +27,27 @@ function Roles({user,history}){
  const READER_PATH = '/roles/:identifier';
  const [roles,setRoles] = useState([]);
 
- let unsubscribe = subscribe((eventResult)=>{
-  switch(eventResult.source){
-   case 'role_browse': {
-    if(eventResult.type === 'artifact'){
-     console.log(eventResult.artifact.entity);
-     setRoles(eventResult.artifact.entity);
-    }
-   }
-   break;
-   default: return;
-  }
- });
+//  let unsubscribe = subscribe((eventResult)=>{
+//   switch(eventResult.source){
+//    case 'role_browse': {
+//     if(eventResult.type === 'artifact'){
+//      console.log(eventResult.artifact.entity);
+//      setRoles(eventResult.artifact.entity);
+//     }
+//    }
+//    break;
+//    default: return;
+//   }
+//  });
 
- useEffect(()=>{
-  fetchRoles();
-  return unsubscribe;
- },[]);
+//  useEffect(()=>{
+// //   fetchRoles();
+//   return unsubscribe;
+//  },[]);
 
 
 
- const onRead = entity => {
+ const onRoleRead = entity => {
   console.log(entity);
   console.log(EDITOR_PATH.replace(":identifier",entity["_id"]));
   if(user.hasPermission('role_edit')){
@@ -58,6 +59,7 @@ function Roles({user,history}){
 
  const reader = mlh => {
   let role = mlh.location.state.entity;
+  console.log(role);
   return(
     <React.Fragment>
     <EReader 
@@ -69,22 +71,16 @@ function Roles({user,history}){
      permissions = {
        ()=>
         <EBrowser 
-         actions={
-          [
-           {
-            icon:'',label:'Remove from Role',onClick:(permission,event)=>{
-             removePermissionFromRole(permission);
-            }
-           }
-          ]
-         } 
-         UISchema={PermissionUISchema} 
+         actions={[{name:'Delete Permission'}]}
+         uischema={PermissionUISchema} 
          entities={mlh.location.state.entity.permissions}
+         onRead={()=>{}} //MUST pass empty function otherwise seem to retain the old onRead,
         />
       }
     />
     
    </React.Fragment>
+   
    )
  }
 
@@ -97,36 +93,53 @@ function Roles({user,history}){
    onSave={()=>{}} onDelete={()=>{}} 
   /> 
 
- const adder = mlh => <EAdder UISchema={RoleUISchema} onSave={()=>{}} /> 
+   const adder = mlh => <EAdder UISchema={RoleUISchema} onSave={()=>{}} /> 
 
-   const onDelete = (entity)=>{
-   console.log('Deleting');
-   return new Promise((res,rej)=>{
-      let t = setTimeout(()=>{
-         rej(true);
-         clearTimeout(t);
-      },5000);
-   });
-   }
+ 
  return(
   <React.Fragment>
    <FeatureTitle>
     <span>Roles</span>
     <AddButton adderPath="/roles/add" text="Add New Role"/>
    </FeatureTitle>
+   <Message />
    <Switch>
      <Route path={ADDER_PATH} exact render={ adder }/> 
      <Route path={EDITOR_PATH} exact render={ editor }/> 
      <Route path={READER_PATH} exact render={ reader }/>    
    </Switch>
    <EBrowser 
-    UISchema={RoleUISchema}
-    entities={roles}
-    onDelete={(entity)=>console.log('Deleting ',entity)}
-    onRead = {onRead}
+      uischema={RoleUISchema}
+      searchable
+      searchableFields={['name','label']}
+      entities={
+         new Promise((res,rej)=>{
+            fetchRoles().then(artifact=>{
+               if(artifact.status === 'ok'){
+                  console.log(artifact);
+                  res(artifact.entity);
+               }
+            }).catch(e=>{
+               console.log(e);
+               rej();
+            });
+         })
+       }
+      
+    onDelete={async role => {
+      try {
+         let artifact = await deleteRole(role);
+         if(artifact.status === 'ok'){
+            return true;
+         }   
+         return false;
+      } catch (error) {
+         return false;
+      }
+    }}
+    onRead = {onRoleRead}
     actions = {[
-     {icon:'delete'},
-     {icon:'edit'}
+     { name :'delete' }
     ]}
    />
   </React.Fragment>

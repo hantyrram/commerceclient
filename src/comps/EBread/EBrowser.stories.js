@@ -1,33 +1,68 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
 import EBrowser from './EBrowser';
-import UISchema from '../../features/uischemas/Role';
-console.log(UISchema);
-const entities = [
- {_id:12,name:'permission_create',label:"Create Permission",createdOn:123123123131},
- {_id:13,name:'Permission_delete',label:"Delete A Permission",createdOn:123123123131},
- {_id:14,name:'user_create',label:"Create a New User",createdOn:123123123131},
- {_id:15,name:'product_create',label:"Create a New Product",createdOn:123123123131,},
-]
+import ProductUISchema from './schemas/ProductUISchema';
+import products from './sample_entities/Products.json';
 
-function onRead(en,e){
- console.log(en);
-}
-
-const searchLookUpFields = [
- 'name',
- 'label'
+const searchableFields = [
+ 'product_name',
+ 'category'
 ];
 
-const actions = [
- { icon: 'edit', onClick: ()=>{} },
- { icon: '',label:'Delete Permission'},
-]
+const actionsProvider = function(entity){
+   return [
+      { type: 'edit', ui:'Edit' },
+      { type: 'delete', ui:'Delete' },
+   ]
+}
 
 const entitiesPromise = new Promise((res)=>{
  console.log('Promise Called');
- res(entities);
+//  res(entities);
 })
 
+const onRead = (entity)=>console.log(entity);
+const onAdd = ()=>{
+   return new Promise((res)=>{
+     let t = setTimeout(()=>{
+        res( {"_id":1236,"product_name":"Tuba","category":"NewCategory"})
+     },2000);
+   })
+}
+const onEdit = (entity)=>console.log(entity);
+const onDelete = (entity)=>{
+   console.log('Deleting');
+   return new Promise((res,rej)=>{
+      let t = setTimeout(()=>{
+         res(true);
+         clearTimeout(t);
+      },5000);
+   });
+}
+
+const actions = [
+   {
+      name : 'edit'
+   },
+   {
+      name: 'delete'
+   }
+]
+
 storiesOf('EBrowser', module)
-  .add('EBrowser', () =><EBrowser entities={entitiesPromise} UISchema={UISchema} actions={actions}  onEdit onDelete onRead={onRead} searchLookUpFields={searchLookUpFields}/>);
+  .add('EBrowser',() => 
+      <EBrowser 
+         uischema={ProductUISchema}
+         entities={products} 
+         entityIdentifier='name'
+         onRead={onRead} 
+         onAdd={onAdd}
+         onEdit={onEdit}
+         onDelete={onDelete}
+         searchable
+         actions={actions}
+         // maxRowPerPage
+         // maxRowExceeded
+         searchableFields={searchableFields}
+      />
+);
