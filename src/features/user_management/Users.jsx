@@ -7,6 +7,9 @@ import UserUISchema from '../uischemas/User';
 import FeatureTitle from '../../comps/FeatureTitle';
 import AddButton from '../../comps/EBread/AddButton';
 
+//test only delete this line
+import axios from '../../axios';
+
 
 import {
  user_create as addUser,
@@ -27,14 +30,19 @@ function Users(props){
  const [users,setUsers] = useState([]);
 
  useEffect(()=>{
+
   fetchUsers().then( artifact => {
    console.log(artifact.data.data.entity);
    if(JSON.stringify(users) !== JSON.stringify(artifact.data.data.entity)){
     setUsers(artifact.data.data.entity);
    }
-  }
-   
+  }   
   ).catch(e=>console.log(e));
+
+  (async function(){
+   let response = await axios.get('/apiv1/features');
+   console.log(response.data);
+  })()
  });
 
 
