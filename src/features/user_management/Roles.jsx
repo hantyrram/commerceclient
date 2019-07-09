@@ -10,6 +10,7 @@ import PermissionUISchema from '../uischemas/Permission';
 import FeatureTitle from '../../comps/FeatureTitle';
 import AddButton from '../../comps/EBread/AddButton';
 import Message from '../../comps/Message';
+import Reader from './roles_/Reader';
 
 //ok
 import {
@@ -57,32 +58,45 @@ function Roles({user,history}){
   history.push(`${READER_PATH.replace(":identifier",entity['_id'])}`,{entity});
  }
 
- const reader = mlh => {
-  let role = mlh.location.state.entity;
-  console.log(role);
-  return(
-    <React.Fragment>
-    <EReader 
-     identifier="_id"
-     UISchema={RoleUISchema} 
-     entity={mlh.location.state.entity} 
-     editorPath={EDITOR_PATH} 
-     onDelete={()=>{}} 
-     permissions = {
-       ()=>
-        <EBrowser 
-         actions={[{name:'Delete Permission'}]}
-         uischema={PermissionUISchema} 
-         entities={mlh.location.state.entity.permissions}
-         onRead={()=>{}} //MUST pass empty function otherwise seem to retain the old onRead,
-        />
-      }
-    />
-    
-   </React.Fragment>
-   
-   )
+ const onRoleDelete = async role => {
+   try {
+      let artifact = await deleteRole(role);
+      if(artifact.status === 'ok'){
+         return true;
+      }   
+      return false;
+   } catch (error) {
+      console.log(error);
+   }
  }
+
+//  const reader = mlh => {
+//   let role = mlh.location.state.entity;
+//   console.log(role);
+  
+//   return(
+//     <React.Fragment>
+//     <EReader 
+//      identifier="_id"
+//      UISchema={RoleUISchema} 
+//      entity={mlh.location.state.entity} 
+//      editorPath={EDITOR_PATH} 
+//      onDelete={()=>{}} 
+//      permissions = {
+//        ()=>
+//         <EBrowser 
+//          actions={[{type:'delete',ui:`Remove from ${role.name}`}]}
+//          uischema={PermissionUISchema} 
+//          entities={mlh.location.state.entity.permissions}
+//          // onRead={()=>{}} //MUST pass empty function otherwise seem to retain the old onRead,
+//         />
+//       }
+//     />
+    
+//    </React.Fragment>
+   
+//    )
+//  }
 
   
  const editor = mlh => 
@@ -106,9 +120,8 @@ function Roles({user,history}){
    <Switch>
      <Route path={ADDER_PATH} exact render={ adder }/> 
      <Route path={EDITOR_PATH} exact render={ editor }/> 
-     <Route path={READER_PATH} exact render={ reader }/>    
-   </Switch>
-   <EBrowser 
+     <Route path={READER_PATH} exact render={ Reader }/>    
+     <EBrowser 
       uischema={RoleUISchema}
       searchable
       searchableFields={['name','label']}
@@ -126,22 +139,14 @@ function Roles({user,history}){
          })
        }
       
-    onDelete={async role => {
-      try {
-         let artifact = await deleteRole(role);
-         if(artifact.status === 'ok'){
-            return true;
-         }   
-         return false;
-      } catch (error) {
-         return false;
-      }
-    }}
+    onDelete={onRoleDelete}
     onRead = {onRoleRead}
     actions = {[
-     { name :'delete' }
+     { type :'delete' }
     ]}
    />
+   </Switch>
+   
   </React.Fragment>
  )
 }

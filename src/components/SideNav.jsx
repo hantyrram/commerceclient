@@ -60,11 +60,11 @@ class SideNav extends Component {
         {/* <li><i className="fas fa-th-list"></i><A href="#" >Catalog</A></li>
         <li><i className="fas fa-user-cog"></i><A href="#">User Management</A></li> */}
         {
-         groups.map(g=>{
+         groups.map((g,i)=>{
           const groupKey = g.replace(/\s/g,'');
           return(
             //key = group name without spaces
-            <li> <div id="x" ref="dropdownTrigger" className="dropdown-trigger" key={groupKey+'key'} content={groupKey} >{g}</div> 
+            <li key={i}> <div id="x" ref="dropdownTrigger" className="dropdown-trigger" key={groupKey+'key'} content={groupKey} >{g}</div> 
               <DropdownContent id={groupKey}  >
                {
                 features.reduce((acc,feature)=>{

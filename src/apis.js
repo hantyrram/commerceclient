@@ -127,12 +127,12 @@ export async function role_delete(role){
    }
   }
 
-export async function role_permissions_delete(){
- const PATH = `/apiv1/roles/:id/permissions`;
+export async function role_permissions_delete(roleId,permissionName){
+ const PATH = `/apiv1/roles/:_id/permissions/:permission_name`;
  let source = '';
  try {
   
-  let response = await axios.delete(PATH);
+  let response = await axios.delete(PATH.replace(/:_id/,roleId).replace(/:permission_name/,permissionName));
   let artifact = response.data;
   source = artifact.source;
   emit({type:'artifact',source:source, artifact:artifact});

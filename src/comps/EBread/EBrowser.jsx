@@ -72,6 +72,7 @@ const TdFixed = styled(Td)`
  position:absolute;
  right: 0px;
  min-width:8%;
+ height:inherit;
  border-top:none;
  background-color:white;
  box-sizing:border-box; 
@@ -120,6 +121,12 @@ const StatusBar = styled.div`
    color: grey;
    border: none;
    text-align: left;
+`;
+
+const ActionButton = styled.button`
+   height:inherit;
+   padding:0;
+   margin:0;
 `;
 
 
@@ -178,6 +185,7 @@ function EBrowserSearch({searchableFields,data,onResult}){
 function TableHeader({columnNames,withActionColumn,actionColumnWidth,numbered}){
    return(
       <thead>
+         <tr>
          {
             numbered ? <Th>#</Th> : null
          }
@@ -185,6 +193,7 @@ function TableHeader({columnNames,withActionColumn,actionColumnWidth,numbered}){
             columnNames.map((col,i)=> <Th key={i}>{col}</Th>)
          }
          { withActionColumn ?<ThFixed className="ThFixed" colSpan={actionColumnWidth || 2}>Action</ThFixed> : null}
+         </tr>
      </thead>     
    )
 }
@@ -245,6 +254,7 @@ function EBrowser(props){
       }
    }
 
+
    //setting up initial state
    let initialState = {
    entities: props.entities instanceof Array? props.entities: [],
@@ -269,6 +279,7 @@ function EBrowser(props){
       case ACTION_TYPE.DELETE: {
          //delete failed,reverse
          let splicedEntities = Object.assign([],[...state.entities]);
+         console.log(splicedEntities);
          if(action.reversal){
             splicedEntities.splice(action.entityIndex,0,action.entity);//insert on original position
          }else{
@@ -292,21 +303,22 @@ function EBrowser(props){
 
  
    function initOnReadActionHandler(){
-   console.log(props.onRead);
-   if(props.onRead){
+      console.log(props.onRead);
+      if(!props.onRead) return;
+      
       let rows = document.getElementsByTagName("tr");
       for(let row of rows){
          row.addEventListener('click',function(e){
          if(e.eventPhase === Event.CAPTURING_PHASE && e.target.tagName.toLowerCase() === 'td'){
          if(e.target.className.includes("ebrowser-entity-data")){
                let {entity}= JSON.parse(row.attributes["row-entity"].value);
+               console.log(props.onRead);
                props.onRead(entity);
                e.stopImmediatePropagation();
          }
          }
          },true);
       }
-    }
    }
 
    /**Intercepts click event of the edit button, serves as a proxy to props.onEdit*/
@@ -317,12 +329,18 @@ function EBrowser(props){
    /**Intercepts click event of the delete button, serves as a proxy to props.onDelete*/
    const onDeleteClickHandler = async (entity,index,rowId,e)=>{
       //cache entity for dispatching DELETE action with reversal
+      console.log(`index`,index);
       let cacheEntity = Object.assign({},entity); 
       dispatch({type: ACTION_TYPE.DELETE, entityIndex:index});//delete immediately
       dispatch({type: ACTION_TYPE.CHANGE_STATUS, statusText:'deleting...'});//delete immediately
       try {
-         await props.onDelete(entity);
-         dispatch({type: ACTION_TYPE.CHANGE_STATUS, statusText:'deletion done!'});//delete immediately
+         let ok = await props.onDelete(entity);
+         if(ok){
+            dispatch({type: ACTION_TYPE.CHANGE_STATUS, statusText:'deletion done!'});//delete immediately
+         }else{
+            dispatch({ type:ACTION_TYPE.DELETE,entityIndex:index, reversal:true, entity: cacheEntity });   
+         }
+         
       } catch (error) {
          console.log('Error caught deleting: ',entity);
          dispatch({ type:ACTION_TYPE.DELETE,entityIndex:index, reversal:true, entity: cacheEntity });
@@ -334,11 +352,11 @@ function EBrowser(props){
 
    const renderRows = ()=>{
    let activeEntities = state.searchResult.length > 0? state.searchResult : state.entities;
-   return activeEntities && activeEntities.length> 0 ? activeEntities.map((entity,index)=> {
-      let rowId = `ebrowser-row-${index}`; //tr's id attribute
+   return activeEntities && activeEntities.length> 0 ? activeEntities.map((entity,entityIndex)=> {
+      let rowId = `ebrowser-row-${entityIndex}`; //tr's id attribute
       return ( //mapped
-         <tr id={rowId} className="ebrowser-row" key={index} row-entity={JSON.stringify({entity})}>{/** Row is clickable if there is onRead handler else default = empty function*/}
-         <Td className="ebrowser-entity-data">{index + 1}</Td> 
+         <tr id={rowId} className="ebrowser-row" key={entityIndex} row-entity={JSON.stringify({entity})}>{/** Row is clickable if there is onRead handler else default = empty function*/}
+         <Td className="TdData ebrowser-entity-data">{entityIndex + 1}</Td> 
          {
             Object.getOwnPropertyNames(props.uischema).map((uiSchemaProp,i)=>{
                let transform = props.uischema[uiSchemaProp].transform;
@@ -360,10 +378,14 @@ function EBrowser(props){
             <DummyTd className="DummyTd" /> 
             <TdFixed className="TdFixed">
                {
-               props.actions.map(action => {
+               props.actions.map((action,actionIndex) => {
 
-               switch(action.name){
+               switch(action.type){
                   case 'edit': {
+                     if(typeof action.ui === 'string'){
+                        return <ActionButton color="secondary">{action.ui}</ActionButton>
+                     }
+
                      if(action.ui){
                         let UI = action.ui;
                         return <UI onClick={onEditClickHandler.bind(null,entity)} />;
@@ -371,13 +393,17 @@ function EBrowser(props){
                      return <StyledEditIcon onClick={onEditClickHandler.bind(null,entity)}/>;
                   }
                   case 'delete': {
+                     if(typeof action.ui === 'string'){
+                        return <ActionButton color="secondary" onClick={onDeleteClickHandler.bind(null,entity,entityIndex,rowId)}>{action.ui}</ActionButton>
+                     }
+
                      if(action.ui){
                         let UI = action.ui;
-                        return <UI onClick={onDeleteClickHandler.bind(null,entity,index,rowId)} />;
+                        return <UI onClick={onDeleteClickHandler.bind(null,entity,entityIndex,rowId)} />;
                      }
-                     return <StyledDeleteIcon onClick={onDeleteClickHandler.bind(null,entity,index,rowId)}/>;
+                     return <StyledDeleteIcon key={actionIndex} onClick={onDeleteClickHandler.bind(null,entity,entityIndex,rowId)}/>;
                   }
-                  default : return <button>{action.name}</button>;
+                  default : return <Button color="primary">{action.ui}</Button>;
                   }
                })
                }
@@ -396,21 +422,45 @@ function EBrowser(props){
    * Modify Fixed Column / Action Column. 
    */
   const modifyActionColumn = ()=>{
-   let tdFixed = document.getElementsByClassName("TdFixed");
+   // let tdFixed = document.getElementsByClassName("TdFixed");
+
+      let dataTds = document.getElementsByClassName("TdData");
+      
+
+      if(dataTds && dataTds.length > 0){
+         let computedStyleOfTd = window.getComputedStyle(dataTds[0]); //get a td sample
+       
+         let fixedTds = document.getElementsByClassName("TdFixed");
+         let actionTh = document.getElementsByClassName("ThFixed")[0];
+        
+         for(let fTd of fixedTds){
+            fTd.style.minHeight = computedStyleOfTd.height;
+         }
+         let computedStyleOfFixedTds = window.getComputedStyle(fixedTds[0]);//get a TdFixed sample
+         actionTh.style.width = computedStyleOfFixedTds.width;
+         //DummyTd is the extra cell behind the positioned action td, this will be the hidden td on scroll
+         //instead of a td with entity data on it
+         for(let dTd of document.getElementsByClassName("DummyTd")){
+            dTd.style.minWidth = computedStyleOfFixedTds.width;//set the dummy td to the width of the TdFixed
+         }
+      
+      }
    
-   if(tdFixed.length > 0){
-    //set the dummy cells to the computed value of the fixed column width;
-    let computedWidthOfTdElement = window.getComputedStyle(tdFixed[0]).width;
+   // if(tdFixed.length > 0){
+   //  //set the dummy cells to the computed value of the fixed column width;
+   //  let computedWidthOfTdElement = window.getComputedStyle(tdFixed[0]).width;
     
-    for(let dTd of document.getElementsByClassName("DummyTd")){
-     dTd.style.minWidth = computedWidthOfTdElement;
-    }
-    //set the height of fixedTd
-    let computedHeightofTdElement = window.getComputedStyle(tdFixed[0]).height;
-    for(let fTd of document.getElementsByClassName("TdFixed")){
-     fTd.style.height = computedHeightofTdElement;
-    }
-   }
+   //  for(let dTd of document.getElementsByClassName("DummyTd")){
+   //   dTd.style.minWidth = computedWidthOfTdElement;
+   //  }
+   //  //set the height of fixedTd
+   //  let computedHeightofTdElement = window.getComputedStyle(tdFixed[0]).height;
+   //  for(let fTd of document.getElementsByClassName("TdFixed")){
+   //   fTd.style.height = computedHeightofTdElement;
+   //  }
+
+
+   // }
   
   }
 
@@ -435,8 +485,12 @@ function EBrowser(props){
   },[]);
 
   useEffect(()=>{
+   if(props.onRead){
+      initOnReadActionHandler(); 
+   }
+   
    modifyActionColumn();
-   initOnReadActionHandler();
+   
   })
   
 
