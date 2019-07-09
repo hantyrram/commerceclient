@@ -77,7 +77,7 @@ class UserHome extends Component{
              acc.push(Feature);
             }
             return acc;
-           },[]).map(Feature=><Route path={Feature.path} render={(renderProps)=><Feature {... renderProps} {... this.props} onMessage = {this.onMessage}/>}/>) : null 
+           },[]).map((Feature,index)=><Route key={index} path={Feature.path} render={(renderProps)=><Feature  {... renderProps} {... this.props} onMessage = {this.onMessage}/>}/>) : null 
           }
           </Switch>
         </Content>
