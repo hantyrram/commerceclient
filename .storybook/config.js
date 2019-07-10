@@ -6,13 +6,13 @@ import StoryRouter from 'storybook-react-router'; //React Router Wrapper to be a
 function loadStories() {
   // require('../src/comps/Button.stories.js');
   // require('../src/comps/EntityForm.stories.js');
-  require('../src/comps/EBread/EForm.stories.js');
+//   require('../src/comps/EBread/EForm.stories.js');
   // require('../src/comps/EFormAdd.stories.js');
   // require('../src/comps/EFormRead.stories.js');
   // require('../src/comps/EntityBrowser.stories.js');
   // require('../src/comps/EBread.stories.js');
    require('../src/comps/EBread/EBrowser.stories.js');
-   require('../src/pages/_UserHome.stories.js');
+   // require('../src/pages/_UserHome.stories.js');
   // You can require as many stories as you need.
 }
 addDecorator(StoryRouter());

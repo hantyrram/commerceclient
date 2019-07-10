@@ -4,12 +4,17 @@ import styled from 'styled-components';
 import DeleteIcon from '@material-ui/icons/DeleteSharp';
 import EditIcon from '@material-ui/icons/Edit';
 import TextField from '@material-ui/core/TextField';
+import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogActions from '@material-ui/core/DialogActions';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import SvgIcon from '@material-ui/core/SvgIcon';
 import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
 import './EBrowser.css';
+
 //ok
 const ComponentContainer = styled.div`
    padding: 1em;
@@ -53,7 +58,6 @@ const ThFixed = styled(Th)`
  position:absolute;
  right: 0px;
  min-width:8%;
- background-color:white;
  box-sizing:border-box; 
  text-align:center;
 `;
@@ -129,6 +133,30 @@ const ActionButton = styled.button`
    margin:0;
 `;
 
+function AdderModal(props){
+   const [open,setOpen] = useState(false);
+   const Content = props.content;
+   const onCloseHandler = (e)=>{
+      setOpen(false);
+   }
+
+   const trigger = (e)=>{
+      setOpen(true);
+   }
+
+   return(
+      <React.Fragment>
+         <Button size="small" style={{borderRadius:"50%",color:"green"}} onClick={trigger} ><AddIcon /></Button> 
+         <Dialog open={open} onClose={onCloseHandler}>
+            <DialogTitle>{props.title}</DialogTitle>
+            <DialogContent>
+               <Content />
+            </DialogContent>
+            <DialogActions>{props.actions.map(a=>a)}</DialogActions>
+         </Dialog>
+      </React.Fragment>
+   )
+}
 
 /**
  * A Search component for the EBrowser.
@@ -224,12 +252,15 @@ function Status({text,timeout}){
  * @version 0.0.1
  */
 function EBrowser(props){
+   //reducer action types
    const ACTION_TYPE = {
       DELETE: 'delete',
       ADD: 'add',
       EDIT: 'edit',
       SEARCH: 'search',
-      CHANGE_STATUS: 'change_statusText'
+      CHANGE_STATUS: 'change_statusText',
+      SELECT: 'select',
+      DESELECT: 'deselect' 
    }
    //maxRowExceededBehaviour enum
    const MREB = {
@@ -265,6 +296,7 @@ function EBrowser(props){
    currentPage:1,
    statusText: null,
    status: null,
+   // selectedEntities default undefined
   }
 
   let [state, dispatch] = useReducer((state,action)=>{
@@ -272,10 +304,24 @@ function EBrowser(props){
       //always reset statusText
       state.statusText = null;
    }
-   switch(action.type){
+   switch(action.type){      
+      case ACTION_TYPE.SELECT: {
+         let selectedEntities = [];
+         if(state.selectedEntities){
+            selectedEntities = Object.assign([],[...state.selectedEntities]);
+         }
+         //indexOnState is the original index of the entity from state.entities;
+         let newLength = selectedEntities.push({entity: action.entity, indexOnState: action.entityIndex, rowId: action.rowId});
+         action.onAddToSelectedEntities(newLength -1);
+         return { ...state, selectedEntities };
+      }
+      case ACTION_TYPE.DESELECT: {
+         let selectedEntities = Object.assign([],[...state.selectedEntities]);
+         selectedEntities.splice(action.selectedEntityIndex,1);
+         return { ...state, selectedEntities };
+      }
       case ACTION_TYPE.BROWSE: return { ...state, entities : action.entities  }
       case ACTION_TYPE.SEARCH: return { ...state, searchResult : action.searchResult  }
-      
       case ACTION_TYPE.DELETE: {
          //delete failed,reverse
          let splicedEntities = Object.assign([],[...state.entities]);
@@ -348,6 +394,21 @@ function EBrowser(props){
       }
    }
 
+   /** Check boxes onchange handler*/
+   const selectChangeHandler = (entity,entityIndex,rowId,e)=>{
+      e.persist();//persist event, needed on onAddToSelectedEntities callback.
+
+      if(e.target.checked){
+         dispatch({ type: ACTION_TYPE.SELECT, entity, entityIndex, onAddToSelectedEntities : (index)=> {
+            e.target.value = index;
+         } });
+         
+      }else{
+         dispatch({type: ACTION_TYPE.DESELECT,selectedEntityIndex: e.target.value});
+      }
+      
+   } 
+
 
 
    const renderRows = ()=>{
@@ -381,6 +442,10 @@ function EBrowser(props){
                props.actions.map((action,actionIndex) => {
 
                switch(action.type){
+                  case 'select' : {
+                     return <input type="checkbox" onChange={selectChangeHandler.bind(null,entity,entityIndex,rowId)}/>
+                  }
+
                   case 'edit': {
                      if(typeof action.ui === 'string'){
                         return <ActionButton color="secondary">{action.ui}</ActionButton>
@@ -464,6 +529,13 @@ function EBrowser(props){
   
   }
 
+  const callOnSelectEffect = ()=>{
+     if(props.onSelect) props.onSelect(state.selectedEntities);
+  }
+
+  useEffect(callOnSelectEffect);
+
+
   useEffect(()=>{
    if(props.entities instanceof Promise){
       dispatch({type: ACTION_TYPE.CHANGE_STATUS, status:'waiting', statusText:'Fetching Entities...'});
@@ -495,12 +567,22 @@ function EBrowser(props){
   
 
   function onAddClickHandler(e){
-     (async ()=>{
-      let entity = await props.onAdd();
-      dispatch({type: 'ADD', entity });
-     })()
+     //addMode = modal? display modal
+   //   (async ()=>{
+   //    let entity = await props.onAdd();
+   //    dispatch({type: 'ADD', entity });
+   //   })()
   }
 
+  const AdderButton = ()=>{
+     console.log(props.adderUi);
+     if(props.adderType === 'modal'){
+        
+        return <AdderModal content={props.adderModalContent} actions={props.adderModalActions} title={props.adderModalTitle}/>
+     }
+     
+     return null;
+  }
   return(
    
    <ComponentContainer>
@@ -512,11 +594,7 @@ function EBrowser(props){
                <EBrowserSearch onResult={onSearchResult} data={state.entities} searchableFields={props.searchableFields} /> 
             : null
          }
-         {
-            props.onAdd ? 
-               <Button size="small" style={{borderRadius:"50%",color:"green"}} onClick={onAddClickHandler}><AddIcon /></Button> 
-            : null
-         }
+         <AdderButton />
       </SearchAddPanel>
       
       <TableContainer>
@@ -532,7 +610,7 @@ function EBrowser(props){
          </TableWrapper>
       </TableContainer>
     </> :null }
-    <Status text={state.statusText}/>
+    {state.statusText ? <Status text={state.statusText}/> : null}
    </ComponentContainer>
 
   
@@ -632,6 +710,18 @@ EBrowser.propTypes = {
   * The title of the entity browser table.
   */
  title: PropTypes.string,
+ 
+ /**
+  * Determines that the + or Add button when present will do.
+  * 'inline' means entity can be added inline, a row is inserted on top, with x and check buttons to cancel or save.
+  * 'external' default, means the Adder is an external ui, EBrowser won't care.
+  * 'internal' requires adderUI which will be displayed on top of EBrowser.
+  * 'modal', requireds adderUI which will be displayed as modal.
+  */
+ adderType: PropTypes.oneOf(['inline','modal','internal','external']),
+ adderModalTitle: PropTypes.string,
+ adderModalContent: PropTypes.object,
+ adderModalActions: PropTypes.array
 
 }
 
@@ -640,13 +730,30 @@ EBrowser.propTypes = {
  * An object that defines an action that can be peformed on the EBrowser.
  * 
  * @typedef  {Object} EBrowser.action 
- * @property {String} name The action name valid values are 'delete','edit','add'
+ * @property {String} type The action name valid values are 'delete','edit','add' || 'select', 'add'
  * @property {String|React.Component|React.Element|undefined} ui The string or component that the user interacts with. 
  * If value is a string, it is display as simple button without border. If ui is undefined EBrowser will use the 
  * default ui for the given type.
  * 
+ * 
+ * 
  */
 
+ /**
+ * A call back that is one of the property of the ACTION_TYPE.SELECT. This function recieves the index,
+ * of the entity added to the selectedEntities state. This makes DESELECTing the entity from selectedEntities
+ * easier.
+ * 
+ * @typedef  {function} EBrowser~onAddToSelectedEntities
+ * @param {Number} index The index of the entity on the selectedEntities state array.
+ */
 
+ /**
+ * Defines the state of the EBrowser component.
+ * 
+ * @typedef  {Object} EBrowser~state
+ * @property {Array} selectedEntities  An array containing the selected entities, if the 'select' action type
+ * is on.
+ */
 
 export default EBrowser;

@@ -1,7 +1,7 @@
 import {emit} from './event';
 import axios from './axios';
 
-export async function permission_browse(permission){
+export async function permission_browse(){
  const PATH = `/apiv1/permissions`;
  let source = '';
  try {
@@ -72,7 +72,6 @@ export async function permission_delete(permission){
   emit({type:'error',source: source, error: error}); 
  }
 }
-
 
 export async function role_browse(){
  const PATH = `/apiv1/roles`;

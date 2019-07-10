@@ -29,6 +29,9 @@ export default mlh => {
       }
    } 
 
+   const innerEBrowserOnSelect = (selectedEntities)=>{
+      console.log(selectedEntities);
+   }
    return(
      <React.Fragment>
      <EReader 
@@ -40,9 +43,19 @@ export default mlh => {
         ()=>
          <EBrowser 
           onDelete={removePermissionFromRoleAction}
-          actions={[{type:'delete',ui:`Remove from ${role.name}`}]}
+          actions={[{type:'delete',ui:`Remove from ${role.name}`},{type:'add'}]}
+          adderType="modal"
+          adderModalTitle={`Choose the permissions to add to ${role.name}`}
+          adderModalContent={()=>{
+             //note we need to fetch all the permissions here
+            return <EBrowser actions={[{type:'select'}]} entities={role.permissions} uischema={PermissionUISchema} onSelect={innerEBrowserOnSelect}/>
+            }
+          }
+          adderModalActions={
+            [<button>Add Permission To {role.name}</button>]
+          }
           uischema={PermissionUISchema} 
-          entities={mlh.location.state.entity.permissions}
+          entities={role.permissions}
           // onRead={()=>{}} //MUST pass empty function otherwise seem to retain the old onRead,
          />
        }
