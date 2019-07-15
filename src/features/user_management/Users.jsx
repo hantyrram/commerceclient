@@ -6,6 +6,7 @@ import components from '../../comps';
 import UserUISchema from '../uischemas/User';
 import FeatureTitle from '../../comps/FeatureTitle';
 import AddButton from '../../comps/EBread/AddButton';
+import EBrowser from '../../comps/EBread/EBrowser';
 
 //test only delete this line
 import axios from '../../axios';
@@ -17,6 +18,11 @@ import {
  user_delete as removeUser,
  user_browse as fetchUsers,
 } from '../requesters';
+
+import{
+   user_generate as generateUser,
+} from '../../apis';
+
 
 
 const { EBread } = components; 
@@ -51,6 +57,11 @@ function Users(props){
  const onSave = user => console.log('Saving User');
  const onDelete = user => console.log('Deleting User');
 
+ const generateUserOnClickHandler = ()=>{
+   generateUser().then(artifact=>{
+      console.log(artifact);
+   })
+ }
  return (
   <Router basename="/users">
    <div className="feature">
@@ -59,6 +70,7 @@ function Users(props){
       {/* <Link to="/add"><AddBox /><span>Add New User</span></Link> */}
       <AddButton adderPath={"/add"} text="Add New User"/>
      </FeatureTitle>
+     <button onClick={generateUserOnClickHandler}>Generate User </button>
      <Route render={mlh=>
       users?
       <EBread 

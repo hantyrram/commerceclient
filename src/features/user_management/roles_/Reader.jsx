@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState,forwardRef} from 'react';
 import EBrowser from '../../../comps/EBread/EBrowser';
 import EAdder from '../../../comps/EBread/EAdder';
 import EReader from '../../../comps/EBread/EReader';
@@ -7,16 +7,36 @@ import RoleUISchema from '../../uischemas/Role';
 import PermissionUISchema from '../../uischemas/Permission';
 import FeatureTitle from '../../../comps/FeatureTitle';
 import AddButton from '../../../comps/EBread/AddButton';
+import RolePermissionsReader from './RolePermissionsReader';
 
 import {
+ permission_browse as fetchPermissions,
+ role_permissions_add as addPermissionsToRole,
  role_permissions_delete as removePermissionFromRole
 } from '../../../apis';
 
+
+/**
+ * The component used to read and present a Role entity.
+ * @typedef {Function} Roles.Reader
+ * 
+ */
 export default mlh => {
 
-   let role = mlh.location.state.entity;
+   let role;
+
+   if(mlh.location.state.entity){
+      role = mlh.location.state.entity;
+   }
    
-   const removePermissionFromRoleAction = async (permission)=>{
+   //holds the cache of the selected permissions to be added to Role.
+   let selectedPermissionsCache = [];
+  
+
+  
+   
+    /**Action Handler*/
+    const removePermissionFromRoleAction = async (permission)=>{
       console.log('Called');
       try {
          let artifact = await removePermissionFromRole(role._id,permission.name);
@@ -29,36 +49,15 @@ export default mlh => {
       }
    } 
 
-   const innerEBrowserOnSelect = (selectedEntities)=>{
-      console.log(selectedEntities);
-   }
+       //onAdd must wait for the button click handler 
    return(
      <React.Fragment>
      <EReader 
       identifier="_id"
       UISchema={RoleUISchema} 
-      entity={mlh.location.state.entity} 
+      entity={role} 
       onDelete={()=>{}} 
-      permissions = {
-        ()=>
-         <EBrowser 
-          onDelete={removePermissionFromRoleAction}
-          actions={[{type:'delete',ui:`Remove from ${role.name}`},{type:'add'}]}
-          adderType="modal"
-          adderModalTitle={`Choose the permissions to add to ${role.name}`}
-          adderModalContent={()=>{
-             //note we need to fetch all the permissions here
-            return <EBrowser actions={[{type:'select'}]} entities={role.permissions} uischema={PermissionUISchema} onSelect={innerEBrowserOnSelect}/>
-            }
-          }
-          adderModalActions={
-            [<button>Add Permission To {role.name}</button>]
-          }
-          uischema={PermissionUISchema} 
-          entities={role.permissions}
-          // onRead={()=>{}} //MUST pass empty function otherwise seem to retain the old onRead,
-         />
-       }
+      permissions = {()=><RolePermissionsReader role={role} />}
      />
      
     </React.Fragment>

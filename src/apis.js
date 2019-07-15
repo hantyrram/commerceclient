@@ -11,17 +11,18 @@ export async function permission_browse(){
   source = artifact.source;
   emit({type:'artifact',source:source, artifact:artifact});
   if(artifact.message) emit({type:'message',source:source, message: artifact.message});
-
+  return artifact;
  } catch (error) {
-  let artifact;
-  if(error.response){
-   artifact = error.response.data;
-   emit({type:'error',source: source, error: artifact.error }); 
-   return;
-  }
-  //use artifact.error if server error response was received, 
-  //error on request error e.g timeout
-  emit({type:'error',source: source, error:  error}); 
+   let artifact;
+   if(error.response){
+    artifact = error.response.data;
+    emit({type:'error',source: source, error: artifact.error}); 
+    return artifact;
+   }
+   //use artifact.error if server error response was received, 
+   //error on request error e.g timeout
+   emit({type:'error',source: source, error: error}); 
+   return  {type:'error',source: source, error: error};
  }
 }
 
@@ -147,3 +148,67 @@ export async function role_permissions_delete(roleId,permissionName){
   return  {type:'error',source: source, error: error};
  }
 }
+
+/**
+ * 
+ * @param {String} roleId The Role _id.
+ * @param {Array} permissions The permissions to add to the Role.
+ */
+export async function role_permissions_add(roleId,permissions){
+   const PATH = `/apiv1/roles/:_id/permissions`;
+   let source = '';
+   try {
+    
+    let response = await axios.put(PATH.replace(/:_id/,roleId),permissions);
+    let artifact = response.data;
+    source = artifact.source;
+    emit({type:'artifact',source:source, artifact:artifact});
+    if(artifact.message) emit({type:'message',source:source, message: artifact.message});
+    console.log(artifact);
+    return artifact;
+   } catch (error) {
+    let artifact;
+    console.log(error);
+    if(error.response){
+     artifact = error.response.data;
+     emit({type:'error',source: source, error: artifact.error}); 
+     return artifact;
+    }
+    //use artifact.error if server error response was received, 
+    //error on request error e.g timeout
+    emit({type:'error',source: source, error: error}); 
+    return  {type:'error',source: source, error: error};
+   }
+  }
+
+/**
+ * 
+ * @param {String} roleId The Role _id.
+ * @param {Array} permissions The permissions to add to the Role.
+ */
+export async function user_generate(){
+   const PATH = `/apiv1/generateuser`;
+   let source = '';
+   try {
+    
+    let response = await axios.get(PATH);
+    let artifact = response.data;
+    source = artifact.source;
+    emit({type:'artifact',source:source, artifact:artifact});
+    if(artifact.message) emit({type:'message',source:source, message: artifact.message});
+    console.log(artifact);
+    return artifact;
+   } catch (error) {
+    let artifact;
+    console.log(error);
+    if(error.response){
+     artifact = error.response.data;
+     emit({type:'error',source: source, error: artifact.error}); 
+     return artifact;
+    }
+    //use artifact.error if server error response was received, 
+    //error on request error e.g timeout
+    emit({type:'error',source: source, error: error}); 
+    return  {type:'error',source: source, error: error};
+   }
+  }  
