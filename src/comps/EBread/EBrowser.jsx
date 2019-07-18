@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer,useRef} from 'react';
+import React, { useState, useEffect, useReducer,useRef } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import DeleteIcon from '@material-ui/icons/DeleteSharp';
@@ -41,7 +41,7 @@ const Table = styled.table`
  // margin-bottom: .5em;
  & tr {
   border-top: 1px solid #d6cccc;
-  text-align:left;
+  text-align:left;  
  }
  & tr:hover{
   background-color:#f3ffee;
@@ -81,6 +81,7 @@ const TdFixed = styled(Td)`
  border-top:none;
  background-color:white;
  box-sizing:border-box; 
+ text-align:center;
 `;
 
 const DummyTd = styled.td`
@@ -112,7 +113,7 @@ const StyledEditIcon = styled(EditIcon)`
 
 const SearchAddPanel = styled.div`
  display:flex;
- justify-content: space-between;
+ justify-content: flex-end;
  align-items:normal;
 `;
 
@@ -293,6 +294,7 @@ function Status({text,timeout}){
 function EBrowser(props){
    //reducer action types
    const ACTION_TYPE = {
+      BROWSE: 'browse',
       DELETE: 'delete',
       ADD: 'add',
       EDIT: 'edit',
@@ -343,6 +345,7 @@ function EBrowser(props){
       //always reset statusText
       state.statusText = null;
    }
+   console.log(action);
    switch(action.type){      
       case ACTION_TYPE.SELECT: {
          let selectedEntities = [];
@@ -467,6 +470,7 @@ function EBrowser(props){
    
    }
 
+  
    /**
     * Populates the state.entities from the props.entities Promise.
     */
@@ -474,6 +478,7 @@ function EBrowser(props){
       if(props.entities instanceof Promise){
          dispatch({type: ACTION_TYPE.CHANGE_STATUS, status:'waiting', statusText:'Fetching data...'});
          props.entities.then(e=>{
+            console.log(e);
             dispatch({type: ACTION_TYPE.BROWSE, entities:e });
             dispatch({type: ACTION_TYPE.CHANGE_STATUS,statusText:'Entities Received!'});
          }).catch(e=>{
@@ -483,6 +488,7 @@ function EBrowser(props){
          // if(JSON.stringify(state.entities) !== JSON.stringify(props.entities)){
          //    dispatch({type: ACTION_TYPE.BROWSE, entities:props.entities });
          // }
+         console.log('Called dispatch');
          dispatch({type: ACTION_TYPE.BROWSE, entities:props.entities });
       }
    }
@@ -562,7 +568,8 @@ function EBrowser(props){
                // perhaps will improve on this.
                   cellValue = <i>{`[...${uiSchemaProp}]`}</i>
                }else{
-                  cellValue = data && transform? transform(data): data;
+                  cellValue = data; 
+                  cellValue = transform ? transform(cellValue) : cellValue;
                }
 
                return <Td key={i} className="ebrowser-entity-data">{cellValue}</Td>
@@ -602,7 +609,9 @@ function EBrowser(props){
                      }
                      return <StyledDeleteIcon key={actionIndex} onClick={onDeleteClickHandler.bind(null,entity,entityIndex,rowId)}/>;
                   }
-                  default : return <Button color="primary">{action.ui}</Button>;
+                  
+                  // default : return <Button color="primary">{action.ui}</Button>;
+                  default: return null;
                   }
                })
                }
@@ -619,8 +628,10 @@ function EBrowser(props){
   
   useEffect(callOnSelectEffect);
   useEffect(populateEntitiesFromPromiseEffect,[]);
+  
   useEffect(initOnReadActionHandlerEffect);
   useEffect(modifyActionColumnEffect);
+  
   
   const AdderButton = (props)=>{
      if(props.adderType === 'internal-modal'){
@@ -646,7 +657,7 @@ function EBrowser(props){
      
    };
   
-   
+  
   
   return(
    

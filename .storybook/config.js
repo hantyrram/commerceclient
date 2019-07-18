@@ -12,6 +12,7 @@ function loadStories() {
   // require('../src/comps/EntityBrowser.stories.js');
   // require('../src/comps/EBread.stories.js');
    require('../src/comps/EBread/EBrowser.stories.js');
+   
    // require('../src/pages/_UserHome.stories.js');
   // You can require as many stories as you need.
 }

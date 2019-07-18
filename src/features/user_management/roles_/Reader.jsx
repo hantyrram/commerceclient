@@ -3,7 +3,7 @@ import EBrowser from '../../../comps/EBread/EBrowser';
 import EAdder from '../../../comps/EBread/EAdder';
 import EReader from '../../../comps/EBread/EReader';
 import EEditor from '../../../comps/EBread/EEditor';
-import RoleUISchema from '../../uischemas/Role';
+import RoleUISchema from './UISchema';
 import PermissionUISchema from '../../uischemas/Permission';
 import FeatureTitle from '../../../comps/FeatureTitle';
 import AddButton from '../../../comps/EBread/AddButton';
@@ -54,7 +54,7 @@ export default mlh => {
      <React.Fragment>
      <EReader 
       identifier="_id"
-      UISchema={RoleUISchema} 
+      uischema={RoleUISchema} 
       entity={role} 
       onDelete={()=>{}} 
       permissions = {()=><RolePermissionsReader role={role} />}

@@ -1,31 +1,32 @@
 import React, { useState, useEffect} from 'react';
-import {BrowserRouter as Router,Route,Link} from 'react-router-dom';
+import {BrowserRouter as Router,Route,Switch} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import featureGroups from '../featureGroups';
+import Message from '../../comps/Message';
 import components from '../../comps';
 import UserUISchema from '../uischemas/User';
 import FeatureTitle from '../../comps/FeatureTitle';
 import AddButton from '../../comps/EBread/AddButton';
 import EBrowser from '../../comps/EBread/EBrowser';
+import UIBrowserSchema from './users_/UIBrowserSchema';
+import Reader from './users_/Reader';
+
+import Adder from './users_/Adder';
 
 //test only delete this line
 import axios from '../../axios';
 
 
-import {
- user_create as addUser,
- user_edit as updateUser,
- user_delete as removeUser,
- user_browse as fetchUsers,
-} from '../requesters';
+
 
 import{
    user_generate as generateUser,
+   user_browse as fetchUsers,
 } from '../../apis';
+import { ReadStream } from 'tty';
 
 
 
-const { EBread } = components; 
 
 /**
  * 
@@ -33,63 +34,49 @@ const { EBread } = components;
  */
 function Users(props){
 
- const [users,setUsers] = useState([]);
+ const ADDER_PATH = '/users/add';
+ const EDITOR_PATH = '/users/:identifier/edit';
+ const READER_PATH = '/users/:identifier';
+ const adder = ()=>{}
+ const editor = ()=>{}
 
- useEffect(()=>{
+ const usersPromise = new Promise((res,rej)=>{
+   fetchUsers().then(artifact=>{
+      if(artifact.status === 'ok'){
+         res(artifact.data.entity);
+      }
+   }).catch(e=>{
+      console.log(e);
+      rej();
+   });
+})
 
-  fetchUsers().then( artifact => {
-   console.log(artifact.data.data.entity);
-   if(JSON.stringify(users) !== JSON.stringify(artifact.data.data.entity)){
-    setUsers(artifact.data.data.entity);
-   }
-  }   
-  ).catch(e=>console.log(e));
-
-  (async function(){
-   let response = await axios.get('/apiv1/features');
-   console.log(response.data);
-  })()
- });
-
-
-
-
- const onSave = user => console.log('Saving User');
- const onDelete = user => console.log('Deleting User');
-
- const generateUserOnClickHandler = ()=>{
-   generateUser().then(artifact=>{
-      console.log(artifact);
-   })
- }
+ 
  return (
-  <Router basename="/users">
-   <div className="feature">
-     <FeatureTitle>
-      <span>Users</span>
-      {/* <Link to="/add"><AddBox /><span>Add New User</span></Link> */}
-      <AddButton adderPath={"/add"} text="Add New User"/>
-     </FeatureTitle>
-     <button onClick={generateUserOnClickHandler}>Generate User </button>
-     <Route render={mlh=>
-      users?
-      <EBread 
-       {...mlh}
-       identifier={"_id"}
-       UISchema={UserUISchema} 
-       entities={users}
-       adderPath="/add" 
-       readerPath="/:identifier" 
-       editorPath="/:identifier/edit"
-       browserPath="/"
-       onSave={onSave} 
-       onDelete={onDelete} 
-       // onAdd={onAdd} 
-      />:null
-     }/>
-    
-   </div>
-  </Router>
+   <React.Fragment>
+   <FeatureTitle>
+    <span>Users</span>
+    <AddButton adderPath="/users/add" text="Add New User"/>
+   </FeatureTitle>
+   <Message />
+   <Switch>
+     <Route path={ADDER_PATH} exact component={ Adder }/> 
+     <Route path={EDITOR_PATH} exact render={ editor }/> 
+     <Route path={READER_PATH} exact component={ Reader }/>    
+     <EBrowser 
+         uischema={UIBrowserSchema}
+         // searchable
+         // searchableFields={['name','label']}
+         entities={usersPromise}
+         onDelete={()=>{}}
+         onRead = {()=>{}}
+         actions = {[
+         { type :'delete' }
+         ]}
+      />
+   </Switch>
+   
+  </React.Fragment>
  );
 
 }
