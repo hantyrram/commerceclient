@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
  * EFormRead supports the Read functionality of BREAD.
  * @constructor
  * @param {Object} props - React.props
- * @param {Object} props.UISchema - The UISchema that describes the elements of the form.
+ * @param {Object} props.uischema - The uischema that describes the elements of the form.
  * @param {Entity} [props.Entity] - The Entity that is being presented by the Form.
  * @param {Entity} props.entity - The entity instance/object that is being presented by the Form.
  * @param {Number} [props.editorPath] - If 1 the Edit button is enabled.
@@ -40,7 +40,7 @@ export default function EForm(props){
   return ()=>{console.log('Unmounting')};
  });
  
- if(!props.UISchema) return "No Schema";
+ if(!props.uischema) return "No Schema";
 
  if(props.type && props.type !== 'adder' && !entity) return "No Entity";//non - adder type requires entity
 
@@ -64,7 +64,12 @@ export default function EForm(props){
   
  const renderDeleteButton = () => props.onDelete ? <Button variant="contained" size="medium" color="secondary" > Delete <DeleteIcon /></Button> : null;
 
- const renderSaveButton = () => props.onSave ? <Button variant="contained" size="medium" color="primary" className="action-button" onClick={saveButtonClickHandler}>Save</Button>:null;
+ const renderSaveButton = () => 
+   props.onSave ? 
+      <Button variant="contained" size="medium" color="primary" className="action-button" onClick={saveButtonClickHandler}>
+         {props.saveButtonCaption || 'Save'}
+      </Button>
+   :null;
 
  const readerActions = ()=> 
   <div className="eform-actions" style={{textAlign:"right"}}>
@@ -101,15 +106,16 @@ export default function EForm(props){
   let elements = [];
 
   
-  for(let key of Object.keys(props.UISchema)){
+  for(let key of Object.keys(props.uischema)){
    //if prop contains the current key,use that as the component.
+   //This allows the use of component for specific Field.
    if(props[key]){
     let Element = props[key];
            
     elements.push(
           <>
            <div className="eform-inputgroup">
-            <label htmlFor={key}>{key.replace(/^[a-z]/,key.charAt(0).toUpperCase())}</label>
+            <label htmlFor={key} {...props.uischema[key].labelAttributes}>{key.replace(/^[a-z]/,key.charAt(0).toUpperCase())}</label>
            </div>
            <Element />
           </>
@@ -120,13 +126,16 @@ export default function EForm(props){
    let element;
    let attributes;
    if(props.type === 'adder' || !props.type){
-    if(props.UISchema[key].attributes && props.UISchema[key].attributes.readOnly) continue; //skip readOnly fields on Add
-    element = props.UISchema[key];
+    //skip readOnly fields on Add
+    if(props.uischema[key].attributes && props.uischema[key].attributes.readOnly) continue; 
+    
+    element = props.uischema[key];
     attributes = { ...element.attributes, onChange:onChangeHandler, defaultValue: element.attributes.defaultValue || ""};
     
    }else{
-    element = props.UISchema[key]; //input
+    element = props.uischema[key]; //input field
     let value = entity && entity[key]? entity[key] : null;
+    if(!value) continue; //skip creating input fields for property that has no value
     attributes = { ...element.attributes }; //add the onChangeHandler prop as additional attribute
     //the reason value is checked is value won't exist on type 'adder';
     if(props.type === 'editor') {
@@ -139,16 +148,19 @@ export default function EForm(props){
      if(value) attributes.value = value; //makes readOnly
      attributes.readOnly = true;
     }
-    //transform on none zero length value && if transform is available on UISchema
-    if(String(attributes.value).length > 0 && props.UISchema[key].transform){
+   //  transform on none zero length value && if transform is available on uischema
+    if(String(attributes.value).length > 0 && props.uischema[key].transform){
      if(attributes.value){
-      attributes.value = props.UISchema[key].transform(attributes.value);
+      attributes.value = props.uischema[key].transform(attributes.value);
      }
      if(attributes.defaultValue){
-      attributes.defaultValue = props.UISchema[key].transform(attributes.defaultValue);
+      attributes.defaultValue = props.uischema[key].transform(attributes.defaultValue);
      }
     }
+   
    }
+
+   
 
     let children = null;
     //for select input element, add options as children
@@ -158,10 +170,11 @@ export default function EForm(props){
      }
     }
     elements.push(<div className="eform-inputgroup">
-            { element.label ? <label htmlFor={key}>{element.label}</label> : null }
+            { element.label ? <label htmlFor={key} {...element.labelAttributes}>{element.label}</label> : null }
             { React.createElement(element.el, attributes, children) }
            </div>);
-  }
+  } //end for
+
   return elements;
  }
  
@@ -179,5 +192,14 @@ EForm.propTypes = {
   * The identifier of the entity. e.g. _id
   */
  identifier: PropTypes.string,
+
+ /**
+  * The text that will be used on the save button, otherwise 'Save'
+  */
+ saveButtonCaption: PropTypes.string,
+ /**
+  * The UI Schema
+  */
+ uischema: PropTypes.object
 
 }

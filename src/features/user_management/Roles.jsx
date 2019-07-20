@@ -3,15 +3,13 @@ import {Route,Switch} from 'react-router-dom';
 import featureGroups from '../featureGroups';
 import EBrowser from '../../comps/EBread/EBrowser';
 import EAdder from '../../comps/EBread/EAdder';
-import EReader from '../../comps/EBread/EReader';
 import EEditor from '../../comps/EBread/EEditor';
-import RoleUISchema from '../uischemas/Role';
-import PermissionUISchema from '../uischemas/Permission';
 import FeatureTitle from '../../comps/FeatureTitle';
 import AddButton from '../../comps/EBread/AddButton';
 import Message from '../../comps/Message';
 import Reader from './roles_/Reader';
-
+import RoleUISchema from './roles_/UISchema';
+import Adder from './roles_/Adder';
 //ok
 import {
  role_browse as fetchRoles,
@@ -27,6 +25,9 @@ function Roles({user,history}){
  const EDITOR_PATH = '/roles/:identifier/edit';
  const READER_PATH = '/roles/:identifier';
  const [roles,setRoles] = useState([]);
+
+ delete RoleUISchema['_id'];
+ delete RoleUISchema['permissions'];
 
 //  let unsubscribe = subscribe((eventResult)=>{
 //   switch(eventResult.source){
@@ -102,49 +103,47 @@ function Roles({user,history}){
  const editor = mlh => 
   <EEditor 
    identifier="_id"
-   UISchema={RoleUISchema} 
+   uischema={RoleUISchema} 
    entity={mlh.location.state.entity} 
    onSave={()=>{}} onDelete={()=>{}} 
   /> 
 
-   const adder = mlh => <EAdder UISchema={RoleUISchema} onSave={()=>{}} /> 
-
- 
  return(
   <React.Fragment>
    <FeatureTitle>
     <span>Roles</span>
-    <AddButton adderPath="/roles/add" text="Add New Role"/>
+    <AddButton adderPath="/roles/add" text="Create New Role"/>
    </FeatureTitle>
    <Message />
    <Switch>
-     <Route path={ADDER_PATH} exact render={ adder }/> 
+     <Route path={ADDER_PATH} exact component={ Adder }/> 
      <Route path={EDITOR_PATH} exact render={ editor }/> 
-     <Route path={READER_PATH} exact render={ Reader }/>    
+     <Route path={READER_PATH} exact component={ Reader }/>    
      <EBrowser 
-      uischema={RoleUISchema}
-      searchable
-      searchableFields={['name','label']}
-      entities={
-         new Promise((res,rej)=>{
-            fetchRoles().then(artifact=>{
-               if(artifact.status === 'ok'){
-                  console.log(artifact);
-                  res(artifact.entity);
-               }
-            }).catch(e=>{
-               console.log(e);
-               rej();
-            });
-         })
-       }
-      
-    onDelete={onRoleDelete}
-    onRead = {onRoleRead}
-    actions = {[
-     { type :'delete' }
-    ]}
-   />
+         uischema={RoleUISchema}
+         searchable
+         searchableFields={['name','label']}
+         entities={
+            new Promise((res,rej)=>{
+               fetchRoles().then(artifact=>{
+                  if(artifact.status === 'ok'){
+                     console.log(artifact);
+                     console.log(artifact);
+                     res(artifact.data.entity);
+                  }
+               }).catch(e=>{
+                  console.log(e);
+                  rej();
+               });
+            })
+         }
+         
+         onDelete={onRoleDelete}
+         onRead = {onRoleRead}
+         actions = {[
+         { type :'delete' }
+         ]}
+      />
    </Switch>
    
   </React.Fragment>
