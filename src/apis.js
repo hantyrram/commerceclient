@@ -74,6 +74,7 @@ export async function permission_delete(permission){
  }
 }
 
+
 export async function role_browse(){
  const PATH = `/apiv1/roles`;
  let source = '';
@@ -173,7 +174,11 @@ export async function role_permissions_delete(roleId,permissionName){
   emit({type:'error',source: source, error: error}); 
   return  {type:'error',source: source, error: error};
  }
+
 }
+
+
+
 
 /**
  * 
@@ -302,5 +307,6 @@ export async function user_add(employeeId){
     return  {type:'error',source: source, error: error};
    }
 }  
+
 
 
