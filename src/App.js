@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+
 import {
   BrowserRouter as Router, 
   Redirect,
@@ -9,6 +10,7 @@ import UserHome from './pages/UserHome';
 import features from './features';
 import {user_permissions_read as getUserPermissions} from './features/requesters';
 import './App.css';
+import UserContext from './UserContext';
 
 /**
  * Checks if the user has the given permission.Note: MUST bind user as this.
@@ -70,12 +72,14 @@ class App extends Component {
     // const userHome = (props)=>{return this.state.user?<UserHome {...props} user={this.state.user} onLogout={this.onLogout} onMessage={this.state.message}/>:<Redirect to="/login"/>}
     const NOT_FOUND = ({history})=>{return(<div><h1>Page Not Found</h1></div>)}
     return (
-     <Router>
-      <Switch>
-        <Route path="/login" render={this.LoginPage} />
-        <Route path="/" render={this.HomePage} />
-      </Switch>
-     </Router>
+      <UserContext.Provider value={this.state.user}>
+         <Router>
+            <Switch>
+            <Route path="/login" render={this.LoginPage} />
+            <Route path="/" render={this.HomePage} />
+            </Switch>
+         </Router>
+      </UserContext.Provider>
     );
   }
 }

@@ -11,9 +11,10 @@ function loadStories() {
   // require('../src/comps/EFormRead.stories.js');
   // require('../src/comps/EntityBrowser.stories.js');
   // require('../src/comps/EBread.stories.js');
-   require('../src/comps/EBread/EBrowser.stories.js');
-   
-   // require('../src/pages/_UserHome.stories.js');
+   // require('../src/comps/EBread/EBrowser.stories.js');
+   require('../src/App.stories');
+   require('../src/features/employees/EmployeeAdd.stories');
+   require('../src/features/employees/EmployeeView.stories');
   // You can require as many stories as you need.
 }
 addDecorator(StoryRouter());

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component,useContext } from 'react';
 import {Switch,Route,Link} from 'react-router-dom';
 import Permission from '../features/PermissionBrowse';
 import Header from '../comps/Header';
@@ -6,6 +6,7 @@ import SideNav from '../components/SideNav';
 import style from 'styled-components';
 import Message from '../components/Message';
 import { subscribe } from '../actionEvent';
+import UserContext from '../UserContext';
 
 
 const styles = {
@@ -89,3 +90,4 @@ class UserHome extends Component{
 }
 
 export default UserHome;
+
