@@ -12,7 +12,6 @@ export default class Request{
    }
 
    async send(payload){
-      console.log(this.apiEndpoint);
       this.payload = payload; //cache payload
       let source = '';
       try {

@@ -80,10 +80,7 @@ export default function EForm(props){
  if(!props.uischema) return "No Schema";
 
  const changeHandler = e => {
-  console.log(e.target.name);
-  console.log(e.target.value);
   setEntity(Object.assign(entity,{[e.target.name]:e.target.value}));
-  console.log(entity);
  }
 
  const renderElements = ()=>{
@@ -96,10 +93,13 @@ export default function EForm(props){
            
     elements.push(
           <>
-           <div className="eform-inputgroup">
-            <label htmlFor={key} {...props.uischema[key].labelAttributes}>{key.replace(/^[a-z]/,key.charAt(0).toUpperCase())}</label>
-           </div>
-           <Element />
+           <FormControl className="eform-inputgroup">
+            <FormControlLabel htmlFor={key} {...props.uischema[key].labelAttributes}>{key.replace(/^[a-z]/,key.charAt(0).toUpperCase())}</FormControlLabel>
+            <FormControlInput>
+               <Element />
+            </FormControlInput>
+           </FormControl>
+           
           </>
            );
     continue;

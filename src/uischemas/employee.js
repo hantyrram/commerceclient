@@ -217,6 +217,7 @@ const employee = {
          type: "text",
          minLength: 1,
          maxLength: 30,
+         autoFocus:true
       }
    },
    salutation : {
@@ -313,7 +314,7 @@ const employee = {
          maxLength: 20,
          required:true,
       },
-      transform: v => new Date(v)
+      transform: v => String(new Date(v))
    },
    email: {
       el : "input",
@@ -349,7 +350,7 @@ const employee = {
          maxLength: 35,
          required:true,
       },
-      transform: v => new Date(v)
+      transform: v => String(new Date(v))
    },
    jobTitle: {
       el : "input",
@@ -386,7 +387,7 @@ const employee = {
          disable:true,
          readOnly: true,
       },
-      transform : v => new Date(v)
+      transform : v =>String(new Date(v))
    },
    createdBy: {
       el : "input",

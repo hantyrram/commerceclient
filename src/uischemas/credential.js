@@ -1,16 +1,4 @@
 export default {
-   _id : {
-      el : "input",//element tag
-      label: "_id",//label of the element
-      attributes : {//element attributes
-         name : "_id",//currently required,see ?? improvement comment on EntityForm
-         id:"user-id",
-         type: "text",
-         minLength: 1,
-         maxLength: 30,
-         disabled:true
-      }
-   },
    username : {
       el : "input",
       label: "Username",
@@ -19,19 +7,32 @@ export default {
          id:"username",
          type:"text",
          minLength: 1,
-         maxLength: 35
+         maxLength: 35,
+         autoFocus:true
       }
    },
    password : {
       el : "input",
       label: "Password",
       attributes : {
-         name : "username",
-         id:"username",
+         name : "password",
+         id:"password",
          type:"password",
          minLength: 1,
          maxLength: 35
       }
+   },
+   temp : {
+      el : "input",
+      label: "Temporary",
+      attributes : {
+         name : "createdOn",
+         id:"created-on",
+         type:"text",
+         minLength: 1,
+         maxLength: 35,
+         readOnly: true
+      },
    },
    createdOn : {
       el : "input",
@@ -42,7 +43,7 @@ export default {
          type:"text",
          minLength: 1,
          maxLength: 35,
-         hidden:true
+         readOnly: true
       },
       transform: v => new Date(v).toUTCString()
    },
@@ -55,7 +56,7 @@ export default {
          type:"text",
          minLength: 1,
          maxLength: 35,
-         hidden:true
+         readOnly: true
       },
    }
 }

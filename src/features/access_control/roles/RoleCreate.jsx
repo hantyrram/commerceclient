@@ -1,41 +1,38 @@
 import React, { Component, useEffect,useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-import employeeUiSchema from 'uischemas/employee';
+import roleUiSchema from 'uischemas/role';
 import EForm from 'components/EForm';
 import Button from '@material-ui/core/Button';
-import { EmployeeAddRequest } from 'requests';
+import { RoleCreateRequest } from 'requests';
 
 
-function EmployeeAdd(props){
-   const type = props.type || 'auto';
 
-   if(type === 'auto'){
-      employeeUiSchema.employeeId.attributes.readOnly = true;
-   }else{
-      delete employeeUiSchema.employeeId.attributes.readOnly;
-   }
+function RoleCreate(props){
 
    const unsubscriberRef = useRef();
 
    const [message,setMessage] = useState();
 
+   delete roleUiSchema['permissions'];
+   
    const subscriber = (requestResponse)=>{
       if(requestResponse.type === 'artifact'){
          let {artifact} = requestResponse;
+         console.log(artifact);
          if(artifact.status === 'ok'){
-            console.log(props);
-            console.log(artifact);
             props.history.push(artifact.data.href,{entity : artifact.data.entity});
             return;
          }
          setMessage(artifact.error);
-         
       }
-      
+      if(requestResponse.type === 'error'){
+         setMessage(requestResponse.error);
+      }
+
    }
 
    const clickHandler = entity => event=> {
-      let request = new EmployeeAddRequest(type);
+      let request = new RoleCreateRequest();
       unsubscriberRef.current = request.subscribe(subscriber);
       request.send(entity);
    } 
@@ -44,23 +41,23 @@ function EmployeeAdd(props){
       return unsubscriberRef.current;
    });
 
-   
    useEffect(()=>{
-      document.getElementById(employeeUiSchema.employeeId.attributes.id).focus();
+      document.getElementById(roleUiSchema.name.attributes.id).focus();
    });
+
 
    return(
       <>
       {JSON.stringify(message)}
-      <EForm title="Enter Employee Details" uischema={employeeUiSchema} actions={
+      <EForm title="Create Role" uischema={roleUiSchema} actions={
          entity => [
-            <Button onClick={clickHandler(entity)} color="primary" variant="contained">Save</Button>
+            <Button onClick={clickHandler(entity)} color="primary" variant="contained">Create</Button>
          ]
       }/>
       </>
    )
 }
 
-EmployeeAdd.propTypes = {};
+RoleCreate.propTypes = {};
 
-export default EmployeeAdd;
+export default RoleCreate;

@@ -1,4 +1,4 @@
-const s = {
+export default {
  _id : {
   el : "input",//element tag
   label: "ID",//label of the element
@@ -7,7 +7,8 @@ const s = {
    id:"role-id",
    type: "text",
    minLength: 1,
-   maxLength: 30
+   maxLength: 30,
+   readOnly: true
   }
  },
  name : {
@@ -43,10 +44,4 @@ const s = {
  }
 }
 
-const SIZE = 1;
 
-s.name.attributes.style = {width: String(s.name.attributes.maxLength * SIZE) + 'em'};
-s.label.attributes.style = {width: String(s.name.attributes.maxLength * SIZE) + 'em'};
-s.permissions.attributes.style = {width: String(s.name.attributes.maxLength * SIZE) + 'em'};
-
-export default s;

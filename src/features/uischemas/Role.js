@@ -7,7 +7,9 @@ const s = {
    id:"role-id",
    type: "text",
    minLength: 1,
-   maxLength: 30
+   maxLength: 30,
+   hidden:true,
+   readOnly:true,
   }
  },
  name : {

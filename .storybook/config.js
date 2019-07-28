@@ -15,6 +15,8 @@ function loadStories() {
    require('../src/App.stories');
    require('../src/features/employees/EmployeeAdd.stories');
    require('../src/features/employees/EmployeeView.stories');
+   require('../src/features/credentials/CredentialCreate.stories');
+   require('../src/features/credentials/CredentialView.stories');
   // You can require as many stories as you need.
 }
 addDecorator(StoryRouter());
