@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import employeeUiSchema from 'uischemas/employee';
 import EBrowser from 'components/EBrowser';
 import { EmployeeBrowseRequest } from 'requests';
+import Feature from 'components/Feature';
+import FeatureShortcutLink from 'components/FeatureShortcutLink';
 
 
 export default (props)=>{
@@ -24,11 +26,9 @@ export default (props)=>{
 
    
    return(
-      <div>
-         Employees 
-         <Link to="/employees/add">Add Employee</Link>
+      <Feature group="Employees" featureShortcuts={[<FeatureShortcutLink to="/employees/add">Add New Employee</FeatureShortcutLink>]}>
          <EBrowser uischema={employeeUiSchema} entities={entitiesPromise} onRead={ebrowserReadHandler}
          />
-      </div>
+      </Feature>
    )
 }

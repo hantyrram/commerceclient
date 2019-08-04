@@ -375,6 +375,15 @@ const employee = {
          required: true,
       },
    },
+   roles : {
+      el: "select",
+      label: "Roles",
+      attributes: {
+       name: "roles",
+       id: "employee-roles",
+      },
+      options: [ ]
+     },
    createdOn: {
       el : "input",
       label: "Created On",
@@ -382,10 +391,9 @@ const employee = {
          name : "createdOn",
          id:"createdOn",
          type:"text",
-         minLength: 1,
-         maxLength: 35,
          disable:true,
          readOnly: true,
+         maxLength: 45
       },
       transform : v =>String(new Date(v))
    },

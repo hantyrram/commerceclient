@@ -50,6 +50,23 @@ export class EmployeeBrowseRequest extends Request{
   
 }
 
+export class EmployeeRolesAddRequest extends Request{
+
+   constructor(employeeId){
+      super();
+      this.employeeId = employeeId;
+   }
+
+   get method(){
+      return 'post';
+   }
+
+   get apiEndpoint(){
+      return `/apiv1/employees/${this.employeeId}/roles`
+   }
+  
+}
+
 
 export class CredentialCreateRequest extends Request{
 
@@ -100,12 +117,17 @@ export class RoleDeleteRequest extends Request{
 }
 export class RolePermissionsAddRequest extends Request{
 
+   constructor(roleId){
+      super();
+      this.roleId = roleId;
+   }
+
    get method(){
       return 'put';
    }
 
    get apiEndpoint(){
-      return `/apiv1/roles/:_id/permissions`
+      return `/apiv1/roles/${this.roleId}/permissions`
    }
   
 }

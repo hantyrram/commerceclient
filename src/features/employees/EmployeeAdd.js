@@ -4,6 +4,7 @@ import employeeUiSchema from 'uischemas/employee';
 import EForm from 'components/EForm';
 import Button from '@material-ui/core/Button';
 import { EmployeeAddRequest } from 'requests';
+import Feature from 'components/Feature';
 
 
 function EmployeeAdd(props){
@@ -50,14 +51,14 @@ function EmployeeAdd(props){
    });
 
    return(
-      <>
-      {JSON.stringify(message)}
-      <EForm title="Enter Employee Details" uischema={employeeUiSchema} actions={
-         entity => [
-            <Button onClick={clickHandler(entity)} color="primary" variant="contained">Save</Button>
-         ]
-      }/>
-      </>
+      <Feature group="Employees" feature="Add Employee">
+         {JSON.stringify(message)}
+         <EForm title="Enter Employee Details" uischema={employeeUiSchema} actions={
+            entity => [
+               <Button onClick={clickHandler(entity)} color="primary" variant="contained">Save</Button>
+            ]
+         }/>
+      </Feature>
    )
 }
 

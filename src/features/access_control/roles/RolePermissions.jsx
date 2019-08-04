@@ -41,7 +41,7 @@ function RolePermissions(props){
             adderPromise={()=>new Promise((resolve,reject)=>{
                let permissionsToAdd = selectedPermissionsCache.map(s=>s.entity);
                (async ()=>{
-                  let request = RolePermissionsAddRequest();
+                  let request = new RolePermissionsAddRequest(role._id);
                   let artifact = await request.send(permissionsToAdd);
                   if(artifact.status === 'ok'){
                      resolve(permissionsToAdd);
@@ -52,6 +52,7 @@ function RolePermissions(props){
                
             })}
             adderType="internal-modal"
+            adderTriggerLabel={`Add Permission To ${role.name}`}
             adderModalTitle={`Choose the permissions to add to ${role.name}`}
             adderModalContent={()=>
                                  <EBrowser 
@@ -81,6 +82,7 @@ function RolePermissions(props){
             uischema={PermissionUISchema} 
             entities={role.permissions}
             // onRead={()=>{}} //MUST pass empty function otherwise seem to retain the old onRead,
+            emptyEntitiesCaption={`${role.name} has no Permissions`}
             />
       </>  
       )

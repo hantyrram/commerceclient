@@ -15,32 +15,19 @@ function RoleCreate(props){
 
    delete roleUiSchema['permissions'];
    
-   const subscriber = (requestResponse)=>{
-      if(requestResponse.type === 'artifact'){
-         let {artifact} = requestResponse;
-         console.log(artifact);
+   const clickHandler = entity => event=> {
+      (async ()=>{
+         let request = new RoleCreateRequest();
+         console.log(unsubscriberRef);
+         let artifact = await request.send(entity);
          if(artifact.status === 'ok'){
             props.history.push(artifact.data.href,{entity : artifact.data.entity});
             return;
          }
          setMessage(artifact.error);
-      }
-      if(requestResponse.type === 'error'){
-         setMessage(requestResponse.error);
-      }
-
-   }
-
-   const clickHandler = entity => event=> {
-      let request = new RoleCreateRequest();
-      unsubscriberRef.current = request.subscribe(subscriber);
-      request.send(entity);
+      })()
    } 
    
-   useEffect(()=>{
-      return unsubscriberRef.current;
-   });
-
    useEffect(()=>{
       document.getElementById(roleUiSchema.name.attributes.id).focus();
    });

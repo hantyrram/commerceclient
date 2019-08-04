@@ -18,6 +18,8 @@ import ModalAdder from './EBrowserModalAdder';
 
 //ok
 const ComponentContainer = styled.div`
+   border-left: .5px solid #f5f0f0;
+   border-right: .5px solid #f5f0f0;
    // padding: 1em;
 `;
 
@@ -42,9 +44,11 @@ const Table = styled.table`
  & tr {
   border-top: 1px solid #d6cccc;
   text-align:left;  
+  color:#696060;
  }
- & tr:hover{
+ & tbody tr:hover{
   background-color:#f3ffee;
+  color:#37423d;
  }
 `;
 
@@ -56,11 +60,12 @@ const Th = styled.th`
 
 //border-box,because the DummyTd width depends on the computed style of Fixed
 const ThFixed = styled(Th)`
- position:absolute;
- right: 0px;
- min-width:8%;
- box-sizing:border-box; 
- text-align:center;
+   position:absolute;
+   right: 0px;
+   min-width:8%;
+   box-sizing:border-box; 
+   text-align:center;
+   background-color:white;
 `;
 
 
@@ -136,6 +141,15 @@ const ActionButton = styled.button`
    margin-bottom:.1em;
 `;
 
+const NoEntities = styled.div`
+   height: 20em;
+   display: flex;
+   flex-direction: column;
+   justify-content:center;
+   align-items:center;
+   color: #e99797;
+`
+
 function AdderModal(props){
    const [open,setOpen] = useState(false);
    const Content = props.content;
@@ -147,6 +161,7 @@ function AdderModal(props){
       setOpen(true);
    }
 
+   
    const cancelAdd = props.adderModalActions.filter(action=> action.type === 'cancelAdd')[0].ui;
    const confirmAdd = props.adderModalActions.filter(action=> action.type === 'confirmAdd')[0].ui;
 
@@ -161,7 +176,7 @@ function AdderModal(props){
    
    return(
       <React.Fragment>
-         <Button size="small" style={{color:"green"}} onClick={trigger} ><AddIcon /></Button> 
+         <Button size="small" style={{color:"green"}} onClick={trigger} ><AddIcon />{props.triggerLabel}</Button> 
          <Dialog open={open} onClose={onCloseHandler}>
             <DialogTitle>{props.title}</DialogTitle>
             <DialogContent>
@@ -402,9 +417,11 @@ function EBrowser(props){
    
    // invokes the onSelect prop on every select if action.type = 'select' 
    const callOnSelectEffect = ()=>{//if live select is on,
-   
-      if(props.onSelect && state.selectedEntities && state.selectedEntities.length > 0) 
-       props.onSelect(state.selectedEntities);
+      console.log(props.onSelect);
+      console.log(state.selectedEntities);
+      if(props.onSelect && state.selectedEntities && state.selectedEntities.length > 0){
+         props.onSelect(state.selectedEntities);
+      }
    }
  
    // if onRead prop is present,adds click listeners on each row, clicking a row will invoke onRead passing the entity on that row
@@ -519,11 +536,12 @@ function EBrowser(props){
    } 
 
    /**
-    * Fired when the user clicks on the AdderModal's confirm button.
+    * Fired when the user clicks on the AdderModal's confirmAdd button.
     */
    const modalAdderConfirmationHandler = ()=>{
       dispatch({type:ACTION_TYPE.CHANGE_STATUS, statusText:'Adding entity...'});
       props.adderPromise().then(entity=>{
+         console.log(entity);
          dispatch({type:ACTION_TYPE.ADD, entity});
          dispatch({type:ACTION_TYPE.CHANGE_STATUS, statusText:'Add success!'});
       }).catch(e=>{
@@ -537,7 +555,7 @@ function EBrowser(props){
    return activeEntities && activeEntities.length> 0 ? activeEntities.map((entity,entityIndex)=> {
       let rowId = `ebrowser-row-${entityIndex}`; //tr's id attribute
       return ( //mapped
-         <tr id={rowId} className="ebrowser-row" key={entityIndex} row-entity={JSON.stringify({entity})}>{/** Row is clickable if there is onRead handler else default = empty function*/}
+         <tr id={rowId} className="ebrowser-row" key={entityIndex} row-entity={JSON.stringify({entity})}>{/** Row is clickable if there is onRead handler else default = NoEntities function*/}
          <Td className="TdData ebrowser-entity-data">{entityIndex + 1}</Td> 
          {
             Object.getOwnPropertyNames(props.uischema).map((uiSchemaProp,i)=>{
@@ -546,7 +564,7 @@ function EBrowser(props){
                let cellValue = data;
                if(data instanceof Array){
                // just an ellipse,indicating that the value is an array
-               // perhaps will improve on this.
+               // ???perhaps will improve on this.
                   cellValue = <i>{`[...${uiSchemaProp}]`}</i>
                }else{
                   cellValue = data; 
@@ -613,10 +631,13 @@ function EBrowser(props){
   useEffect(initOnReadActionHandlerEffect);
   useEffect(modifyActionColumnEffect);
   
-  
+  /**
+   * The add button component.
+   */
   const AdderButton = (props)=>{
      if(props.adderType === 'internal-modal'){
         return <AdderModal 
+         triggerLabel={props.adderTriggerLabel}
          content={props.adderModalContent} 
          actions={props.adderModalActions} 
          title={props.adderModalTitle} 
@@ -630,12 +651,12 @@ function EBrowser(props){
 
   //extract the options for the adderButton
 
-  let { adderType, adderModalTitle, adderModalContent, adderModalActions } = props;
+  let { adderType,adderTriggerLabel,adderModalTitle, adderModalContent, adderModalActions } = props;
 
   let adderButtonOptions = {
      adderType, 
+     adderTriggerLabel,
      adderModalTitle, adderModalContent, adderModalActions, //adderType = inline-modal
-     
    };
   
   
@@ -643,37 +664,47 @@ function EBrowser(props){
   return(
    
    <ComponentContainer>
-    { state.entities && state.entities.length > 0 ?
-    <>  
-      <SearchAddPanel>
-         {
-            props.searchable ? 
-               <EBrowserSearch onResult={onSearchResult} data={state.entities} searchableFields={props.searchableFields} /> 
-            : null
-         }
-         {/* if adderType = 'internal-modal' */}
-
-         <AdderButton {...adderButtonOptions} confirmAdd={modalAdderConfirmationHandler}/>
-
-      </SearchAddPanel>
-      
-      <TableContainer>
-         <TableWrapper >
-         <Table>
-            <TableHeader columnNames={Object.keys(props.uischema)} numbered withActionColumn={props.actions && props.actions.length > 0}/> 
-            <tbody ref={tbodyRef}>
+      {props.title ? props.title: null}
+      { state.entities && state.entities.length > 0 ?
+      <>  
+         <SearchAddPanel>
             {
-               renderRows()
+               props.searchable ? 
+                  <EBrowserSearch onResult={onSearchResult} data={state.entities} searchableFields={props.searchableFields} /> 
+               : null
             }
-            </tbody>
-         </Table>
-         </TableWrapper>
-      </TableContainer>
-    </> :null }
-    { 
-       
-    }
-    {state.statusText ? <Status text={state.statusText}/> : null}
+            {/* if adderType = 'internal-modal' */}
+
+            <AdderButton {...adderButtonOptions} confirmAdd={modalAdderConfirmationHandler}/>
+
+         </SearchAddPanel>
+         
+         <TableContainer>
+            <TableWrapper >
+            <Table>
+               <TableHeader columnNames={Object.keys(props.uischema)} numbered withActionColumn={props.actions && props.actions.length > 0}/> 
+               <tbody ref={tbodyRef}>
+               {
+                  renderRows()
+               }
+               </tbody>
+            </Table>
+            </TableWrapper>
+         </TableContainer>
+      </> :<NoEntities> 
+               <div><i>{`< ${props.emptyEntitiesCaption || "No Entities" } > `}</i></div>
+               {  
+                  
+                  props.actions && props.actions.find(action => action.type === 'adder') !== -1 ? 
+                  <AdderButton {...adderButtonOptions} confirmAdd={modalAdderConfirmationHandler}/>:null 
+               }
+            </NoEntities>  
+         }
+            
+      { 
+         
+      }
+      {state.statusText ? <Status text={state.statusText}/> : null}
    </ComponentContainer>
 
   
@@ -786,6 +817,10 @@ EBrowser.propTypes = {
   * 'modal', requireds adderUI which will be displayed as modal.
   */
  adderType: PropTypes.oneOf(['internal-modal','internal-inline','external']),
+ /**
+  * The label of the Adder button. Default is a Plus (+) sign.
+  */
+ adderTriggerLabel: PropTypes.string,
  adderModalTitle: PropTypes.string,
  adderModalContent: PropTypes.object,
  adderModalActions: PropTypes.array,
@@ -796,7 +831,15 @@ EBrowser.propTypes = {
   * The caption of the button used to confirm the selection. 
   */
  selectConfirmer : PropTypes.string,
+ 
+ /**
+  * The text to display when entities is empty, or there are no entities provided, or the entities Promise,
+  * yields nothing. Default "No Entities"
+  */
+ emptyEntitiesCaption: PropTypes.string,
 }
+
+
 
 
 /**

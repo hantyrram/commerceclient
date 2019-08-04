@@ -3,7 +3,8 @@ import {Link} from 'react-router-dom';
 import EBrowser from 'components/EBrowser';
 import permissionUiSchema from 'uischemas/permission';
 import {PermissionBrowseRequest} from 'requests';
-
+import Feature from 'components/Feature';
+import FeatureShortcutLink from 'components/FeatureShortcutLink';
 export default (props)=>{
    
    const entitiesPromise = new Promise((res,rej)=>{
@@ -20,10 +21,9 @@ export default (props)=>{
    }
 
    return(
-      <div>
-         Employees          
+      <Feature group="Permissions" >
          <EBrowser uischema={permissionUiSchema} entities={entitiesPromise} onRead={ebrowserReadHandler}/>
-      </div>
+      </Feature>
       
    )
 }

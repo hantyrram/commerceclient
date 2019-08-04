@@ -3,6 +3,8 @@ import {Link} from 'react-router-dom';
 import EBrowser from 'components/EBrowser';
 import roleUiSchema from 'uischemas/role';
 import {RoleBrowseRequest,RoleDeleteRequest} from 'requests';
+import Feature from 'components/Feature';
+import FeatureShortcutLink from 'components/FeatureShortcutLink';
 
 export default (props)=>{
    
@@ -34,13 +36,11 @@ export default (props)=>{
       }
    }
    return(
-      <div>
-         Roles 
-         <Link to="/roles/create">Create Role</Link>
+      <Feature group="Roles" featureShortcuts={[<FeatureShortcutLink to="/roles/create">Create Role</FeatureShortcutLink>]}>
          <EBrowser uischema={roleUiSchema} entities={entitiesPromise} onRead={ebrowserReadHandler}
             actions={[{type:'delete'}]}
             onDelete={deleteRolePromise}
          />
-      </div>
+      </Feature>
    )
 }
