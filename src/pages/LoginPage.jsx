@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Login from '../features/Login';
+import Login from '../features/authentication/Login';
 
 const styles = {
   display:"flex",

@@ -41,5 +41,12 @@ body{
   background-color: #e7ebf2;
   background-image: linear-gradient(to bottom right, #E9ECF1, #e9ecf0); 
   font-size: .9em;
+
+}
+input, select {
+   color: #595555;
 }
 
+a {
+   text-decoration: none;
+}

@@ -1,0 +1,9 @@
+{
+   "ronComment":"See create-react-app,configuring absolute import",
+   "compilerOptions": {
+      "baseUrl": "src"
+   },
+   "include": [
+      "src"
+   ]
+}

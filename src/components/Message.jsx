@@ -1,27 +1,27 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { subscribe } from '../event';
 
 export default (props)=>{
-  let style = {display:"block",border:"1px dotted white",padding:".5em",marginBottom:".5em"};
 
-  let color = '#057296';
-  let backgroundColor = '#a6e9e';
-  
-  if(props.type === 'error'){
-   backgroundColor = '#f8aaa4';
-   color = '#960f05';
+ const [text,setText] = useState(null);
 
+ const [loc,setLoc] = useState(window.location.pathname);
+ //if state location does ont e
+ subscribe((payload)=>{
+  if(payload.type === 'message' || payload.type === 'error'){
+   setText(payload.message || payload.error);
+   setLoc(window.location.pathname);
+   return;
   }
+ });
 
-  if(props.type === 'success'){
-   backgroundColor = '#77e377';
-   color = "#0b4b0b";
+ useEffect(()=>{
+  if(loc !== window.location.pathname){
+   setText(null); // when location changes
   }
+ });
 
-  style = Object.assign(style,{color:color,backgroundColor:backgroundColor});
-
-  return (
-   props.text ? <div style={style}>{props.text}</div> : null
-  )
-  
+ return(
+  text  ?JSON.stringify(text): null
+ )
 }
-

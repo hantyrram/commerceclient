@@ -1,6 +1,85 @@
 import {emit} from './event';
 import axios from './axios';
 
+export async function authenticate(){
+   const PATH = `/apiv1/authenticate`;
+   let source = '';
+   try {
+    
+    let response = await axios.get(PATH);
+    let artifact = response.data;
+    source = artifact.source;
+    emit({type:'artifact',source:source, artifact:artifact});
+    if(artifact.message) emit({type:'message',source:source, message: artifact.message});
+    return artifact;
+   } catch (error) {
+    let artifact;
+    if(error.response){
+     artifact = error.response.data;
+     emit({type:'error',source: source, error: artifact.error}); 
+     return artifact;
+    }
+    //use artifact.error if server error response was received, 
+    //error on request error e.g timeout
+    emit({type:'error',source: source, error: error}); 
+    return  {type:'error',source: source, error: error};
+   }
+  
+}
+
+export async function login(credential){
+   const PATH = `/apiv1/login`;
+   let source = '';
+   try {
+    
+    let response = await axios.post(PATH,credential);
+    let artifact = response.data;
+    source = artifact.source;
+    emit({type:'artifact',source:source, artifact:artifact});
+    if(artifact.message) emit({type:'message',source:source, message: artifact.message});
+    return artifact;
+   } catch (error) {
+    let artifact;
+    if(error.response){
+     artifact = error.response.data;
+     emit({type:'error',source: source, error: artifact.error}); 
+     return artifact;
+    }
+    //use artifact.error if server error response was received, 
+    //error on request error e.g timeout
+    emit({type:'error',source: source, error: error}); 
+    return  {type:'error',source: source, error: error};
+   }
+  
+}
+
+
+export async function logout(){
+   const PATH = `/apiv1/logout`;
+   let source = '';
+   try {
+    
+    let response = await axios.get(PATH);
+    let artifact = response.data;
+    source = artifact.source;
+    emit({type:'artifact',source:source, artifact:artifact});
+    if(artifact.message) emit({type:'message',source:source, message: artifact.message});
+    return artifact;
+   } catch (error) {
+    let artifact;
+    if(error.response){
+     artifact = error.response.data;
+     emit({type:'error',source: source, error: artifact.error}); 
+     return artifact;
+    }
+    //use artifact.error if server error response was received, 
+    //error on request error e.g timeout
+    emit({type:'error',source: source, error: error}); 
+    return  {type:'error',source: source, error: error};
+   }
+  
+}
+
 export async function permission_browse(){
  const PATH = `/apiv1/permissions`;
  let source = '';
@@ -152,11 +231,11 @@ export async function role_delete(role){
   }
 
 export async function role_permissions_delete(roleId,permissionName){
- const PATH = `/apiv1/roles/:_id/permissions/:permission_name`;
+ const PATH = `/apiv1/roles/${roleId}permissions/${permissionName}`;
  let source = '';
  try {
   
-  let response = await axios.delete(PATH.replace(/:_id/,roleId).replace(/:permission_name/,permissionName));
+  let response = await axios.delete(PATH);
   let artifact = response.data;
   source = artifact.source;
   emit({type:'artifact',source:source, artifact:artifact});
