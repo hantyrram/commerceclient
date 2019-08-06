@@ -194,6 +194,11 @@ const nationalities = [
    "Zimbabwean"
 ]
 
+const date = new Date();
+const year = date.getFullYear();
+const month = (date.getMonth() + 1).toString().padStart(2,'0');
+const day = date.getDate().toString().padStart(2,'0');
+const dateValue = `${year}-${month}-${day}`;
 const employee = {
    _id : {
       el : "input",//element tag
@@ -313,8 +318,7 @@ const employee = {
          minLength: 1,
          maxLength: 20,
          required:true,
-      },
-      transform: v => String(new Date(v))
+      }
    },
    email: {
       el : "input",
@@ -349,8 +353,8 @@ const employee = {
          minLength: 1,
          maxLength: 35,
          required:true,
-      },
-      transform: v => String(new Date(v))
+         defaultValue : dateValue
+      }
    },
    jobTitle: {
       el : "input",
@@ -376,13 +380,13 @@ const employee = {
       },
    },
    roles : {
-      el: "select",
+      el: "input",
       label: "Roles",
       attributes: {
        name: "roles",
        id: "employee-roles",
       },
-      options: [ ]
+      transform: r => `[ ${r.join()} ]`
      },
    createdOn: {
       el : "input",

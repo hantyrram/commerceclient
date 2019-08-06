@@ -5,6 +5,7 @@ import roleUiSchema from 'uischemas/role';
 import {RoleBrowseRequest,RoleDeleteRequest} from 'requests';
 import Feature from 'components/Feature';
 import FeatureShortcutLink from 'components/FeatureShortcutLink';
+import RoleBrowser from './RoleBrowser';
 
 export default (props)=>{
    
@@ -37,10 +38,10 @@ export default (props)=>{
    }
    return(
       <Feature group="Roles" featureShortcuts={[<FeatureShortcutLink to="/roles/create">Create Role</FeatureShortcutLink>]}>
-         <EBrowser uischema={roleUiSchema} entities={entitiesPromise} onRead={ebrowserReadHandler}
+         <RoleBrowser 
+            onRead={ebrowserReadHandler}
             actions={[{type:'delete'}]}
-            onDelete={deleteRolePromise}
-         />
+            onDelete={deleteRolePromise}/>
       </Feature>
    )
 }

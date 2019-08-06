@@ -1,9 +1,9 @@
-import { RoleBrowseRequest } from 'requests';
+import { EmployeeBrowseRequest } from 'requests';
 
-export default query => new Promise((resolve,reject)=>{
+export default new Promise((resolve,reject)=>{
    (async ()=>{
       try {
-         let request  = new RoleBrowseRequest(query);
+         let request  = new EmployeeBrowseRequest();
          let artifact = await request.send();
          if(artifact.status === 'ok'){
             resolve(artifact.data.entity);

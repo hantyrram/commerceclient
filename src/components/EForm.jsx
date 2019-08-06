@@ -4,7 +4,7 @@ import TextField from '@material-ui/core/TextField';
 import Styled from 'styled-components';
 
 const FormTitle = Styled.div`
-   // border-bottom: 1px solid #979595;
+   border-bottom: 1px solid #979595;
    font-size: 1.5em;
    font-weight: bold;
    font-style: italic;
@@ -22,9 +22,6 @@ const Form = Styled.form`
    display: flex;
    flex-direction: column;
    justify-content: center;
-   & input[readOnly] {
-      background-color:#f5efef
-   }
 `
 const FormControl = Styled.div`
    display: flex;
@@ -155,15 +152,9 @@ export default function EForm(props){
 
     let Element;
     let computedFontSize = Number(window.getComputedStyle(window.document.body).fontSize.replace(/px/,''));
-   //  let width = null;
-    
-   //  if(element.attributes.maxLength){
-   //    width = computedFontSize * element.attributes.maxLength;
-   //  }
-
     switch(element.el){
        case 'select':{
-         let computedWidth = computedFontSize * (element.attributes.maxLength || 1); // || 1 if maxlength is undefined
+         let computedWidth = computedFontSize * element.attributes.maxLength;
          computedWidth += 'px';
          if(props.type === 'reader'){
             //get the value of the entity vt = {value,text}
@@ -178,30 +169,23 @@ export default function EForm(props){
             }
           </Select>
        }break;
-       default : // 'input'
-         Element = <Input {...attributes} width = {(computedFontSize * (attributes.maxLength || 1) / 2) + 'px'} />;
-         
-         if(element.el.attributes && element.el.attributes.type){//type specified
+       case 'input':
+         if(element.el.attributes && element.el.attributes.type){
             switch(element.el.attributes.type){
                case 'date':{
                   let computedHeight = (computedFontSize * 2) + 'px';
-                  // width = {attributes.maxLength + 'em'}
-                  Element = <Input {...attributes}  height={computedHeight} />
+                  Element = <Input {...attributes} width = {attributes.maxLength + 'em'} height={computedHeight} />
                }break;
-               
-               default: 
-                  let computedWidth = attributes.maxLength ? { width: ((computedFontSize * attributes.maxLength / 2) + 'px') } : null;
-                  Element = <Input {...attributes} {...computedWidth} />
+               default: Element = <Input {...attributes} width = {(computedFontSize * attributes.maxLength / 2) + 'px'} />
             }
+         }else{
+            // length of 1 can fit 2 characters(computedFontSize) hence / 2
+            Element = <Input {...attributes} width = {(computedFontSize * attributes.maxLength / 2) + 'px'} />
          }
-         // else{//default input
-         //    // length of 1 can fit 2 characters(computedFontSize) hence / 2
-         //    Element = <Input {...attributes} width = {(computedFontSize * attributes.maxLength / 2) + 'px'} />
-         // }
-      //  break;
-      //  default : {
-      //    Element = <Input {...attributes} width = {attributes.maxLength + 'em'} />
-      // }
+       break;
+       default : {
+         Element = <Input {...attributes} width = {attributes.maxLength + 'em'} />
+      }
     }
     elements.push(<FormControl>
             { 
@@ -226,7 +210,7 @@ export default function EForm(props){
       <FormTitle>{props.title}</FormTitle>
       {renderElements()}
       <FormActionControl>
-         {props.actions ?props.actions(entity).map(a=>a) : null }
+         {props.actions? props.actions(entity).map(a=>a) : null}
       </FormActionControl>
    </Form>
  )

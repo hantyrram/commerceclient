@@ -83,6 +83,11 @@ export class CredentialCreateRequest extends Request{
 
 export class RoleBrowseRequest extends Request{
 
+   constructor(query){
+      super();
+      this.query = query;
+   }
+
    get method(){
       return 'get';
    }

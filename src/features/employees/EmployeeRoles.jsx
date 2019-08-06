@@ -7,6 +7,7 @@ import roleUiSchema from 'uischemas/role';
 import EForm from 'components/EForm';
 import rolesPromise from 'promises/rolesPromise';
 import {EmployeeRolesAddRequest} from 'requests';
+import RoleBrowser from 'features/access_control/roles/RoleBrowser';
 
 
 export default function EmployeeRoles(props){
@@ -16,7 +17,8 @@ export default function EmployeeRoles(props){
 
    console.log(roles);
    let newEmployeeUiSchema  = {
-      employeeId: Object.assign({},employeeUiSchema.employeeId)
+      employeeId: Object.assign({},employeeUiSchema.employeeId),
+      roles: employeeUiSchema.roles,
    }
    
    let selectedRolesCache = [];
@@ -29,11 +31,13 @@ export default function EmployeeRoles(props){
    return(
       <Feature group="Roles" feature={`Employee Roles`} >
          <EForm 
+            title="Add Role To Employee"
             entity={employee} 
             uischema={newEmployeeUiSchema} 
-            roles = {[employee.roles.join()]}
+            // roles = {[employee.roles.join()]}
             type="reader" 
          />
+         <RoleBrowser title="Select Roles To Add" actions={[{type:'select'}]}/>
          {/* <EBrowser 
             actions={[
                {type: 'add'}

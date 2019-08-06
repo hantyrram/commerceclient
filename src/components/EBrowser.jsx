@@ -417,8 +417,6 @@ function EBrowser(props){
    
    // invokes the onSelect prop on every select if action.type = 'select' 
    const callOnSelectEffect = ()=>{//if live select is on,
-      console.log(props.onSelect);
-      console.log(state.selectedEntities);
       if(props.onSelect && state.selectedEntities && state.selectedEntities.length > 0){
          props.onSelect(state.selectedEntities);
       }
