@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import PermissionUISchema from 'uischemas/permission';
 import EBrowser from 'components/EBrowser';
+import Feature from 'components/Feature';
+
 import {
    RolePermissionsDeleteRequest,
    RolePermissionsAddRequest,
@@ -33,9 +35,9 @@ function RolePermissions(props){
          return false;
       };
      return(
-      <>
-         <div>Roles / {role.name}'s Permissions</div>
+      <Feature group="Roles">         
          <EBrowser 
+            title={`${role.name}'s Permissions`}
             onDelete={deletePromise}
             actions={[{type:'delete',ui:`Remove from ${role.name}`},{type:'add', ui: 'Add Permission'}]}
             adderPromise={()=>new Promise((resolve,reject)=>{
@@ -84,7 +86,7 @@ function RolePermissions(props){
             // onRead={()=>{}} //MUST pass empty function otherwise seem to retain the old onRead,
             emptyEntitiesCaption={`${role.name} has no Permissions`}
             />
-      </>  
+      </Feature>  
       )
 }
 

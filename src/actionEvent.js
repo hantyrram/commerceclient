@@ -8,13 +8,18 @@
 let subscribers = [];
 
 export const emit = (actionName,artifact)=>{
- for(let i in subscribers){
-  subscribers[i](actionName,artifact);
+ 
+ let actionSubscribers = subscribers.filter(function(actionSubscriber){
+    return actionSubscriber.actionName === actionName;
+ });
+
+ for(let subscriber of actionSubscribers){
+   subscriber.callback(artifact);
  }
 }
 
-export const subscribe = (callback)=>{
- let index = subscribers.push(callback) - 1;
+export const subscribe = (actionName,callback)=>{
+ let index = subscribers.push({actionName,callback}) - 1;
  let unsubscribe = (i)=>{
   subscribers.splice(i,1);
  }

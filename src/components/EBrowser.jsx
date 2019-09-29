@@ -9,12 +9,15 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import InputAdornment from '@material-ui/core/InputAdornment';
+import mstyled from '@material-ui/styles/styled';
 import SvgIcon from '@material-ui/core/SvgIcon';
 import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
+import EBrowserSearch from './EBrowserSearch';
 import './EBrowser.css';
 import ModalAdder from './EBrowserModalAdder';
+import { makeStyles } from '@material-ui/styles';
 
 //ok
 const ComponentContainer = styled.div`
@@ -45,6 +48,7 @@ const Table = styled.table`
   border-top: 1px solid #d6cccc;
   text-align:left;  
   color:#696060;
+  height: 2em;
  }
  & tbody tr:hover{
   background-color:#f3ffee;
@@ -77,7 +81,9 @@ const Td = styled.td`
 
 //border-box,because the DummyTd width depends on the computed style of Fixed
 const TdFixed = styled(Td)`
- padding-top:.2em;
+//  padding-top:.2em;
+//overwrite padding
+ padding: 0px; 
  padding-bottom:0px;
  position:absolute;
  right: 0px;
@@ -141,6 +147,13 @@ const ActionButton = styled.button`
    margin-bottom:.1em;
 `;
 
+const DeleteActionButton = mstyled(Button)({
+   textTransform:'none',
+   lineHeight:"inherit",
+   color:"pink"
+})
+
+
 const NoEntities = styled.div`
    height: 20em;
    display: flex;
@@ -150,13 +163,20 @@ const NoEntities = styled.div`
    color: #e99797;
 `
 
+const useDeleteButtonStyles = makeStyles(theme=>({
+   label:{
+      textTransform: 'none',
+      lineHeight:'normal',
+      fontWeight: 400
+   }
+}))
+
 function AdderModal(props){
    const [open,setOpen] = useState(false);
    const Content = props.content;
    const onCloseHandler = (e)=>{
       setOpen(false);
    }
-
    const trigger = (e)=>{
       setOpen(true);
    }
@@ -215,56 +235,7 @@ AdderModal.propTypes = {
    adderModalActions: PropTypes.array,
 }
 
-/**
- * A Search component for the EBrowser.
- * 
- * @author Ronaldo Ramano <rongrammer@hotmail.com>
- * @version 0.0.1
- */
-function EBrowserSearch({searchableFields,data,onResult}){
-   const onChange = (e)=>{
-      let searchStr = e.target.value;
-      (async ()=>{
-       let filtered = data.filter((entity)=>{
-        let truthAccumulator;
-        if(searchableFields && searchableFields.length > 0){
-         for(let field of searchableFields){//search on the searchlookUpFields
-          truthAccumulator |= RegExp(`${searchStr}`,'i').test(entity[field]);
-         }
-        }else{
-         for(let field of Object.keys(entity)){//search all prop by default
-          truthAccumulator |= RegExp(`${searchStr}`,'i').test(entity[field]);
-         }
-        }
-        
-        return truthAccumulator;
-       });
-      onResult(filtered);
-      })();
-   }
 
-   return(
-   <div style={{textAlign:"left",marginBottom:"1em"}}>
-     <TextField 
-      onChange={onChange}
-      label="Search" 
-      InputProps={
-       {
-        endAdornment:(
-         <InputAdornment position="end" >
-          <IconButton>
-           <SvgIcon xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">>
-            {/* //from https://www.materialui.co/icon/search */}
-            <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>			
-           </SvgIcon>
-          </IconButton>
-         </InputAdornment>
-        )
-       }}
-      />
-    </div>
-   )
-}
 
 function TableHeader({columnNames,withActionColumn,actionColumnWidth,numbered}){
    return(
@@ -301,30 +272,34 @@ function Status({text,timeout}){
       counter && text? <StatusBar>{`${text} `}</StatusBar>: null
    )
 }
+
+
+const ACTION_TYPE = { //reducer action types
+   BROWSE: 'browse',
+   DELETE: 'delete',
+   ADD: 'add',
+   EDIT: 'edit',
+   SEARCH: 'search',
+   CHANGE_STATUS: 'change_statusText',
+   SELECT: 'select',
+   DESELECT: 'deselect' 
+}
+
+const MREB = { //maxRowExceededBehaviour enum
+   PAGINATE: 'paginate',
+   SCROLL: 'scroll'
+}
+
+
 /**
  * An entity browser displays a list of entities.
  * 
  * @author Ronaldo Ramano <rongrammer@hotmail.com>
  * @version 0.0.1
  */
-function EBrowser(props){
-   //reducer action types
-   const ACTION_TYPE = {
-      BROWSE: 'browse',
-      DELETE: 'delete',
-      ADD: 'add',
-      EDIT: 'edit',
-      SEARCH: 'search',
-      CHANGE_STATUS: 'change_statusText',
-      SELECT: 'select',
-      DESELECT: 'deselect' 
-   }
-   //maxRowExceededBehaviour enum
-   const MREB = {
-      PAGINATE: 'paginate',
-      SCROLL: 'scroll'
-   }
-
+export default function EBrowser(props){
+   
+   const deleteButtonClasses = useDeleteButtonStyles();
    //Setting up defaults
    let maxRowExceededBehaviour = 
       props.maxRowExceededBehaviour && props.maxRowExceededBehaviour === MREB.PAGINATE ? 
@@ -342,9 +317,10 @@ function EBrowser(props){
       }
    }
 
-
+   
    //setting up initial state
    let initialState = {
+   ebrowserId: props.id,
    entities: props.entities instanceof Array? props.entities: [],
    searchResult: [],
    searching: false,
@@ -356,12 +332,12 @@ function EBrowser(props){
    
   }
 
+  /****************hooks***********************************************/
   let [state, dispatch] = useReducer((state,action)=>{
    if(state.statusText && action.type !== ACTION_TYPE.CHANGE_STATUS){
       //always reset statusText
       state.statusText = null;
    }
-   console.log(action);
    switch(action.type){      
       case ACTION_TYPE.SELECT: {
          let selectedEntities = [];
@@ -407,6 +383,9 @@ function EBrowser(props){
       dispatch({ type: ACTION_TYPE.SEARCH, searchResult });
    }
 
+   
+   /****************hooks***********************************************/
+
    /******************************* refs *****************************/
 
    //Table's tbody ref, used by InlineAdder
@@ -422,7 +401,8 @@ function EBrowser(props){
       }
    }
  
-   // if onRead prop is present,adds click listeners on each row, clicking a row will invoke onRead passing the entity on that row
+   // if onRead prop is present,adds click listeners on each row, clicking a row will invoke onRead passing 
+   //the entity on that row
    function initOnReadActionHandlerEffect(){
       if(!props.onRead) return;
       
@@ -471,21 +451,29 @@ function EBrowser(props){
     * Populates the state.entities from the props.entities Promise.
     */
    const populateEntitiesFromPromiseEffect = ()=>{
+      
       if(props.entities instanceof Promise){
          dispatch({type: ACTION_TYPE.CHANGE_STATUS, status:'waiting', statusText:'Fetching data...'});
          props.entities.then(e=>{
-            console.log(e);
             dispatch({type: ACTION_TYPE.BROWSE, entities:e });
             dispatch({type: ACTION_TYPE.CHANGE_STATUS,statusText:'Entities Received!'});
          }).catch(e=>{
             dispatch({type: ACTION_TYPE.BROWSE, entities:[] });
          });
-      }else{
-         // if(JSON.stringify(state.entities) !== JSON.stringify(props.entities)){
-         //    dispatch({type: ACTION_TYPE.BROWSE, entities:props.entities });
-         // }
-         console.log('Called dispatch');
-         dispatch({type: ACTION_TYPE.BROWSE, entities:props.entities });
+      }
+      // else{
+      //    // if(JSON.stringify(state.entities) !== JSON.stringify(props.entities)){
+      //    //    dispatch({type: ACTION_TYPE.BROWSE, entities:props.entities });
+      //    // }
+      //    console.log('Called dispatch');
+      //    console.log(props.entities);
+      //    dispatch({type: ACTION_TYPE.BROWSE, entities:props.entities });
+      // }
+   }
+
+   const populateEntitiesFromProps = ()=>{
+      if(props.entities instanceof Array && JSON.stringify(state.entities) !== JSON.stringify(props.entities)){
+         dispatch({type: ACTION_TYPE.BROWSE, entities: props.entities});
       }
    }
 
@@ -494,7 +482,6 @@ function EBrowser(props){
    /**************************************Action Handlers*******************************/
    /**Intercepts click event of the edit button, serves as a proxy to props.onEdit*/
    const onEditClickHandler = async (entity,e)=>{
-      console.log('Editing ',entity);
    }
 
    /**Intercepts click event of the delete button, serves as a proxy to props.onDelete*/
@@ -512,7 +499,6 @@ function EBrowser(props){
          }
          
       } catch (error) {
-         console.log('Error caught deleting: ',entity);
          dispatch({ type:ACTION_TYPE.DELETE,entityIndex:index, reversal:true, entity: cacheEntity });
          
       }
@@ -539,7 +525,6 @@ function EBrowser(props){
    const modalAdderConfirmationHandler = ()=>{
       dispatch({type:ACTION_TYPE.CHANGE_STATUS, statusText:'Adding entity...'});
       props.adderPromise().then(entity=>{
-         console.log(entity);
          dispatch({type:ACTION_TYPE.ADD, entity});
          dispatch({type:ACTION_TYPE.CHANGE_STATUS, statusText:'Add success!'});
       }).catch(e=>{
@@ -550,6 +535,7 @@ function EBrowser(props){
    /**************************************Action Handlers end*****************************/  
    const renderRows = ()=>{
    let activeEntities = state.searchResult.length > 0? state.searchResult : state.entities;
+   
    return activeEntities && activeEntities.length> 0 ? activeEntities.map((entity,entityIndex)=> {
       let rowId = `ebrowser-row-${entityIndex}`; //tr's id attribute
       return ( //mapped
@@ -597,7 +583,7 @@ function EBrowser(props){
                   }
                   case 'delete': {
                      if(typeof action.ui === 'string'){
-                        return <ActionButton color="secondary" onClick={onDeleteClickHandler.bind(null,entity,entityIndex,rowId)}>{action.ui}</ActionButton>
+                        return <Button classes={{...deleteButtonClasses}} color="secondary" variant="outlined" size="small" onClick={onDeleteClickHandler.bind(null,entity,entityIndex,rowId)}>{action.ui}</Button>
                      }
 
                      if(action.ui){
@@ -625,7 +611,7 @@ function EBrowser(props){
   
   useEffect(callOnSelectEffect);
   useEffect(populateEntitiesFromPromiseEffect,[]);
-  
+  useEffect(populateEntitiesFromProps);
   useEffect(initOnReadActionHandlerEffect);
   useEffect(modifyActionColumnEffect);
   
@@ -660,7 +646,6 @@ function EBrowser(props){
   
   
   return(
-   
    <ComponentContainer>
       {props.title ? props.title: null}
       { state.entities && state.entities.length > 0 ?
@@ -674,9 +659,7 @@ function EBrowser(props){
             {/* if adderType = 'internal-modal' */}
 
             <AdderButton {...adderButtonOptions} confirmAdd={modalAdderConfirmationHandler}/>
-
          </SearchAddPanel>
-         
          <TableContainer>
             <TableWrapper >
             <Table>
@@ -698,14 +681,8 @@ function EBrowser(props){
                }
             </NoEntities>  
          }
-            
-      { 
-         
-      }
       {state.statusText ? <Status text={state.statusText}/> : null}
    </ComponentContainer>
-
-  
   )
 }
 
@@ -872,5 +849,3 @@ EBrowser.propTypes = {
  //internal-inline adderType
  //Clicking Add will insert a new row inside the table
 
-
-export default EBrowser;

@@ -135,6 +135,10 @@ const ActionButton = styled.button`
    margin:0;
 `;
 
+const DeleteButton = styled(Button)`
+
+`
+
 function AdderModal(props){
    const [open,setOpen] = useState(false);
    const Content = props.content;
@@ -600,7 +604,7 @@ function EBrowser(props){
                   }
                   case 'delete': {
                      if(typeof action.ui === 'string'){
-                        return <ActionButton color="secondary" onClick={onDeleteClickHandler.bind(null,entity,entityIndex,rowId)}>{action.ui}</ActionButton>
+                        return <Button variant="outlined" color="secondary" onClick={onDeleteClickHandler.bind(null,entity,entityIndex,rowId)}>{action.ui}</Button>
                      }
 
                      if(action.ui){

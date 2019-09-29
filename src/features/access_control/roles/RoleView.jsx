@@ -5,6 +5,8 @@ import roleUiSchema from 'uischemas/role';
 import EForm from 'components/EForm';
 import Button from '@material-ui/core/Button';
 import RolePermissions from './RolePermissions';
+import Feature from 'components/Feature';
+
 
 
 function RoleView(props){
@@ -24,7 +26,8 @@ function RoleView(props){
    console.log(role);
 
    return(
-      <EForm title="Role" type={eformType} entity={props.location.state.entity} uischema={roleUiSchema} 
+      <Feature group="Roles">
+      <EForm title="Role Detail" type={eformType} entity={props.location.state.entity} uischema={roleUiSchema} 
          actions={
             entity => [
                <Button color="primary" variant="contained" onClick={modifyClickHandler}>Modify</Button>,
@@ -35,6 +38,7 @@ function RoleView(props){
             // ()=><RolePermissionsReader role={props.location.state.entity}/>
          }
       />
+      </Feature>
    )
 }
 

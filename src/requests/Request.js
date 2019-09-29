@@ -1,6 +1,6 @@
 import {emit,subscribe} from '../event';
 import axios from '../axios';
-
+import queryString from 'query-string';
 
 export default class Request{
    get apiEndpoint(){
@@ -14,13 +14,15 @@ export default class Request{
    async send(payload){
       this.payload = payload; //cache payload
       let source = '';
+      let path = this.query? `${this.apiEndpoint}?${queryString.stringify(this.query)}`: this.apiEndpoint;
+      
       try {
     
          let response; 
          if(payload){
-            response = await axios[this.method](this.apiEndpoint,payload);
+            response = await axios[this.method](path,payload);
          }else{
-            response = await axios[this.method](this.apiEndpoint);
+            response = await axios[this.method](path);
          }
          let artifact = response.data;
          source = artifact.source;

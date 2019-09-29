@@ -1,1 +1,2 @@
-history.push does not cause re-render
+How Can We Display Error, And Clear Error on each screen change
+How Can we invoke multiple actions on a feature, e.g. fetchRole, fetchRolePermissions

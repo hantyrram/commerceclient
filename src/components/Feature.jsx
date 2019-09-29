@@ -29,7 +29,6 @@ const FeatureShortcuts = Styled.div`
  * A Feature wrapper.
  */
 export default (props)=>{
-   console.log(props.featureShortcuts);
    return (
       <Wrapper>
          <Header>

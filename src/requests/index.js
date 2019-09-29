@@ -1,5 +1,6 @@
 import Request from './Request';
 import permission from 'uischemas/permission';
+import role from 'uischemas/role';
 
 export class LoginRequest extends Request{
 
@@ -50,6 +51,23 @@ export class EmployeeBrowseRequest extends Request{
   
 }
 
+export class EmployeeRolesDeleteRequest extends Request{
+   constructor(employeeId,roleName){
+      super();
+      this.employeeId = employeeId;
+      this.roleName = roleName;
+   }
+
+   get method(){
+      return 'delete';
+   }
+
+   get apiEndpoint(){
+      return `/apiv1/employees/${this.employeeId}/roles/${this.roleName}`;
+   }
+  
+}
+
 export class EmployeeRolesAddRequest extends Request{
 
    constructor(employeeId){
@@ -62,7 +80,7 @@ export class EmployeeRolesAddRequest extends Request{
    }
 
    get apiEndpoint(){
-      return `/apiv1/employees/${this.employeeId}/roles`
+      return `/apiv1/employees/${this.employeeId}/roles`;
    }
   
 }
@@ -82,12 +100,7 @@ export class CredentialCreateRequest extends Request{
 }
 
 export class RoleBrowseRequest extends Request{
-
-   constructor(query){
-      super();
-      this.query = query;
-   }
-
+   
    get method(){
       return 'get';
    }
@@ -164,6 +177,21 @@ export class PermissionBrowseRequest extends Request{
 
   
 }
+
+export class SearchRequest extends Request{
+
+   get method(){
+      return 'post';
+   }
+
+   get apiEndpoint(){
+      return `/apiv1/search`
+   }
+
+  
+}
+
+
 
 
 
