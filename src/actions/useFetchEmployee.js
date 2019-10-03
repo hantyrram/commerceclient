@@ -1,30 +1,29 @@
 import {useContext} from 'react';
 import axios from '../axios';
-import employeesFetchPending from './action_creators/employeesFetchPending';
-import employeesFetchOk from './action_creators/employeesFetchOk';
-import employeesFetchNok from './action_creators/employeesFetchNok';
+import employeeFetchPending from './action_creators/employeeFetchPending';
+import employeeFetchOk from './action_creators/employeeFetchOk';
+import employeeFetchNok from './action_creators/employeeFetchNok';
 import StateContext from 'contexts/StateContext';
 import { emit } from 'actionEvent';
 export default ()=>{
    
    let {dispatch} = useContext(StateContext);
 
-   return async function(){
+   return async function(id){
       try {
-         dispatch(employeesFetchPending());
-         let {data} = await axios.get('/apiv1/employees');
+         dispatch(employeeFetchPending());
+         let {data} = await axios.get('/apiv1/employees/' + id);
          if(data.ok){
-            dispatch(employeesFetchOk(data.resource));
+            dispatch(employeeFetchOk(data.resource));
             if(data.message){
                emit('message',data.message);
             }
             return data.resource;
          }
-
-         dispatch(employeesFetchNok({error: data.error}));
+         dispatch(employeeFetchNok(data.error));
          emit('error',data.error);
       } catch (error) {
-         dispatch({error: {type:'CLIENT_ERROR',text:'Axios Error!'}});
+         dispatch({type:'CLIENT_ERROR',text:'Axios Error!'});
          emit('error',{type:'CLIENT_ERROR',text:'Axios Error!'});
       }
    }

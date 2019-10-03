@@ -4,6 +4,7 @@ import roleFetchPending from './action_creators/roleFetchPending';
 import roleFetchOk from './action_creators/roleFetchOk';
 import roleFetchNok from './action_creators/roleFetchNok';
 import StateContext from 'contexts/StateContext';
+import { emit } from 'actionEvent';
 
 export default ()=>{
    
@@ -16,11 +17,17 @@ export default ()=>{
          if(data.ok){
             console.log(data.resource);
             dispatch(roleFetchOk(data.resource));
+            if(data.message){
+               emit('message',data.message);
+            }
             return data.resource;
          }
          dispatch(roleFetchNok(data.error));
+         emit('error',data.error);
+
       } catch (error) {
          dispatch({type:'CLIENT_ERROR',text:'Axios Error!'});
+         emit('error',{type:'CLIENT_ERROR',text:'Axios Error!'});
       }
    }
 }

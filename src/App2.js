@@ -12,6 +12,7 @@ import actionTypes from './actions/types';
 import useFetchRoles from 'actions/useFetchRoles';
 import useFetchPermissions from 'actions/useFetchPermissions';
 import useFetchApis from 'actions/useFetchApis';
+import useFetchEmployees from 'actions/useFetchEmployees';
 
 const ApiList = React.lazy(()=> import(/*webpackChunkName: "feature.admin.apis.list" */'features/admin/Apis'));
 const RolesMain = React.lazy(()=> import(/*webpackChunkName: "feature.admin.roles" */'features/admin/RolesMain'));
@@ -20,6 +21,10 @@ const RoleRead = React.lazy(()=>import(/*webpackChunkName: "feature.admin.roles.
 const RoleEdit= React.lazy(()=>import(/*webpackChunkName: "feature.admin.roles.edit" */'features/admin/roles/Edit'));
 const PermissionList = React.lazy(()=>import(/*webpackChunkName: "feature.admin.permission.list" */'features/admin/Permissions'));
 const Employees = React.lazy(()=> import(/*webpackChunkName: "feature.personnel_management.employees" */'features/personnel_management/Employees'));
+const EmployeeAdd = React.lazy(()=> import(/*webpackChunkName: "feature.personnel_management.employee.add" */'features/personnel_management/employee/Add'));
+const EmployeeEdit = React.lazy(()=> import(/*webpackChunkName: "feature.personnel_management.employee.edit" */'features/personnel_management/employee/Edit'));
+
+
 const Page = Styled.div`
    width : 100%;
    min-height:100vh;
@@ -62,39 +67,43 @@ const LogoContainer = Styled.div`
    
 `
 
-const Navigator = ({history})=>{
-   let {getStore} = useContext(StateContext);
+const PageTransitioner = ({history})=>{
+   let {getStore,dispatch} = useContext(StateContext);
    let store = getStore();
   
    useEffect(()=>{
-      if(store.lastAction === actionTypes.ROLE_CREATE_OK){
-         history.push(store.lastActionPayload._id);
+      // if(store.lastAction === actionTypes.ROLE_CREATE_OK){
+      //    history.push(store.lastActionPayload._id);
+      // }
+      switch(store.lastAction){
+         case actionTypes.ROLE_CREATE_OK: history.push(store.lastActionPayload._id);dispatch({type:'PAGE_TRANSITION'});break;
+         case actionTypes.EMPLOYEE_ADD_OK: history.push(store.lastActionPayload._id + '/edit');dispatch({type:'PAGE_TRANSITION'});break;
+         default:
       }
    });
-   return(<div>Navigator</div>)
+   return(<div>PageTransitioner</div>)
 }
 
 
 
 export default ({history})=>{
-   let fetchRoles = useFetchRoles();
-   let fetchPermissions = useFetchPermissions();
-   let fetchApis = useFetchApis();
-   
    let {getStore} = useContext(StateContext);
    let store = getStore();
 
-   useEffect(()=>{
-    if(!store.permissions){
-      fetchPermissions();
-    }
-    if(!store.apis){
-       fetchApis();
-    }
-    if(!store.roles){
-       fetchRoles();
-    }
-   },[]);
+   // useEffect(()=>{
+   //  if(!store.permissions){
+   //    fetchPermissions();
+   //  }
+   //  if(!store.apis){
+   //     fetchApis();
+   //  }
+   //  if(!store.roles){
+   //     fetchRoles();
+   //  }
+   //  if(!store.employees){
+   //    fetchEmployees();
+   // }
+   // },[]);
 
    return(
       //value emulates a redux store,
@@ -174,26 +183,9 @@ export default ({history})=>{
                <Content>
                   <React.Suspense fallback={<div>Loading...</div>}>
                      <Switch>
-                        {/* <Route exact path="/employees/add" render={(props)=><EmployeeAdd {...props} type="manual"/>}/>
-                        <Route exact path="/employees/:id" component={EmployeeView} />
-                        <Route exact path="/employees/:employeeId/roles" component={EmployeeRoles}/>
                         <Route exact path="/employees" component={Employees}/>
-                        
-                        
-                        <Route exact path="/credentials/create" component={CredentialCreate}/>
-                        <Route path="/credentials/:username" component={CredentialView} />
-                        <Route exact path="/credentials" component={Credentials}/>
-
-                        {/* <Route exact path="/roles/create" component={RoleCreate}/> */}
-                        
-                        {/* <Route exact path="/roles/:id" component={RoleView} />
-                        <Route exact path="/roles/:id/permissions" component={RolePermissions}/> 
-                        <Route exact path="/roles" component={Roles}/>  */} */}
-
-                        {/* <Route exact path="/permissions" component={Permissions}/> 
-                        <Route exact path="/permissions/:name" component={PermissionView}/>  */}
-                        <Route exact path="/employees" component={Employees}/>
-
+                        <Route exact path="/employees/add" component={EmployeeAdd}/>
+                        <Route exact path="/employees/:id/edit" component={EmployeeEdit}/>
                         <Route exact path="/admin/resources" component={Resources}/> 
                         <Route exact path="/admin/roles" component={RolesMain}/> 
                         <Route exact path="/admin/roles/create" component={RoleCreate}/> 
@@ -202,9 +194,9 @@ export default ({history})=>{
                         <Route exact path="/admin/apis" component={ApiList}/>   
                         <Route exact path="/admin/permissions" component={PermissionList}/>   
                      </Switch>
-                     {/* <Route component={Navigator}/> */}
+                     {/* <Route component={PageTransitioner}/> */}
                   </React.Suspense>
-                  <Route component={Navigator}/>
+                  <Route component={PageTransitioner}/>
                   <div id="xxx"></div>
                </Content>
             </RightSection>

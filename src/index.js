@@ -9,22 +9,23 @@ import App from './App2';
 class Store{
    constructor(){
       this.identity = null;
-      this.lastAction = {
-         type: 'INIT'
-      }
+      this.authenticatedUser = null;
+      this.lastAction = {  type: 'INIT'  }
    }
 
-   findRoleById(roleId){
-      if(!this.roles || this.roles.length < 1){
-         return null
-      }
-      return this.roles.find(role=>role._id === roleId);
+   getHello(){
+      return 'hello';
+   }
+
+   getEmployeeById(id){
+      if(!this.employees || this.employees.length === 0) return null;
+      return this.employees.find(e => e._id === id);
    }
 }
 
 
 const AppContainer = (props)=>{
-
+   console.log('AppContainer called')
    let initialState = new Store();
 
    const [store,dispatch] = useReducer(rootReducer,initialState);

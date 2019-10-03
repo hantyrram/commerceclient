@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 const ActiveTable = (props)=>{
 
-   if(!props.data || props.data.length === 0){
-      return <div><i>{'< Empty >'} </i></div>
-   }
+   let tableRef = useRef(null);
+
+   
 
    const renderColumnHeaders = ()=>{
       if(props.columnHeaders){
@@ -25,7 +25,7 @@ const ActiveTable = (props)=>{
    function renderRows(){
       return props.data.map((obj,i)=>{
          return (
-            <tr key={i}>
+            <tr key={i} rowData={JSON.stringify(obj)}>
                {Object.getOwnPropertyNames(obj).map((pName,ii)=>{
                   let hidden = props.hidden || [];
                   return (
@@ -37,8 +37,31 @@ const ActiveTable = (props)=>{
       });
    }
 
+   /**
+    * Listen to <tr> click event if onRowClick prop is provided.
+    */
+   const addRowClickListener = ()=>{
+      if(props.onRowClick){
+         let tbody = tableRef.current.children[1];
+         for(let tr of tbody.children){
+            tr.style.cursor = 'default';
+            tr.addEventListener('click',function(){
+               if(props.onRowClick){
+                  props.onRowClick(JSON.parse(tr.attributes.rowData.value));
+               }
+            });
+         }
+      }
+   }
+
+   useEffect(addRowClickListener,[]);
+
+   if(!props.data || props.data.length === 0){
+      return <div><i>{'< Empty >'} </i></div>
+   }
+   
    return(
-      <table>
+      <table ref={tableRef}>
          <thead><tr>{renderColumnHeaders()}</tr></thead>
          <tbody>{renderRows()}</tbody>
       </table>
@@ -47,7 +70,11 @@ const ActiveTable = (props)=>{
 
 
 ActiveTable.propTypes = {
-   onRowClick: PropTypes.func, //function called if row is clicked
+   /**
+    * Function called when row is clicked. Function is passed with the entity on the clicked row.
+    * @param {object} rowData The data of the current row, including hidden data.
+    */
+   onRowClick: PropTypes.func, 
    onRowSelect: PropTypes.func, // function called if row is selected, optional
    rowActionHandlers: PropTypes.array, // optional array of functions that accept the rowData, must return a Component e.g. button
    data: PropTypes.array, //array of objects

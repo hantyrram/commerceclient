@@ -2,26 +2,28 @@ import {useContext} from 'react';
 import axios from '../axios';
 import StateContext from 'contexts/StateContext';
 
-import roleCreatePending from './action_creators/roleCreatePending';
-import roleCreateOk from './action_creators/roleCreateOk';
-import roleCreateNok from './action_creators/roleCreateNok';
+import employeeAddPending from './action_creators/employeeAddPending';
+import employeeAddOk from './action_creators/employeeAddOk';
+import employeeAddNok from './action_creators/employeeAddNok';
 import { emit } from 'actionEvent';
 function useCreateRole(){
    //emit('CREATE_ROLE_BEGIN')
    let { dispatch} = useContext(StateContext);
 
-   return async function(role){
+   return async function(employee){
       try {
-         dispatch(roleCreatePending());
-         let {data} = await axios.post('/apiv1/admin/roles', role);
+         dispatch(employeeAddPending());
+         let {data} = await axios.post('/apiv1/employees/empid_manual', employee);
+         console.log(data);
          if(data.ok){
-            dispatch(roleCreateOk(data.resource));
+            data.resource = 
+            dispatch(employeeAddOk(Object.assign(employee,{_id:data.resource._id})));
             if(data.message){
                emit('message',data.message);
             }
             return;
          }
-         dispatch(roleCreateNok(data.error));
+         dispatch(employeeAddNok(data.error));
          emit('error',data.error);
       } catch (error) {
          dispatch({type:'CLIENT_ERROR',text:'Axios Error!'});

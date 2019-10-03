@@ -1,8 +1,16 @@
 import types from './actions/types';
 
 export default (state, action)=>{
-   let newState = {...state, lastAction: action.type, lastActionPayload: action.payload };
+
+   let newState = { 
+      ...state, lastAction: action.type, 
+      lastActionPayload: action.payload, 
+      lastActionMessage: (action.payload || {}).message,
+      lastActionError: (action.payload || {}).error 
+   };
+
    switch(action.type){
+      
       case types.ROLES_FETCH_OK: {
          return {...newState, roles: action.payload}
       }
@@ -59,9 +67,25 @@ export default (state, action)=>{
 
          return newState;
       }
+      case types.EMPLOYEE_FETCH_OK : {
+         
+         newState.employees = [];
+         newState.employees.push(action.payload);
+         console.log(action.payload);
+         console.log(newState);
+         return newState;
+         
+      }
       case types.EMPLOYEES_FETCH_OK: return {...newState, employees: action.payload}
+      case types.EMPLOYEES_ADD_OK: {
+         newState.employees? newState.employees.push(action.payload): (newState.employees = []).push(action.payload);
+         return { ...newState }
+      }
+     
       case 'GET_RESOURCES_OK': return {...newState, resources: action.payload}
       case 'FETCH_PERMISSIONS_OK': return {...newState, permissions: action.payload}
       default: return newState;
    }
 }
+
+//employee add ok ?

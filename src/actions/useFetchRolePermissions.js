@@ -8,6 +8,7 @@ import rolePermissionsFetchPending from './action_creators/rolePermissionsFetchP
 import rolePermissionsFetchOk from './action_creators/rolePermissionsFetchOk';
 import rolePermissionsFetchNok from './action_creators/rolePermissionsFetchNok';
 import StateContext from 'contexts/StateContext';
+import { emit } from 'actionEvent';
 
 export default ()=>{
    
@@ -19,11 +20,17 @@ export default ()=>{
          let {data} = await axios.get(`/apiv1/admin/roles/${roleId}/permissions`);
          if(data.ok){
             dispatch(rolePermissionsFetchOk({_id: roleId, permissions:data.resource}));
-            return;
+            if(data.message){
+               emit('message',data.message);
+            }
+            return data;
          }
          dispatch(rolePermissionsFetchNok(data.error));
+         emit('error',data.error);
+
       } catch (error) {
          dispatch({type:'CLIENT_ERROR',text:'Axios Error!'});
+         emit('error',{type:'CLIENT_ERROR',text:'Axios Error!'});
       }
    }
 }

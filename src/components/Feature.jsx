@@ -32,6 +32,7 @@ export default (props)=>{
    return (
       <Wrapper>
          <Header>
+            {props.title}
             {props.group} {props.feature ? `/ ${props.feature}` : null}
             <FeatureShortcuts>{props.featureShortcuts ? props.featureShortcuts.map(FS=>FS):null}</FeatureShortcuts>
          </Header>

@@ -4,10 +4,10 @@ import getResources from 'action_creators/getResources';
 import EBrowser from 'components/EBrowser';
 import StateContext from 'contexts/StateContext';
 import resourceUISchema from 'uischemas/resource';
-import Feature from 'components/Feature';
+import feature from 'features/feature';
+import FeatureShortcutLink from 'components/FeatureShortcutLink';
 
 function Resources(props){
-
      
    let { getStore,dispatch } = useContext(StateContext);
    
@@ -20,10 +20,13 @@ function Resources(props){
    },[]);
 
    return(
-      <Feature group="Admin / Resources" >
-         <EBrowser entities={resources} uischema={resourceUISchema}/>
-      </Feature>
+      // <Feature group="Admin / Resources" >
+         
+      // </Feature>
+      <EBrowser entities={resources} uischema={resourceUISchema}/>
    )
 }
 
-export default Resources;
+export default feature(Resources,{
+   title: 'Admin / Resources'
+});
