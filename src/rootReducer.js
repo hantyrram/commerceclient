@@ -81,6 +81,7 @@ export default (state, action)=>{
          newState.employees? newState.employees.push(action.payload): (newState.employees = []).push(action.payload);
          return { ...newState }
       }
+      case types.USERACCOUNTS_FETCH_OK: return {...newState, userAccounts: action.payload}
      
       case 'GET_RESOURCES_OK': return {...newState, resources: action.payload}
       case 'FETCH_PERMISSIONS_OK': return {...newState, permissions: action.payload}

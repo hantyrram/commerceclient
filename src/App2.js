@@ -23,7 +23,7 @@ const PermissionList = React.lazy(()=>import(/*webpackChunkName: "feature.admin.
 const Employees = React.lazy(()=> import(/*webpackChunkName: "feature.personnel_management.employees" */'features/personnel_management/Employees'));
 const EmployeeAdd = React.lazy(()=> import(/*webpackChunkName: "feature.personnel_management.employee.add" */'features/personnel_management/employee/Add'));
 const EmployeeEdit = React.lazy(()=> import(/*webpackChunkName: "feature.personnel_management.employee.edit" */'features/personnel_management/employee/Edit'));
-
+const UserAccounts = React.lazy(()=> import(/*webpackChunkName: "feature.admin.userAccounts" */'features/admin/UserAccounts'));
 
 const Page = Styled.div`
    width : 100%;
@@ -164,6 +164,9 @@ export default ({history})=>{
                      <ul>
                         <Link to="/admin/permissions">Permissions</Link>                        
                      </ul>
+                     <ul>
+                        <Link to="/admin/useraccounts">User Accounts</Link>                        
+                     </ul>
                   </li>
                </ul>
                {/* <Nav menus={[
@@ -193,6 +196,7 @@ export default ({history})=>{
                         <Route exact path="/admin/roles/:id/edit" component={RoleEdit}/> 
                         <Route exact path="/admin/apis" component={ApiList}/>   
                         <Route exact path="/admin/permissions" component={PermissionList}/>   
+                        <Route exact path="/admin/useraccounts" component={UserAccounts}/>
                      </Switch>
                      {/* <Route component={PageTransitioner}/> */}
                   </React.Suspense>

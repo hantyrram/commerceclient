@@ -48,17 +48,17 @@ function Feature(props){
    )
 }
 
-const ErrorBox = (props)=>{
+const ErrorBox = ({error})=>{
 
-   let [error,setError] = useState(null);
+   // let [error,setError] = useState(null);
 
-   useEffect(()=>{
-      let unsubsrcibe = subscribe('error',function(err){
-         console.log(err);
-         setError(err);
-      });
-      return unsubsrcibe;
-   },[])
+   // useEffect(()=>{
+   //    let unsubsrcibe = subscribe('error',function(err){
+   //       console.log(err);
+   //       setError(err);
+   //    });
+   //    return unsubsrcibe;
+   // },[])
 
    return(
       error ? 
@@ -66,17 +66,17 @@ const ErrorBox = (props)=>{
    )
 }
 
-const MessageBox = (props)=>{
+const MessageBox = ({message})=>{
 
-   let [message,setMessage] = useState(null);
+   // let [message,setMessage] = useState(null);
 
-   useEffect(()=>{
-      let unsubscribe = subscribe('message',function(msg){
-         setMessage(msg);
-      });
+   // useEffect(()=>{
+   //    let unsubscribe = subscribe('message',function(msg){
+   //       setMessage(msg);
+   //    });
 
-      return unsubscribe;
-   },[])
+   //    return unsubscribe;
+   // },[])
 
 
 
@@ -91,10 +91,42 @@ const MessageBox = (props)=>{
 export default (FeatureComponent,options)=>{
 
    return (props)=>{
+
+      let [message,setMessage] = useState(null);
+
+      let [error,setError] = useState(null);
+
+      useEffect(()=>{
+         let unsubscribeToMessage = subscribe('message',function(msg){
+            console.log(msg);
+            setMessage(msg);
+            setError(null);
+         });
+   
+         let unsubsrcibeToError = subscribe('error',function(err){
+            console.log(err);
+            setError(err);
+            setMessage(null);
+         });
+
+         return ()=>{
+            unsubscribeToMessage();
+            unsubsrcibeToError();
+         };
+
+      },[])
+
+
       return(
          <Feature title={(options || {}).title} featureShortcuts={(options || {}).shortcutLinks}>
-            <ErrorBox />
-            <MessageBox />
+            {
+               message? <MessageBox message={message}/>: null
+            }
+            {
+               error? <ErrorBox error={error}/> : null
+            }
+            {/* <ErrorBox />
+            <MessageBox /> */}
             <FeatureComponent {...props} />
          </Feature>
       )
