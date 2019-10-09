@@ -1,10 +1,12 @@
 import { RoleBrowseRequest } from 'requests';
+import queryString from 'query-string';
 
-export default query => new Promise((resolve,reject)=>{
+export default new Promise((resolve,reject)=>{
    (async ()=>{
       try {
-         let request  = new RoleBrowseRequest(query);
+         let request  = new RoleBrowseRequest();
          let artifact = await request.send();
+         console.log(artifact);
          if(artifact.status === 'ok'){
             resolve(artifact.data.entity);
             return;

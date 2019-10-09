@@ -4,7 +4,7 @@ import TextField from '@material-ui/core/TextField';
 import Styled from 'styled-components';
 
 const FormTitle = Styled.div`
-   border-bottom: 1px solid #979595;
+   border-bottom: 1px solid #e4e3e3;
    font-size: 1.5em;
    font-weight: bold;
    font-style: italic;
@@ -15,6 +15,8 @@ const FormTitle = Styled.div`
 const Form = Styled.form`
    background-color: white;
    border: 1px solid #d6cdcd;
+   // margin-top: .5em;
+   // margin-bottom: .5em;
    color: #595555;
    padding: 1em;
    font-family: arial;
@@ -91,7 +93,7 @@ export default function EForm(props){
    if(props[key]){
     let Element = props[key];
            
-    elements.push(
+    elements.push(         
           <>
            <FormControl className="eform-inputgroup">
             <FormControlLabel htmlFor={key} {...props.uischema[key].labelAttributes}>{key.replace(/^[a-z]/,key.charAt(0).toUpperCase())}</FormControlLabel>

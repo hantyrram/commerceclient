@@ -385,6 +385,7 @@ const employee = {
       attributes: {
        name: "roles",
        id: "employee-roles",
+       readOnly:true,
       },
       transform: r => `[ ${r.join()} ]`
      },

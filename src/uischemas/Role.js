@@ -23,25 +23,36 @@ export default {
   }
  },
  label : {
+   el : "input",
+   label: "Label",
+   attributes : {
+    name : "label",
+    id:"role-label",
+    type:"text",
+    minLength: 1,
+    maxLength: 20
+   }
+  },
+ description : {
   el : "input",
   label: "Role Description",
   attributes : {
-   name : "label",
-   id:"role-label",
+   name : "description",
+   id:"role-description",
    type:"text",
    minLength: 1,
-   maxLength: 35
+   maxLength: 60
   }
  },
- permissions : {
-  el: "select",
-  label: "Permissions",
-  attributes: {
-   name: "permissions",
-   id: "role-permissions",
-  },
-  options: [ ]
- }
+//  permissions : {
+//   el: "select",
+//   label: "Permissions",
+//   attributes: {
+//    name: "permissions",
+//    id: "role-permissions",
+//   },
+//   options: [ ]
+//  }
 }
 
 
