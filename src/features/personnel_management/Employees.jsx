@@ -20,8 +20,6 @@ function Employees({history}){
    },[]);
 
    const onRowClick = (rowData)=>{
-
-      console.log(rowData,'Received From Row Click');
       history.push(`employees/${rowData._id }/edit`, {state: rowData});
    }
 
@@ -30,14 +28,13 @@ function Employees({history}){
       <ActiveTable 
          data={
                employees.reduce(function(acc,element){
-                  console.log(element);
-                  let {_id,identity,joiningDate,contactNo} = element;
+                  let {_id,employeeId,identity,joiningDate,contactNo} = element;
                   let {firstname,middlename,lastname,gender,dateOfBirth} = identity;
-                  acc.push({_id,firstname,middlename,lastname,gender,dateOfBirth,joiningDate,contactNo});
+                  acc.push({_id,employeeId,firstname,middlename,lastname,gender,dateOfBirth,joiningDate,contactNo});
                   return acc;
                },[])
          } 
-         columnHeaders={['Firstname','Middlename','Lastname','Gender','Date Of Birth','Joining Date','Contact No.']}
+         columnHeaders={['Employee Id','Firstname','Middlename','Lastname','Gender','Date Of Birth','Joining Date','Contact No.']}
          hidden={['_id']}
          onRowClick={onRowClick}
       />

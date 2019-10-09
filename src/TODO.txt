@@ -1,2 +1,2 @@
-How Can We Display Error, And Clear Error on each screen change
-How Can we invoke multiple actions on a feature, e.g. fetchRole, fetchRolePermissions
+Display The User Account's Roles Properly,
+Add Role To A User Account

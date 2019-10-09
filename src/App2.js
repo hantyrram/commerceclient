@@ -24,6 +24,8 @@ const Employees = React.lazy(()=> import(/*webpackChunkName: "feature.personnel_
 const EmployeeAdd = React.lazy(()=> import(/*webpackChunkName: "feature.personnel_management.employee.add" */'features/personnel_management/employee/Add'));
 const EmployeeEdit = React.lazy(()=> import(/*webpackChunkName: "feature.personnel_management.employee.edit" */'features/personnel_management/employee/Edit'));
 const UserAccounts = React.lazy(()=> import(/*webpackChunkName: "feature.admin.userAccounts" */'features/admin/UserAccounts'));
+const UserAccountCreate = React.lazy(()=> import(/*webpackChunkName: "feature.admin.userAccount.create" */'features/admin/useraccount/Create'));
+const UserAccountRead = React.lazy(()=> import(/*webpackChunkName: "feature.admin.userAccount.read" */'features/admin/useraccount/Read'));
 
 const Page = Styled.div`
    width : 100%;
@@ -197,6 +199,8 @@ export default ({history})=>{
                         <Route exact path="/admin/apis" component={ApiList}/>   
                         <Route exact path="/admin/permissions" component={PermissionList}/>   
                         <Route exact path="/admin/useraccounts" component={UserAccounts}/>
+                        <Route exact path="/admin/useraccounts/create" component={UserAccountCreate}/>
+                        <Route exact path="/admin/useraccounts/:employeeId" component={UserAccountRead}/>
                      </Switch>
                      {/* <Route component={PageTransitioner}/> */}
                   </React.Suspense>

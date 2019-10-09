@@ -24,7 +24,7 @@ function UserAccounts({history}){
 
    
    const onRowClick = (rowData)=>{
-      history.push(`/admin/userAccounts/${rowData._id }/edit`, {state: rowData});
+      history.push(`/admin/useraccounts/${rowData._owner}`, {state: rowData});
    }
 
    console.log(userAccounts);
@@ -35,14 +35,14 @@ function UserAccounts({history}){
          data={
             userAccounts.reduce(function(acc,element){
                   console.log(element);
-                  let {_id, roles, credential} = element;
+                  let { _owner, roles, credential} = element;
                   let { username, password, temp} = credential || {};
-                  acc.push({_id, username, password, temp, roles: (roles || []).length});
+                  acc.push({ _owner, username, password, temp, roles: (roles || []).length});
                   return acc;
                },[])
          } 
-         columnHeaders={['Username','Password','Temporary','Roles']}
-         hidden={['_id']}
+         columnHeaders={['Owned By (EmployeeId)','Username','Password','Is Temporary','Roles']}
+         // hidden={['_id']}
          onRowClick={onRowClick}
    />
    )
@@ -54,6 +54,6 @@ function UserAccounts({history}){
 export default feature(UserAccounts,{
    title: 'User Accounts',
    shortcutLinks: [
-      <FeatureShortcutLink to="/admin/userAccounts/create">Create New User Account</FeatureShortcutLink>
+      <FeatureShortcutLink to="/admin/useraccounts/create">Create New User Account</FeatureShortcutLink>
    ]
 })

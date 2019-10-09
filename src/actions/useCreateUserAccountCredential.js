@@ -4,29 +4,25 @@
 
 import {useContext} from 'react';
 import axios from '../axios';
-import userAccountsFetchPending from './action_creators/userAccountsFetchPending';
-import userAccountsFetchOk from './action_creators/userAccountsFetchOk';
-import userAccountsFetchNok from './action_creators/userAccountsFetchNok';
 import StateContext from 'contexts/StateContext';
 import { emit } from 'actionEvent';
 export default ()=>{
    
    let {dispatch} = useContext(StateContext);
 
-   return async function(){
+   return async function(employee,credential){
+      
       try {
-         dispatch(userAccountsFetchPending());
-         let {data} = await axios.get('/apiv1/admin/userAccounts/');
+         let {data} = await axios.post(`/apiv1/employees/${employee._id}/useraccount/credential`,credential);
+         console.log(data);
          if(data.ok){
-            dispatch(userAccountsFetchOk(data.resource));
             if(data.message){
                emit('message',data.message);
             }
             return data.resource;
          }
-         dispatch(userAccountsFetchNok(data.error));
          emit('error',data.error);
-
+         return;
       } catch (error) {
          dispatch({type:'CLIENT_ERROR',text:'Axios Error!'});
          emit('error',{type:'CLIENT_ERROR',text:'Axios Error!'});

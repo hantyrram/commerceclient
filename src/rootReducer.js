@@ -68,13 +68,9 @@ export default (state, action)=>{
          return newState;
       }
       case types.EMPLOYEE_FETCH_OK : {
-         
          newState.employees = [];
          newState.employees.push(action.payload);
-         console.log(action.payload);
-         console.log(newState);
          return newState;
-         
       }
       case types.EMPLOYEES_FETCH_OK: return {...newState, employees: action.payload}
       case types.EMPLOYEES_ADD_OK: {
@@ -82,6 +78,27 @@ export default (state, action)=>{
          return { ...newState }
       }
       case types.USERACCOUNTS_FETCH_OK: return {...newState, userAccounts: action.payload}
+      case types.USERACCOUNT_FETCH_OK: {
+         let fetchedUserAccount = action.payload;
+         let i = -1;
+
+         if(!newState.userAccounts){
+            newState.userAccounts = [];
+         }
+
+         let role = newState.userAccounts.find((existingUserAccount,index)=>{
+            i = index;
+            return existingUserAccount._owner === fetchedUserAccount._owner;
+         });
+         
+         if(role){
+            newState.userAccounts.splice(i,1,role);
+         }else{
+            newState.userAccounts.push(fetchedUserAccount);
+         }
+
+         return newState;
+      }
      
       case 'GET_RESOURCES_OK': return {...newState, resources: action.payload}
       case 'FETCH_PERMISSIONS_OK': return {...newState, permissions: action.payload}

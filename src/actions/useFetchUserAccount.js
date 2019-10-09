@@ -4,27 +4,27 @@
 
 import {useContext} from 'react';
 import axios from '../axios';
-import userAccountsFetchPending from './action_creators/userAccountsFetchPending';
-import userAccountsFetchOk from './action_creators/userAccountsFetchOk';
-import userAccountsFetchNok from './action_creators/userAccountsFetchNok';
+import userAccountFetchPending from './action_creators/userAccountFetchPending';
+import userAccountFetchOk from './action_creators/userAccountFetchOk';
+import userAccountFetchNok from './action_creators/userAccountFetchNok';
 import StateContext from 'contexts/StateContext';
 import { emit } from 'actionEvent';
 export default ()=>{
    
    let {dispatch} = useContext(StateContext);
 
-   return async function(){
+   return async function(employeeId){
       try {
-         dispatch(userAccountsFetchPending());
-         let {data} = await axios.get('/apiv1/admin/userAccounts/');
+         dispatch(userAccountFetchPending());
+         let {data} = await axios.get('/apiv1/admin/userAccounts/' + employeeId);
          if(data.ok){
-            dispatch(userAccountsFetchOk(data.resource));
+            dispatch(userAccountFetchOk(data.resource));
             if(data.message){
                emit('message',data.message);
             }
             return data.resource;
          }
-         dispatch(userAccountsFetchNok(data.error));
+         dispatch(userAccountFetchNok(data.error));
          emit('error',data.error);
 
       } catch (error) {
