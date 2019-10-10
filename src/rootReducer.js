@@ -86,13 +86,13 @@ export default (state, action)=>{
             newState.userAccounts = [];
          }
 
-         let role = newState.userAccounts.find((existingUserAccount,index)=>{
+         let userAccount = newState.userAccounts.find((existingUserAccount,index)=>{
             i = index;
             return existingUserAccount._owner === fetchedUserAccount._owner;
          });
          
-         if(role){
-            newState.userAccounts.splice(i,1,role);
+         if(userAccount){
+            newState.userAccounts.splice(i,1,userAccount);
          }else{
             newState.userAccounts.push(fetchedUserAccount);
          }

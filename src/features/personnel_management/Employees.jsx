@@ -9,9 +9,7 @@ import feature from '../feature';
 function Employees({history}){
    let { getStore } = useContext(StateContext);
    let fetchEmployees = useFetchEmployees();
-
    let {employees} = getStore();
-   console.log(getStore());
 
    useEffect(()=>{
       if(!getStore().employees){ // or stale
@@ -23,6 +21,16 @@ function Employees({history}){
       history.push(`employees/${rowData._id }/edit`, {state: rowData});
    }
 
+   const columnHeaders = [
+      { employeeId: 'Employee Id' },
+      { firstname: 'Firstname' },
+      { middlename: 'Middlename' },
+      { lastname: 'Lastname' },
+      { gender: 'Gender' },
+      { dateOfBirth: 'Birthday' },
+      { joiningDate: 'Joining Date' },
+      { contactNo: 'Contact No.' },
+   ]
    return(
       !employees || employees.length === 0 ? 'No Employees' : 
       <ActiveTable 
@@ -34,7 +42,7 @@ function Employees({history}){
                   return acc;
                },[])
          } 
-         columnHeaders={['Employee Id','Firstname','Middlename','Lastname','Gender','Date Of Birth','Joining Date','Contact No.']}
+         columnHeaders={columnHeaders}
          hidden={['_id']}
          onRowClick={onRowClick}
       />

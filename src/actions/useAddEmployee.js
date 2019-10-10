@@ -14,7 +14,6 @@ function useCreateRole(){
       try {
          dispatch(employeeAddPending());
          let {data} = await axios.post('/apiv1/employees/empid_manual', employee);
-         console.log(data);
          if(data.ok){
             data.resource = 
             dispatch(employeeAddOk(Object.assign(employee,{_id:data.resource._id})));

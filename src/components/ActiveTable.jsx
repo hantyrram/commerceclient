@@ -9,8 +9,11 @@ const ActiveTable = (props)=>{
 
    const renderColumnHeaders = ()=>{
       if(props.columnHeaders){
-         return  props.columnHeaders.map((columnHeader,i)=>{
-            return <th key={i}>{columnHeader}</th>
+         return  props.columnHeaders.map((hObj,i)=>{
+            let key = Object.keys(hObj)[0];
+            return(
+               <th key={i}>{ hObj[key] } </th>
+            )
          })
       }
 
@@ -23,15 +26,20 @@ const ActiveTable = (props)=>{
    }
 
    function renderRows(){
-      return props.data.map((obj,i)=>{
+      return props.data.map((dObj,i)=>{
          return (
-            <tr key={i} rowData={JSON.stringify(obj)}>
-               {Object.getOwnPropertyNames(obj).map((pName,ii)=>{
-                  let hidden = props.hidden || [];
-                  return (
-                     <td key={ii} style={{display: hidden.includes(pName)?'none':''}}>{obj[pName]}</td>
-                  )
-               })}
+            <tr key={i} rowData={JSON.stringify(dObj)}>
+               {
+                  props.columnHeaders.map((hObj,ii)=>{
+                     let pName = Object.keys(hObj)[0];
+                     let tdValue = String(dObj[pName]); ///??? convert all to string temporarily, because array value would result an error
+                     return (
+                        <td key={ii} style={{display: (props.hidden || []).includes(hObj)?'none':''}}>
+                           { tdValue }
+                        </td>
+                     )
+                  })
+               }
             </tr>
          )
       });
@@ -78,8 +86,12 @@ ActiveTable.propTypes = {
    onRowSelect: PropTypes.func, // function called if row is selected, optional
    rowActionHandlers: PropTypes.array, // optional array of functions that accept the rowData, must return a Component e.g. button
    data: PropTypes.array, //array of objects
-   columnHeaders: PropTypes.array, //array of string, which will be used as column headers
+   //array of Objects 
+   //each object key maps to the property of the datas object, the value will be the column header.
+   //e.g. {firstname: 'First Name'} where firstname is a key of data[i]
+   columnHeaders: PropTypes.array, 
    hidden: PropTypes.array // array of string which is the property of the data to hide, e.g. _id if you don't want to show id
 }
+
 
 export default ActiveTable;
