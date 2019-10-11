@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 const ActiveTable = (props)=>{
 
    let tableRef = useRef(null);
-
+   let checkboxRef = useRef(null);
    
 
    const renderColumnHeaders = ()=>{
@@ -25,10 +25,32 @@ const ActiveTable = (props)=>{
       })
    }
 
+   //renders the select / checkbox if onRowSelect is enabled
+   //param dObj - the object 
+   const renderSelect = (dObj)=>{
+      if(!props.onRowSelect){
+         return null;
+      }
+
+      const checkboxChangeHandler = (e)=>{
+         props.onRowSelect({selected: e.target.checked, rowData: dObj});
+      }
+      
+      return (
+         <td >
+            <input type="checkbox" onChange={checkboxChangeHandler}/>
+         </td>
+      )
+
+   }
+
    function renderRows(){
       return props.data.map((dObj,i)=>{
          return (
             <tr key={i} rowData={JSON.stringify(dObj)}>
+               {
+                  renderSelect(dObj)
+               }
                {
                   props.columnHeaders.map((hObj,ii)=>{
                      let pName = Object.keys(hObj)[0];
@@ -62,7 +84,17 @@ const ActiveTable = (props)=>{
       }
    }
 
+   const addCheckboxChangeListener = ()=>{
+      if(props.onRowSelect){
+         console.log(checkboxRef.current);
+         checkboxRef.current.addEventListener('change',function(e){
+            console.log(e.target.checked);
+         });
+      }
+   }
+
    useEffect(addRowClickListener,[]);
+   // useEffect(addCheckboxChangeListener,[props.onRowSelect]);
 
    if(!props.data || props.data.length === 0){
       return <div><i>{'< Empty >'} </i></div>
