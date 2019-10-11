@@ -1,5 +1,4 @@
 import React, { useContext,useEffect } from 'react';
-import uischema from 'uischemas/role';
 import EBrowser from 'components/EBrowser';
 import StateContext from 'contexts/StateContext';
 import useFetchUserAccounts from 'actions/useFetchUserAccounts';
@@ -29,6 +28,13 @@ function UserAccounts({history}){
 
    console.log(userAccounts);
 
+   const columnHeaders = [
+      { _owner : 'Owner (Employee Id)'},
+      { username: 'Username' },
+      { password: 'Password' },
+      { temp: 'Is Temporary' }
+   ]
+
    return(
       !userAccounts || userAccounts.length === 0 ? 'No Existing User Accounts' : 
       <ActiveTable 
@@ -41,8 +47,9 @@ function UserAccounts({history}){
                   return acc;
                },[])
          } 
-         columnHeaders={['Owned By (EmployeeId)','Username','Password','Is Temporary','Roles']}
-         // hidden={['_id']}
+         columnHeaders={columnHeaders}
+         hidden={['roles']}
+         
          onRowClick={onRowClick}
    />
    )
