@@ -2,6 +2,7 @@ import React,{useReducer} from 'react';
 
 import ReactDOM from 'react-dom';
 import './index.css';
+import './App.css';
 import StateContext from './contexts/StateContext';
 import rootReducer from './rootReducer';
 import App from './App2';

@@ -16,9 +16,7 @@ function UserAccounts({history}){
    let {userAccounts} = getStore();
 
    useEffect(()=>{
-      if(!getStore().userAccounts){//or roles is stale
-         fetchUserAccounts();
-      }
+      fetchUserAccounts();
    },[]);
 
    

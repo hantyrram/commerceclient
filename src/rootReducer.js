@@ -99,6 +99,26 @@ export default (state, action)=>{
 
          return newState;
       }
+      case types.USERACCOUNT$ROLES_ADD_OK: {
+         let {username,role} = action.payload;
+         let userAccount = (newState.userAccounts || []).find((ua)=>{
+            return (ua.credential || {}).username === username;
+         });
+
+         if(userAccount){ 
+            if(!userAccount.roles){
+               userAccount.roles = [];
+            }
+            
+            let i = userAccount.roles.findIndex(r => r._id === role._id);
+            if(i !== -1){
+               return newState;
+            }
+            userAccount.roles.push(role);
+         }
+         
+         return newState;
+      }
      
       case 'GET_RESOURCES_OK': return {...newState, resources: action.payload}
       case 'FETCH_PERMISSIONS_OK': return {...newState, permissions: action.payload}
@@ -107,3 +127,5 @@ export default (state, action)=>{
 }
 
 //employee add ok ?
+
+

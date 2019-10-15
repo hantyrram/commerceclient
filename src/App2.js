@@ -15,7 +15,7 @@ import useFetchApis from 'actions/useFetchApis';
 import useFetchEmployees from 'actions/useFetchEmployees';
 
 const ApiList = React.lazy(()=> import(/*webpackChunkName: "feature.admin.apis.list" */'features/admin/Apis'));
-const RolesMain = React.lazy(()=> import(/*webpackChunkName: "feature.admin.roles" */'features/admin/RolesMain'));
+const Roles = React.lazy(()=> import(/*webpackChunkName: "feature.admin.roles" */'features/admin/Roles'));
 const RoleCreate = React.lazy(()=>import(/*webpackChunkName: "feature.admin.roles.create" */'features/admin/roles/Create'));
 const RoleRead = React.lazy(()=>import(/*webpackChunkName: "feature.admin.roles.read" */'features/admin/roles/Read'));
 const RoleEdit= React.lazy(()=>import(/*webpackChunkName: "feature.admin.roles.edit" */'features/admin/roles/Edit'));
@@ -113,7 +113,7 @@ export default ({history})=>{
          <Page>
             <LeftSection >
                <LogoContainer>  
-                  <img src="/hantyr_icon.svg" alt="Logo" style={{width:"100px",height:"100px"}} />
+                  <img src="/images/hantyr_icon.svg" alt="Logo" style={{width:"100px",height:"100px"}} />
                </LogoContainer>  
                <ul>
                   <li>Catalog
@@ -192,7 +192,7 @@ export default ({history})=>{
                         <Route exact path="/employees/add" component={EmployeeAdd}/>
                         <Route exact path="/employees/:id/edit" component={EmployeeEdit}/>
                         <Route exact path="/admin/resources" component={Resources}/> 
-                        <Route exact path="/admin/roles" component={RolesMain}/> 
+                        <Route exact path="/admin/roles" component={Roles}/> 
                         <Route exact path="/admin/roles/create" component={RoleCreate}/> 
                         <Route exact path="/admin/roles/:id" component={RoleRead}/> 
                         <Route exact path="/admin/roles/:id/edit" component={RoleEdit}/> 
