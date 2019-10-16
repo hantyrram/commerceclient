@@ -61,7 +61,7 @@ const ActiveTable = (props)=>{
                      let pName = Object.keys(hObj)[0];
                      let tdValue = String(dObj[pName]); ///??? convert all to string temporarily, because array value would result an error
                      return (
-                        <td key={ii} style={{display: (props.hidden || []).includes(hObj)?'none':''}}>
+                        <td key={ii} style={{display: (props.hidden || []).includes(hObj)?'none':'', cursor: 'inherit'}} >
                            { tdValue }
                         </td>
                      )
@@ -81,8 +81,10 @@ const ActiveTable = (props)=>{
    const addRowClickListener = ()=>{
       if(props.onRowClick){
          let tbody = tableRef.current.children[1];
+         
          for(let tr of tbody.children){
-            tr.style.cursor = 'default';
+            console.log(tr);
+            tr.style.cursor = 'default';            
             tr.addEventListener('click',function(){
                if(props.onRowClick){
                   props.onRowClick(JSON.parse(tr.attributes.rowData.value));
@@ -92,7 +94,7 @@ const ActiveTable = (props)=>{
       }
    }
 
-   useEffect(addRowClickListener,[]);
+   useEffect(addRowClickListener,[props.onRowClick,props.data]);
    // useEffect(addCheckboxChangeListener,[props.onRowSelect]);
 
    if(!props.data || props.data.length === 0){
