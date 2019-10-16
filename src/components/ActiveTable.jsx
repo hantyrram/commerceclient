@@ -44,6 +44,11 @@ const ActiveTable = (props)=>{
 
    }
 
+   function deleteHandler(rowData,e){
+      props.onRowDelete(rowData);
+      
+   }
+
    function renderRows(){
       return props.data.map((dObj,i)=>{
          return (
@@ -56,11 +61,14 @@ const ActiveTable = (props)=>{
                      let pName = Object.keys(hObj)[0];
                      let tdValue = String(dObj[pName]); ///??? convert all to string temporarily, because array value would result an error
                      return (
-                        <td key={ii} style={{display: (props.hidden || []).includes(hObj)?'none':''}}>
+                        <td key={ii} style={{display: (props.hidden || []).includes(hObj)?'none':'', cursor: 'inherit'}} >
                            { tdValue }
                         </td>
                      )
                   })
+               }
+               {
+                  props.onRowDelete ? <td><button onClick={deleteHandler.bind({},dObj)}>Delete</button></td>: null
                }
             </tr>
          )
@@ -73,8 +81,10 @@ const ActiveTable = (props)=>{
    const addRowClickListener = ()=>{
       if(props.onRowClick){
          let tbody = tableRef.current.children[1];
+         
          for(let tr of tbody.children){
-            tr.style.cursor = 'default';
+            console.log(tr);
+            tr.style.cursor = 'default';            
             tr.addEventListener('click',function(){
                if(props.onRowClick){
                   props.onRowClick(JSON.parse(tr.attributes.rowData.value));
@@ -84,16 +94,7 @@ const ActiveTable = (props)=>{
       }
    }
 
-   const addCheckboxChangeListener = ()=>{
-      if(props.onRowSelect){
-         console.log(checkboxRef.current);
-         checkboxRef.current.addEventListener('change',function(e){
-            console.log(e.target.checked);
-         });
-      }
-   }
-
-   useEffect(addRowClickListener,[]);
+   useEffect(addRowClickListener,[props.onRowClick,props.data]);
    // useEffect(addCheckboxChangeListener,[props.onRowSelect]);
 
    if(!props.data || props.data.length === 0){
@@ -122,7 +123,8 @@ ActiveTable.propTypes = {
    //each object key maps to the property of the datas object, the value will be the column header.
    //e.g. {firstname: 'First Name'} where firstname is a key of data[i]
    columnHeaders: PropTypes.array, 
-   hidden: PropTypes.array // array of string which is the property of the data to hide, e.g. _id if you don't want to show id
+   hidden: PropTypes.array, // array of string which is the property of the data to hide, e.g. _id if you don't want to show id
+   onRowDelete: PropTypes.func // a function that will be called when the delete button is clicked
 }
 
 

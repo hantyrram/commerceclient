@@ -31,9 +31,10 @@ function EmployeeEdit({location,match}){
    let [employee,setEmployee] = useState(employeeFromStore);
 
    const tryFetchingEmployee = ()=>{
-      if(!employee){
-         fetchEmployee(match.params.id);
-      }
+      // if(!employee){
+      //    fetchEmployee(match.params.id);
+      // }
+      fetchEmployee(match.params.id);
    }
 
    useEffect(tryFetchingEmployee,[]);
@@ -84,8 +85,8 @@ function EmployeeEdit({location,match}){
             <form action="#" onSubmit={formSubmitHandler}>
                <h3>Employee Id</h3>
                <div>
-                  <label htmlFor="employeeId">Enter Employee Id</label>
-                  <input type="text" name="employeeId" value={employee.employeeId} onChange={changeHandler}/>
+                  <label htmlFor="employeeId">Employee Id</label>
+                  <input type="text" name="employeeId" value={employee.employeeId} onChange={changeHandler} disabled/>
                </div>
                <h3>Personal Information</h3>
                <hr/>

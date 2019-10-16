@@ -1,24 +1,21 @@
 import React, { useContext,useEffect, useState } from 'react';
 import StateContext from 'contexts/StateContext';
 import useFetchEmployees from 'actions/useFetchEmployees';
-import Feature from 'components/Feature';
 import FeatureShortcutLink from 'components/FeatureShortcutLink';
 import ActiveTable from 'components/ActiveTable';
 import feature from '../feature';
 
 function Employees({history}){
    let { getStore } = useContext(StateContext);
-   let fetchEmployees = useFetchEmployees();
+   let fetchEmployees = useFetchEmployees();   
    let {employees} = getStore();
 
    useEffect(()=>{
-      if(!getStore().employees){ // or stale
-         fetchEmployees();
-      }
+      fetchEmployees();
    },[]);
 
    const onRowClick = (rowData)=>{
-      history.push(`employees/${rowData._id }/edit`, {state: rowData});
+      history.replace(`/employees/${rowData._id}/edit`, {state: rowData});
    }
 
    const columnHeaders = [
@@ -29,16 +26,17 @@ function Employees({history}){
       { gender: 'Gender' },
       { dateOfBirth: 'Birthday' },
       { joiningDate: 'Joining Date' },
-      { contactNo: 'Contact No.' },
+      { mobileNo: 'Contact No.' },
    ]
    return(
       !employees || employees.length === 0 ? 'No Employees' : 
       <ActiveTable 
+         key={'e1'}
          data={
                employees.reduce(function(acc,element){
-                  let {_id,employeeId,identity,joiningDate,contactNo} = element;
+                  let {_id,employeeId,identity,joiningDate,mobileNo} = element;
                   let {firstname,middlename,lastname,gender,dateOfBirth} = identity;
-                  acc.push({_id,employeeId,firstname,middlename,lastname,gender,dateOfBirth,joiningDate,contactNo});
+                  acc.push({_id,employeeId,firstname,middlename,lastname,gender,dateOfBirth,joiningDate,mobileNo});
                   return acc;
                },[])
          } 
