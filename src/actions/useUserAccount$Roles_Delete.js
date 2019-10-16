@@ -23,7 +23,7 @@ export default ()=>{
          let {data} = await axios.delete(`/apiv1/useraccounts/${username}/roles/${role._id}`);
          console.log(data);
          if(data.ok){
-            dispatch(userAccount$Roles_Delete_Ok({username, role: data.resource}));
+            dispatch(userAccount$Roles_Delete_Ok({username, role}));
             if(data.message){
                emit('message',data.message);
             }

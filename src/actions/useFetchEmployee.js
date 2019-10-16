@@ -10,6 +10,7 @@ export default ()=>{
    let {dispatch} = useContext(StateContext);
 
    return async function(id){
+      console.log(id);
       try {
          dispatch(employeeFetchPending());
          let {data} = await axios.get('/apiv1/employees/' + id);

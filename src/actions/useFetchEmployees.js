@@ -15,9 +15,9 @@ export default ()=>{
          let {data} = await axios.get('/apiv1/employees');
          if(data.ok){
             dispatch(employeesFetchOk(data.resource));
-            if(data.message){
-               emit('message',data.message);
-            }
+            // if(data.message){
+            //    emit('message',data.message);
+            // }
             return data.resource;
          }
 

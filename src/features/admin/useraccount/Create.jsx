@@ -37,7 +37,8 @@ function UserAccountCreate(props){
    }
   
    const saveBtnClickHandler = ()=>{
-      createUserAccountCredential(employeeVerified,...credential);
+      console.log(credential);
+      createUserAccountCredential(employeeVerified,credential);
    }  
 
    const genCredentialBtnClickHandler = ()=>{
@@ -56,7 +57,7 @@ function UserAccountCreate(props){
             <h3>Employee Id</h3>
                <div>
                   <label htmlFor="employeeId">Enter Employee Id</label>
-                  <input type="text" name="employeeId" value={employeeId} onChange={employeeIdChangeHandler} minLength="6"/>
+                  <input type="text" name="employeeId" value={employeeId || ''} onChange={employeeIdChangeHandler} minLength="6"/>
                   <button type="submit">Verify Employee Id</button>
                   { 
                      employeeVerified ? 

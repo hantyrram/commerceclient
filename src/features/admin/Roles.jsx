@@ -5,30 +5,34 @@ import StateContext from 'contexts/StateContext';
 import useFetchRoles from 'actions/useFetchRoles';
 import Feature from 'components/Feature';
 import FeatureShortcutLink from 'components/FeatureShortcutLink';
-
-export default ({history})=>{
+import feature from '../feature';
+function Roles({history}){
    
    let { getStore} = useContext(StateContext);
-
+   let { roles } = getStore();
    let fetchRoles = useFetchRoles();
 
    useEffect(()=>{
-      if(!getStore().roles){//or roles is stale
-         fetchRoles();
-      }
+      fetchRoles();
    },[]);
 
    
    const ebrowserReadHandler = (entity)=>{
-      history.push('/admin/roles/'+entity._id,{entity});
+      history.push('/admin/roles/' + entity._id, {entity} );
    }
 
    return(
-      <Feature group="Roles" featureShortcuts={[<FeatureShortcutLink to="/admin/roles/create">Create Role</FeatureShortcutLink>]}>
-        <EBrowser uischema={uischema} entities={getStore().roles} onRead={ebrowserReadHandler} />    
-      </Feature>
+      <EBrowser uischema={uischema} entities={roles} onRead={ebrowserReadHandler} />   
    )
    
 }
+
+export default feature(Roles,{
+   title: 'Roles',
+   shortcutLinks: [
+      <FeatureShortcutLink to="/admin/roles/create">Create New Role</FeatureShortcutLink>
+   ]
+})
+
 
 

@@ -59,8 +59,9 @@ function UserAccountRead({match,location}){
    ]
    return(
       <form id="temporaryCredential" action="#" onSubmit={(e)=>{e.preventDefault()}}>
-         <h2>User Account : Employee Id > {userAccount._owner}</h2>
+         <h2>User Account</h2>
          <hr/>
+         <h4>Owner : {userAccount._owner}</h4>
          <h4>Credential</h4>
          <hr/>
          <div>

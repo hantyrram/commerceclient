@@ -119,7 +119,21 @@ export default (state, action)=>{
          
          return newState;
       }
-     
+      case types.USERACCOUNT$ROLES_DELETE_OK: {
+         let {username,role} = action.payload;
+         let userAccount = (newState.userAccounts || []).find((ua)=>{
+            return (ua.credential || {}).username === username;
+         });
+
+         if(userAccount && userAccount.roles && userAccount.roles.length > 0){ 
+            let i = userAccount.roles.findIndex(r => r._id === role._id);
+            if(i === -1){
+               return newState;
+            }
+            userAccount.roles.splice(i,1);
+         }
+         return newState;
+      }
       case 'GET_RESOURCES_OK': return {...newState, resources: action.payload}
       case 'FETCH_PERMISSIONS_OK': return {...newState, permissions: action.payload}
       default: return newState;
