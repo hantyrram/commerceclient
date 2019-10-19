@@ -1,6 +1,6 @@
 import React from 'react';
-import { storiesOf } from '@storybook/react';
-import EForm from 'components/EForm';
+import { storiesOf } from 'storybook__react';
+import EForm from './EForm';
 import s from 'uischemas/employee';
 
 const entity = {

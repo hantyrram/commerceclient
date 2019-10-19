@@ -1,29 +1,38 @@
+/**
+ * Fetches All Permissions.
+ */
+
 import {useContext} from 'react';
-import axios from '../axios';
-import apisFetchPending from './action_creators/apisFetchPending';
-import apisFetchOk from './action_creators/apisFetchOk';
-import apisFetchNok from './action_creators/apisFetchNok';
+import axios from 'axios';
+import { 
+   apis_Fetch_Pending,
+   apis_Fetch_Ok,
+   apis_Fetch_Nok,
+} from './action_creators/apis_Fetch';
 import StateContext from 'contexts/StateContext';
 import { emit } from 'actionEvent';
 export default ()=>{
+   
    let {dispatch} = useContext(StateContext);
+
    return async function(){
       try {
-         dispatch(apisFetchPending());
-         let {data} = await axios.get('/apiv1/admin/apis');
+         dispatch(apis_Fetch_Pending());
+         let {data} = await axios.get(`/apiv1/admin/apis`);
          if(data.ok){
-            dispatch(apisFetchOk(data.resource));
+            dispatch(apis_Fetch_Ok(data.resource));
             if(data.message){
                emit('message',data.message);
             }
-            return;
+            return data.resource;
          }
-         dispatch(apisFetchNok(data.error));
+         dispatch(apis_Fetch_Nok(data.error));
          emit('error',data.error);
+
       } catch (error) {
+         console.log(error);
          dispatch({type:'CLIENT_ERROR',text:'Axios Error!'});
          emit('error',{type:'CLIENT_ERROR',text:'Axios Error!'});
       }
    }
-
 }

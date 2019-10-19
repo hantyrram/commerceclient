@@ -3,9 +3,9 @@ import React,{useReducer} from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import './App.css';
-import StateContext from './contexts/StateContext';
-import rootReducer from './rootReducer';
-import App from './App2';
+import StateContext from 'contexts/StateContext';
+import rootReducer from 'rootReducer';
+import App from 'App2';
 
 class Store{
    constructor(){
@@ -26,7 +26,6 @@ class Store{
 
 
 const AppContainer = (props)=>{
-   console.log('AppContainer called')
    let initialState = new Store();
 
    const [store,dispatch] = useReducer(rootReducer,initialState);

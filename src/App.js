@@ -7,8 +7,8 @@ import {
   Switch} from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
 import UserHome from './pages/UserHome';
-import features from './features';
-import {user_permissions_read as getUserPermissions} from './features/requesters';
+import features from 'features';
+import {user_permissions_read as getUserPermissions} from 'features/requesters';
 import './App.css';
 import UserContext from './UserContext';
 

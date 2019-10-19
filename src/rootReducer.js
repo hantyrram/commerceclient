@@ -77,6 +77,13 @@ export default (state, action)=>{
          newState.employees? newState.employees.push(action.payload): (newState.employees = []).push(action.payload);
          return { ...newState }
       }
+      case types.EMPLOYEE$PHOTO_EDIT_OK: {
+         let employee = (newState.employees || []).find(e => e._id === action.payload._id)
+         employee.photo = action.payload.photo;
+         employee.photoURL = action.payload.photoURL;
+         console.log(employee);
+         return newState;
+      }
       case types.USERACCOUNTS_FETCH_OK: return {...newState, userAccounts: action.payload}
       case types.USERACCOUNT_FETCH_OK: {
          let fetchedUserAccount = action.payload;

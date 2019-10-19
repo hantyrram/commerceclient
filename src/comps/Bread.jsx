@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {BrowserRouter as Router,Route,Switch,withRouter} from 'react-router-dom';
-import pluralize from '.pluralize';
+import pluralize from 'pluralize';
 import './App.css';
 import EntityForm from './EntityForm';
 import EntityBrowser from './EntityBrowser';
@@ -100,7 +100,7 @@ class Bread extends Component {
   this._init = this._init.bind(this);
   this._init();
   this.state = {
-   entities : this.props.Entity.browse()
+   entities : this.props.entities
   }
  }
 
@@ -178,13 +178,14 @@ class Bread extends Component {
     this.setState({entities});
    }
 
+   entity.delete().catch(error=>entities.splice(i,0,entity));
    //delete test scenario
 
-   let l = setTimeout(()=>{
-    console.log('Error Deleting');
-    entities.splice(i,0,entity);//insert back on unsuccessful delete
-    this.setState({entities});
-   },6000);
+   // let l = setTimeout(()=>{
+   //  console.log('Error Deleting');
+   //  entities.splice(i,0,entity);//insert back on unsuccessful delete
+   //  this.setState({entities});
+   // },6000);
 
   }
 
