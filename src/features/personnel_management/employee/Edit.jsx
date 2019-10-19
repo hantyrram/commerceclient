@@ -1,12 +1,14 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect, useRef } from 'react';
 import {Link} from 'react-router-dom';
 import Feature from 'components/Feature';
 import FeatureShortcutLink from 'components/FeatureShortcutLink';
 import StateContext from 'contexts/StateContext';
 import useFetchEmployee from 'actions/useFetchEmployee';
 import useEditEmployee from 'actions/useEditEmployee';
+import useEmployee$Photo_Edit from 'actions/useEmployee$Photo_Edit';
 import feature from '../../feature';
-
+import Avatar from 'components/Avatar';
+import axios from '../../../axios';
 
 let profilePicContainerStyle = {
    minWidth: "25%",
@@ -16,39 +18,55 @@ let profilePicContainerStyle = {
 }
 
 let formContainerStyle = {
-   display: "inline-block"
+   display: "inline-block",
+   minWidth: "75%"
 }
 
-function EmployeeEdit({location,match}){
-  
+function EmployeeEdit({match}){
+   let employeeAvatarOverlayRef = useRef({});
    let fetchEmployee = useFetchEmployee();
    let editEmployee = useEditEmployee();
-
+   let uploadEmployeePhoto = useEmployee$Photo_Edit();
    let {getStore} = useContext(StateContext);
-
    let employeeFromStore = (getStore().employees||[]).find(emp=> emp._id === match.params.id);
-
    let [employee,setEmployee] = useState(employeeFromStore);
-
-   const tryFetchingEmployee = ()=>{
-      // if(!employee){
-      //    fetchEmployee(match.params.id);
-      // }
-      fetchEmployee(match.params.id);
-   }
-
-   useEffect(tryFetchingEmployee,[]);
-
+   let [employeePhotoURL,setEmployeePhotoURL] = useState((employee || {}).photoURL);  
+   
+   //always get the fresh copy
+   useEffect( () => { fetchEmployee(match.params.id) } ,[match.params.id] );
+   
    useEffect(()=>{
       if(employeeFromStore){
          setEmployee(employeeFromStore);
+         if(employeeFromStore.photoURL){
+            setEmployeePhotoURL(employeeFromStore.photoURL);
+            return ()=>{URL.revokeObjectURL(employeeFromStore.photoURL)};
+         }
       }
+      
    },[employeeFromStore]);
+
+   useEffect(()=>{
+    if(employeePhotoURL){
+      setEmployeePhotoURL(employeeFromStore.photoURL);
+      return ()=>{URL.revokeObjectURL(employeeFromStore.photoURL)};
+    }
+   },[employeePhotoURL]);
+
 
    const formSubmitHandler = (e)=>{
       e.preventDefault();
-      console.log('Submitted',employee);
-      editEmployee(employee);
+      let editedEmployee = Object.assign({},employee);
+      delete editedEmployee.photo;
+      delete editedEmployee.photoURL;
+      editEmployee(editedEmployee);
+   }
+
+   function employeePhotoChangeHandler(e){
+      let formData = new FormData();
+      formData.set(e.currentTarget.name,e.currentTarget.files[0]);
+      console.log(employee._id,formData);
+      uploadEmployeePhoto(employee._id,formData);
    }
 
    const changeHandler = (e)=>{
@@ -79,15 +97,41 @@ function EmployeeEdit({location,match}){
    return(
       <React.Fragment>
          <div style={profilePicContainerStyle}>
-            <Link to="#" >Attach CV</Link>
+            {/* <div id="htcomp-employee-avatar" style={{position:"relative"}}>
+               <label id="employee-avatar">
+                  <img src={`/apiv1/employees/${employee._id}/photo`} alt="avatar" height="200" width="200" 
+                  style={{cursor:"pointer",position:"absolute",left:0,top:0,opacity:1}}/>
+               </label>
+               <label ref={employeeAvatarOverlayRef} id="employee-avatar-overlay" style={{
+                  justifyContent: "center",
+                  display:"flex",
+                  alignItems: "center",
+                  height: "200px",
+                  width: "200px",
+                  cursor: "pointer",
+                  position: "absolute",
+                  left:0,
+                  top:0,
+                  opacity: 0,
+                  zIndex: 3,
+                  backgroundColor: "rgba(210,205,205,.53)"
+
+               }} >
+                  <input type="file" name="employeeAvatar" hidden={true} onChange={employeePhotoChangeHandler}/>
+                  <b>Change Photo</b>
+               </label>
+            </div>  */}
+            {/* htcomp avatar end */}
+            {/* <Avatar imgURL={`/apiv1/employees/${employee._id}/photo`} photoChangeHandler={employeePhotoChangeHandler} /> */}
+            <Avatar imgURL={employee.photoURL || `/apiv1/employees/${employee._id}/photo`} photoChangeHandler={employeePhotoChangeHandler} />
          </div>
          <div style={formContainerStyle}>
             <form action="#" onSubmit={formSubmitHandler}>
-               <h3>Employee Id</h3>
-               <div>
+               <h3>Employee Id: {employee.employeeId}</h3>
+               {/* <div>
                   <label htmlFor="employeeId">Employee Id</label>
                   <input type="text" name="employeeId" value={employee.employeeId} onChange={changeHandler} disabled/>
-               </div>
+               </div> */}
                <h3>Personal Information</h3>
                <hr/>
                <div>

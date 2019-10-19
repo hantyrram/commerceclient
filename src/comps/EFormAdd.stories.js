@@ -1,5 +1,5 @@
 import React from 'react';
-import { storiesOf } from '@storybook/react';
+import { storiesOf } from 'storybook__react';
 import EFormAdd from './EFormAdd';
 import ProductUISchema from './schemas/ProductUISchema';
 

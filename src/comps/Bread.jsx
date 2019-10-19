@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
 import {BrowserRouter as Router,Route,Switch,withRouter} from 'react-router-dom';
-import _ from 'lodash';
 import pluralize from 'pluralize';
 import './App.css';
 import EntityForm from './EntityForm';
 import EntityBrowser from './EntityBrowser';
-import ArtifactEmitter from './ArtifactEmitter';
 
 let UISchema = {
  name : {
