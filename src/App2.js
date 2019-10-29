@@ -4,11 +4,11 @@ import {BrowserRouter as Router,Route,Switch,Link} from 'react-router-dom';
 import Resources from 'features/admin/Resources';
 import Nav from 'components/Nav';
 // import rootReducer from './rootReducer';
-import StateContext from './contexts/StateContext';
+import StateContext from 'contexts/StateContext';
 import './App.css';
 // import RoleList from 'features/admin/roles/List';
-import {subscribe} from './actionEvent';
-import actionTypes from './actions/types';
+import {subscribe} from 'actionEvent';
+import actionTypes from 'actions/types';
 import useFetchRoles from 'actions/useFetchRoles';
 import useFetchPermissions from 'actions/useFetchPermissions';
 import useFetchApis from 'actions/useFetchApis';
@@ -26,6 +26,8 @@ const EmployeeEdit = React.lazy(()=> import(/*webpackChunkName: "feature.personn
 const UserAccounts = React.lazy(()=> import(/*webpackChunkName: "feature.admin.userAccounts" */'features/admin/UserAccounts'));
 const UserAccountCreate = React.lazy(()=> import(/*webpackChunkName: "feature.admin.userAccount.create" */'features/admin/useraccount/Create'));
 const UserAccountRead = React.lazy(()=> import(/*webpackChunkName: "feature.admin.userAccount.read" */'features/admin/useraccount/Read'));
+const ProductCategories = React.lazy(()=> import(/*webpackChunkName: "feature.catalog.productCategory.main" */'features/catalog/ProductCategories'));
+const ProductCategoryCreate = React.lazy(()=> import(/*webpackChunkName: "feature.catalog.productCategory.create" */'features/catalog/productCategory/Create'));
 
 const Page = Styled.div`
    width : 100%;
@@ -118,10 +120,10 @@ export default ({history})=>{
                <ul>
                   <li>Catalog
                      <ul>
-                        <Link to="/products">Products</Link>
+                        <Link to="/catalog/products">Products</Link>
                      </ul>
                      <ul>
-                        <Link to="/products/categories">Product Categories</Link>
+                        <Link to="/catalog/productcategories">Product Categories</Link>
                      </ul>
                      <ul>
                         <Link to="/products/features">Product Features</Link>
@@ -201,6 +203,8 @@ export default ({history})=>{
                         <Route exact path="/admin/useraccounts" component={UserAccounts}/>
                         <Route exact path="/admin/useraccounts/create" component={UserAccountCreate}/>
                         <Route exact path="/admin/useraccounts/:employeeId" component={UserAccountRead}/>
+                        <Route exact path="/catalog/productcategories" component={ProductCategories}/>
+                        <Route exact path="/catalog/productcategories/create" component={ProductCategoryCreate}/>
                      </Switch>
                      {/* <Route component={PageTransitioner}/> */}
                   </React.Suspense>
