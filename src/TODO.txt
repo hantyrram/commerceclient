@@ -1,2 +1,2 @@
-Display The User Account's Roles Properly,
-Add Role To A User Account
+Update The Category Tree after adding a new category,
+The New Added Category should be visible on the tree

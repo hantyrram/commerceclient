@@ -4,16 +4,22 @@ import FeatureShortcutLink from 'components/FeatureShortcutLink';
 import ActiveTable from 'components/ActiveTable';
 import feature from '../feature';
 import axios from 'axios';
-import SingleDepthDataTree from 'components/SingleDepthDataTree';
+import SingleDepthDataTreeDiv from 'components/SingleDepthDataTreeDiv';
+import useProductCategory_Create from 'actions/useProductCategory_Create';
 
 function ProductCategories({history}){
    
    let [productCategories,setProductCategories] = useState(null);
+   let createCategory = useProductCategory_Create();
 
    useEffect(()=>{
       (async ()=>{
          try {
             let {data} = await axios.get(`/apiv1/catalog/productcategories`);
+            console.log(data);
+            for(let e of data.resource){
+               console.log(e);
+            }
             if(data.ok){
                setProductCategories(data.resource);
             }
@@ -23,40 +29,36 @@ function ProductCategories({history}){
       })()
    },[]);
 
-   useEffect(()=>{
 
-      let categories = [
-         {name: "Clothing"},
-         {name: "Pants", parent: "Clothing"},
-         {name: "Skirts", parent: "Clothing"},
-         {name: "Collectibles"},
-         {name: "Gaming Accessories"},
-         {name: "Audio Devices",parent: "Gaming Accessories"},
-         {name: "Mini Skirt",parent: "Skirts"},
-      ]
-
-     
-   },[])
-
-   const onRowClick = (rowData)=>{
-      history.replace(`/productcategories/${rowData._id}`, {state: rowData});
+   function onSelect(selected){
+      console.log(selected);
    }
 
-   const columnHeaders = [
-      { name: 'Category Name' },
-      { parent: 'Parent Category' }
-   ]
+   function onAdd(category){
+      
+      (async ()=>{
+         try {
+            if(category.parent === null){
+               delete category.parent;
+            }
+            if(category.parent){
+               category.parent = category.parent._id;
+            }
+            let data = await createCategory(category);
+            
+            if(data){
+               setProductCategories([...productCategories,data]);
+            }
+         } catch (error) {
+            console.log(error);
+         }
+      })()
+   }
+
    return(
       !productCategories || productCategories.length === 0 ? 'No Product Categories' : 
-      // <ActiveTable 
-      //    key={'e1'}
-      //    data={productCategories} 
-      //    columnHeaders={columnHeaders}
-      //    hidden={['_id']}
-      //    onRowClick={onRowClick}
-      // />
       <div style={{minWidth: "100%",border:"1px solid grey"}}>
-         <SingleDepthDataTree data={productCategories} rootName="Categories" />
+         <SingleDepthDataTreeDiv data={productCategories} rootName="Categories" onSelect={onSelect} onAdd={onAdd}/>
       </div>
    )
    
