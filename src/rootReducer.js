@@ -141,6 +141,20 @@ export default (state, action)=>{
          }
          return newState;
       }
+      case types.PRODUCTCATEGORY_FETCH_OK: {
+         return {...newState, productCategories: action.payload}
+      }
+      case types.PRODUCTCATEGORY_CREATE_OK: {
+         let {productCategories} = newState;
+         
+         if(productCategories){
+            productCategories.push(action.payload);
+         }
+         return {...newState, productCategories};
+      }
+      case types.PRODUCT_FETCHALL_OK: {
+         return {...newState, products: action.payload}
+      }
       case 'GET_RESOURCES_OK': return {...newState, resources: action.payload}
       case 'FETCH_PERMISSIONS_OK': return {...newState, permissions: action.payload}
       default: return newState;

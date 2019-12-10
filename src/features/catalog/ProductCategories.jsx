@@ -1,64 +1,62 @@
 import React, { useContext,useEffect, useState } from 'react';
 import StateContext from 'contexts/StateContext';
 import FeatureShortcutLink from 'components/FeatureShortcutLink';
-import ActiveTable from 'components/ActiveTable';
 import feature from '../feature';
-import axios from 'axios';
-import SingleDepthDataTreeDiv from 'components/SingleDepthDataTreeDiv';
+import SCategory from 'components/SCategory';
 import useProductCategory_Create from 'actions/useProductCategory_Create';
+import useProductCategory_Delete from 'actions/useProductCategory_Delete';
+import useProductCategory_Fetch from 'actions/useProductCategory_Fetch';
 
 function ProductCategories({history}){
    
-   let [productCategories,setProductCategories] = useState(null);
+   
+   let { getStore } = useContext(StateContext);
+   let {productCategories} = getStore();
+   let [selected,setSelected] = useState({_id: 'root'});
    let createCategory = useProductCategory_Create();
+   let getCategories = useProductCategory_Fetch();
+   let deleteCategory = useProductCategory_Delete();
 
    useEffect(()=>{
-      (async ()=>{
-         try {
-            let {data} = await axios.get(`/apiv1/catalog/productcategories`);
-            console.log(data);
-            for(let e of data.resource){
-               console.log(e);
-            }
-            if(data.ok){
-               setProductCategories(data.resource);
-            }
-         } catch (error) {
-            console.log(error);
-         }
-      })()
+      getCategories();
    },[]);
 
 
-   function onSelect(selected){
-      console.log(selected);
+   function onSelect(s){
+      console.log('Selected: ',s);
+      setSelected(s);
    }
 
-   function onAdd(category){
-      
-      (async ()=>{
-         try {
-            if(category.parent === null){
-               delete category.parent;
-            }
-            if(category.parent){
-               category.parent = category.parent._id;
-            }
-            let data = await createCategory(category);
-            
-            if(data){
-               setProductCategories([...productCategories,data]);
-            }
-         } catch (error) {
-            console.log(error);
-         }
+   function onDelete(category){
+      console.log('Deleting',category);
+      (async function(){
+         await deleteCategory(category);
+         getCategories();
       })()
    }
 
+   function onAdd(newCategory,parent){
+      let category = {
+         name: newCategory
+      }
+      
+      if(parent){
+         category.parent = parent._id;
+      }
+      
+      createCategory(category);
+   }
+
    return(
-      !productCategories || productCategories.length === 0 ? 'No Product Categories' : 
+      // !productCategories || productCategories.length === 0 ? 'No Product Categories' : 
       <div style={{minWidth: "100%",border:"1px solid grey"}}>
-         <SingleDepthDataTreeDiv data={productCategories} rootName="Categories" onSelect={onSelect} onAdd={onAdd}/>
+         {/* <SingleDepthDataTreeDiv data={productCategories} rootName="Categories" onSelect={onSelect} onAdd={onAdd}/> */}
+         <SCategory category={{name: 'Categories', _id: 'root'}} 
+            data={productCategories === undefined? []: productCategories}  selected={selected} 
+            onSelect={onSelect} 
+            onAdd={onAdd} 
+            onDelete={onDelete}
+         />
       </div>
    )
    

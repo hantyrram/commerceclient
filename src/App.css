@@ -37,16 +37,21 @@
   border-width: 1px;
 } */
 
-body{
+/* body{
   background-color: #e7ebf2;
   background-image: linear-gradient(to bottom right, #E9ECF1, #e9ecf0); 
   font-size: .9em;
-
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 input, select {
    color: #595555;
-}
+   font-family: inherit;
+} */
 
-a {
+/* a {
    text-decoration: none;
+} */
+
+.form-input-control{
+   
 }

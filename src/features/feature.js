@@ -60,9 +60,16 @@ const ErrorBox = ({error})=>{
    //    return unsubsrcibe;
    // },[])
 
+   let style = {
+      padding: ".5em",
+      marginBottom: ".5em",
+      backgroundColor: "#ffd7dc",
+      color: "#790d0d"
+   }
+
    return(
       error ? 
-      <div> {error.text} </div> : null
+      <div style={style}> {error.text} </div> : null
    )
 }
 
@@ -77,12 +84,38 @@ const MessageBox = ({message})=>{
 
    //    return unsubscribe;
    // },[])
+   let style = {
+      padding: ".5em",
+      marginBottom: ".5em"
+   }
 
-
+   switch(message.type){
+      case 'SUCCESS': 
+         style = {
+            ...style, 
+            backgroundColor: "#cff1d0",
+            colort: "#024a0e"
+         }
+      break;
+      case 'WARNING': 
+         style = {
+            ...style, 
+            backgroundColor: "#f3dfca",
+            colort: "#63220e"
+         }
+      break;
+      default: {
+         style = {
+            ...style, 
+            backgroundColor: "#e1f7f9",
+            colort: "#0c4356"
+         }
+      }
+   }
 
    return(
       message ? 
-      <div> {message.text} </div> : null
+      <div style={style}> {message.text} </div> : null
    )
 }
 
@@ -125,8 +158,7 @@ export default (FeatureComponent,options)=>{
             {
                error? <ErrorBox error={error}/> : null
             }
-            {/* <ErrorBox />
-            <MessageBox /> */}
+            {/* //Loader Here */}
             <FeatureComponent {...props} />
          </Feature>
       )

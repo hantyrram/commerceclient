@@ -3,14 +3,16 @@ import React, { useEffect, useState, useRef } from 'react';
 
 //data must have single depth, with parent
 export default ({data,rootName = 'Categories', identifierName = '_id', onSelect, onAdd})=>{
-   console.log(data);
+
+   
    let [state,setState] = useState({
       selected:null,
-      prevSelected: null
+      prevSelected: null,
+      data
    });
-
+   let cache = [...data]; // we need original data for lookup
    function getChildren(category){
-      return data.filter(cat=>cat.parent === category._id);
+      return cache.filter(cat=>cat.parent === category._id); //changed data to cache
    }
    
    function hasChildren(category){
@@ -18,7 +20,7 @@ export default ({data,rootName = 'Categories', identifierName = '_id', onSelect,
    }
    
    function hasParent(category){
-      return Boolean(data.filter(cat=>cat.parent).length);//0 is false
+      return Boolean(cache.filter(cat=>cat.parent).length);//0 is false //cchanged data to cache
    }
    
    function createCategoryTree(cats,parent){
@@ -73,6 +75,9 @@ export default ({data,rootName = 'Categories', identifierName = '_id', onSelect,
 
    useEffect(()=>{
       let root = document.getElementById("sddt-root");
+      while(root.firstChild){
+         root.remove(root.firstChild);
+      }
       let span = document.createElement('span');
       span.classList.add('root');
       span.classList.add('parent');
@@ -82,9 +87,13 @@ export default ({data,rootName = 'Categories', identifierName = '_id', onSelect,
       span.style.cursor = 'default';
       span.setAttribute('sddt-item-data',JSON.stringify({_id:'sddt-root-category',name:rootName}));
       root.appendChild(span);     
-      createCategoryTree(data || [],root);
-   },[])
+      createCategoryTree(state.data,root);
+      console.log('Load Effect');
+      console.log(JSON.stringify(state.data) === JSON.stringify(data));
+      console.log(data);
+   },[data]);
 
+ 
    useEffect(()=>{//add click event 
       let sddtItems = document.getElementsByClassName("sddt-item");
       for(let sddtitem of sddtItems){
@@ -96,7 +105,9 @@ export default ({data,rootName = 'Categories', identifierName = '_id', onSelect,
                onSelect(selectedCategory);
             }
          }
+         
       }
+      console.log('Selected Effect');
    });
 
    useEffect(()=>{
@@ -158,8 +169,8 @@ export default ({data,rootName = 'Categories', identifierName = '_id', onSelect,
          }
       }
       
+      console.log('Toggle Selected Effect');
    });
-  
 
    return(
       <div>
@@ -170,3 +181,6 @@ export default ({data,rootName = 'Categories', identifierName = '_id', onSelect,
       </div>
    )
 }
+
+
+

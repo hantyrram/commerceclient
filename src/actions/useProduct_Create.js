@@ -5,30 +5,30 @@
 import {useContext} from 'react';
 import axios from 'axios';
 import {
-   productCategory_Create_Nok,
-   productCategory_Create_Ok,
-   productCategory_Create_Pending
-} from './action_creators/productCategory_Create';
+   product_Create_Nok,
+   product_Create_Ok,
+   product_Create_Pending
+} from './action_creators/product_Create';
 import StateContext from 'contexts/StateContext';
 import { emit } from 'actionEvent';
 export default ()=>{
    
    let {dispatch} = useContext(StateContext);
 
-   return async function(productCategory){
-      console.log(productCategory);
+   return async function(product){
+      console.log(product);
       try {
-         dispatch(productCategory_Create_Pending());
-         let {data} = await axios.post(`/apiv1/catalog/productcategories`,productCategory);
+         dispatch(product_Create_Pending());
+         let {data} = await axios.post(`/apiv1/catalog/products`,product);
          console.log(data);
          if(data.ok){
-            dispatch(productCategory_Create_Ok(data.resource));
+            dispatch(product_Create_Ok(data.resource));
             if(data.message){
                emit('message',data.message);
             }
             return data.resource;
          }
-         dispatch(productCategory_Create_Nok(data.error));
+         dispatch(product_Create_Nok(data.error));
          emit('error',data.error);
 
       } catch (error) {

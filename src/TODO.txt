@@ -1,2 +1,3 @@
-Update The Category Tree after adding a new category,
-The New Added Category should be visible on the tree
+Add feature to Roles Selection 
+   - prop : closeOnSelect -> close modal on select
+   

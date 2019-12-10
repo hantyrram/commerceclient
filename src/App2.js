@@ -28,6 +28,8 @@ const UserAccountCreate = React.lazy(()=> import(/*webpackChunkName: "feature.ad
 const UserAccountRead = React.lazy(()=> import(/*webpackChunkName: "feature.admin.userAccount.read" */'features/admin/useraccount/Read'));
 const ProductCategories = React.lazy(()=> import(/*webpackChunkName: "feature.catalog.productCategory.main" */'features/catalog/ProductCategories'));
 const ProductCategoryCreate = React.lazy(()=> import(/*webpackChunkName: "feature.catalog.productCategory.create" */'features/catalog/productCategory/Create'));
+const Products = React.lazy(()=> import(/*webpackChunkName: "feature.catalog.products" */'features/catalog/Products'));
+const ProductCreate = React.lazy(()=> import(/*webpackChunkName: "feature.catalog.product.create" */'features/catalog/product/Create'));
 
 const Page = Styled.div`
    width : 100%;
@@ -205,6 +207,8 @@ export default ({history})=>{
                         <Route exact path="/admin/useraccounts/:employeeId" component={UserAccountRead}/>
                         <Route exact path="/catalog/productcategories" component={ProductCategories}/>
                         <Route exact path="/catalog/productcategories/create" component={ProductCategoryCreate}/>
+                        <Route exact path="/catalog/products" component={Products}/>
+                        <Route exact path="/catalog/products/create" component={ProductCreate}/>
                      </Switch>
                      {/* <Route component={PageTransitioner}/> */}
                   </React.Suspense>

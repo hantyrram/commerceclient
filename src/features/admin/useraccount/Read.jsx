@@ -88,7 +88,6 @@ function UserAccountRead({match,location}){
                columnHeaders={rolesColumnHeaders}
                hidden={['_id','permissions']}
                onRowSelect={rolesRowSelectHandler}
-               
             />
          </Dialog>
       </form>
