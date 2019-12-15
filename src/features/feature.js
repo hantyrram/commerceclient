@@ -40,8 +40,9 @@ function Feature(props){
             {props.title}
             {props.group} {props.feature ? `/ ${props.feature}` : null}
             <FeatureShortcuts>{props.featureShortcuts ? props.featureShortcuts.map(FS=>FS):null}</FeatureShortcuts>
-         </Header>
+         </Header>   
          <Content>
+        
          {props.children}
          </Content>
       </Wrapper>

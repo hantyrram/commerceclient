@@ -80,10 +80,8 @@ const ActiveTable = (props)=>{
     */
    const addRowClickListener = ()=>{
       if(props.onRowClick){
-         let tbody = tableRef.current.children[1];
-         
+         let tbody = tableRef.current.children[1];         
          for(let tr of tbody.children){
-            console.log(tr);
             tr.style.cursor = 'default';            
             tr.addEventListener('click',function(){
                if(props.onRowClick){

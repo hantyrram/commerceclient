@@ -152,8 +152,29 @@ export default (state, action)=>{
          }
          return {...newState, productCategories};
       }
+      case types.PRODUCT_CREATE_OK: {
+         let {products} = newState;
+         
+         if(products){
+            products.push(action.payload);
+         }else{
+            products = [];
+            products.push(action.payload);
+         }
+
+         return {...newState, products};
+      }
+     
       case types.PRODUCT_FETCHALL_OK: {
          return {...newState, products: action.payload}
+      }
+      case types.PRODUCT_UPDATE_OK: {
+         let product = (newState.products || []).find(p =>p._id === action.payload._id)
+         console.log({...action.payload});
+         product = Object.assign(product,{...action.payload})
+         
+         console.log(product);
+         return newState;
       }
       case 'GET_RESOURCES_OK': return {...newState, resources: action.payload}
       case 'FETCH_PERMISSIONS_OK': return {...newState, permissions: action.payload}

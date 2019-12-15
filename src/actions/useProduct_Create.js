@@ -20,7 +20,7 @@ export default ()=>{
       try {
          dispatch(product_Create_Pending());
          let {data} = await axios.post(`/apiv1/catalog/products`,product);
-         console.log(data);
+         
          if(data.ok){
             dispatch(product_Create_Ok(data.resource));
             if(data.message){

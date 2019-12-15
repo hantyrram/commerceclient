@@ -1,3 +1,6 @@
-Add feature to Roles Selection 
-   - prop : closeOnSelect -> close modal on select
-   
+Decide if we'll separate pricing,inventory requests or on one sinlge product update
+
+Add the newly added product to the store so that we can reference the store instead of the location state,this way 
+the product is updated when we update, e.g. setting price.
+
+EDIT PRICING

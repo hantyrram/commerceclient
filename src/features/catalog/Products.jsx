@@ -25,11 +25,10 @@ function Products({history}){
       { type: 'Product Type' },
       { inStock: 'In Stock' },
       { netCost: 'Net Cost' },
-      { price: 'Selling Price' },
    ]
 
    const activeTableSelectHandler = (rowData)=>{
-      history.replace(`/catalog/products/${rowData._id}/edit`, {state: rowData});
+      history.push({pathname: `/catalog/products/${rowData.name.replace(/\s/g,'-')}`, state:{ product:rowData} });
    }
 
    return(
@@ -39,8 +38,9 @@ function Products({history}){
          key={'e1'}
          data={
                products.reduce(function(acc,element){
-                  let {_id, name, type, inStock, netCost, price } = element;
-                  acc.push({_id,name, type, inStock, netCost, price});
+                  // let {_id, name, type, inStock, netCost,price} = element;
+                  // acc.push({_id,name, type, inStock, netCost,price});
+                  acc.push(element);
                   return acc;
                },[])
          } 
@@ -57,7 +57,7 @@ function Products({history}){
 export default feature(Products,{
    title: 'Products',
    shortcutLinks: [
-      <FeatureShortcutLink to="/catalog/products/create">New Product</FeatureShortcutLink>
+      <FeatureShortcutLink to="/catalog/products/add">New Product</FeatureShortcutLink>
    ]
 })
 

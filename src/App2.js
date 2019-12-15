@@ -29,7 +29,8 @@ const UserAccountRead = React.lazy(()=> import(/*webpackChunkName: "feature.admi
 const ProductCategories = React.lazy(()=> import(/*webpackChunkName: "feature.catalog.productCategory.main" */'features/catalog/ProductCategories'));
 const ProductCategoryCreate = React.lazy(()=> import(/*webpackChunkName: "feature.catalog.productCategory.create" */'features/catalog/productCategory/Create'));
 const Products = React.lazy(()=> import(/*webpackChunkName: "feature.catalog.products" */'features/catalog/Products'));
-const ProductCreate = React.lazy(()=> import(/*webpackChunkName: "feature.catalog.product.create" */'features/catalog/product/Create'));
+const ProductAdd = React.lazy(()=> import(/*webpackChunkName: "feature.catalog.product.add" */'features/catalog/product/Add'));
+const ProductView = React.lazy(()=> import(/*webpackChunkName: "feature.catalog.product.view" */'features/catalog/product/View'));
 
 const Page = Styled.div`
    width : 100%;
@@ -208,7 +209,8 @@ export default ({history})=>{
                         <Route exact path="/catalog/productcategories" component={ProductCategories}/>
                         <Route exact path="/catalog/productcategories/create" component={ProductCategoryCreate}/>
                         <Route exact path="/catalog/products" component={Products}/>
-                        <Route exact path="/catalog/products/create" component={ProductCreate}/>
+                        <Route exact path="/catalog/products/add" component={ProductAdd}/>
+                        <Route exact path="/catalog/products/:slug" component={ProductView}/>
                      </Switch>
                      {/* <Route component={PageTransitioner}/> */}
                   </React.Suspense>

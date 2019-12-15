@@ -31,27 +31,32 @@
   }
 }
 
-/* div {
-  border-style:dotted;
-  border-color:orange;
-  border-width: 1px;
-} */
 
-/* body{
-  background-color: #e7ebf2;
-  background-image: linear-gradient(to bottom right, #E9ECF1, #e9ecf0); 
-  font-size: .9em;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-input, select {
-   color: #595555;
-   font-family: inherit;
-} */
-
-/* a {
-   text-decoration: none;
-} */
 
 .form-input-control{
-   
+   display:flex;
+   flex-direction:column;
+   margin-bottom: 1em;
 }
+
+.form-input-control label{
+   margin-bottom: .5em;
+}
+
+.form-input-control input,select,textarea{
+   margin-left: 1em;
+}
+
+.form-input-control .field-description{
+   font-style:italic;
+   margin-left: 1em;
+   font-size: .8em;
+}
+
+.form-input-control .form-input-control-inline{
+   flex-direction:row;
+}
+/* feature title #98a0ac */
+/* root e0e0e0 */
+/* right dedede    */
+/* sidenav d8d7d7 */

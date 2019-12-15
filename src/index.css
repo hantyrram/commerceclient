@@ -7,14 +7,24 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-size: .9em;
+  /* ie hide scrollbar/keep functionality */
+  -ms-overflow-style: none;
   
+}
+
+body::-webkit-scrollbar{
+   display: none;
 }
 
 input, select {
    color: #595555;
    font-family: inherit;
+   min-height: 1.5em;
 }
 
+select {
+   height: 2em;
+}
 a {
    text-decoration: none;
 }
