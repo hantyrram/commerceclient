@@ -53,6 +53,7 @@ export const useProduct_Update = ()=>{
    return async function(product){
       try {
          dispatch(product_Update_Pending());
+         emit('pending','Updating Product');
          let {data} = await axios.patch(`/apiv1/catalog/products`,product);
          console.log(data);
          if(data.ok){

@@ -13,6 +13,11 @@ import useFetchRoles from 'actions/useFetchRoles';
 import useFetchPermissions from 'actions/useFetchPermissions';
 import useFetchApis from 'actions/useFetchApis';
 import useFetchEmployees from 'actions/useFetchEmployees';
+import {
+   useProduct_FetchAll,
+   
+} from 'actions/useProduct';
+import useProductCategory_Fetch from 'actions/useProductCategory_Fetch';
 
 const ApiList = React.lazy(()=> import(/*webpackChunkName: "feature.admin.apis.list" */'features/admin/Apis'));
 const Roles = React.lazy(()=> import(/*webpackChunkName: "feature.admin.roles" */'features/admin/Roles'));
@@ -96,21 +101,19 @@ const PageTransitioner = ({history})=>{
 export default ({history})=>{
    let {getStore} = useContext(StateContext);
    let store = getStore();
+   let fetchAllProducts = useProduct_FetchAll();
+   let fetchProductCategories = useProductCategory_Fetch();
+   useEffect(()=>{
+      if(!store.products){
+         fetchAllProducts();
+      }
+      if(!store.ProductCategories){
+         fetchProductCategories();
+      }   
 
-   // useEffect(()=>{
-   //  if(!store.permissions){
-   //    fetchPermissions();
-   //  }
-   //  if(!store.apis){
-   //     fetchApis();
-   //  }
-   //  if(!store.roles){
-   //     fetchRoles();
-   //  }
-   //  if(!store.employees){
-   //    fetchEmployees();
-   // }
-   // },[]);
+   },[]);
+
+ 
 
    return(
       //value emulates a redux store,

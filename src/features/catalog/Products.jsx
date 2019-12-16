@@ -36,13 +36,13 @@ function Products({history}){
       <div style={{minWidth: "100%",border:"1px solid grey"}}>
          <ActiveTable 
          key={'e1'}
-         data={
-               products.reduce(function(acc,element){
-                  // let {_id, name, type, inStock, netCost,price} = element;
-                  // acc.push({_id,name, type, inStock, netCost,price});
-                  acc.push(element);
-                  return acc;
-               },[])
+         data={ products
+               // products.reduce(function(acc,element){
+               //    // let {_id, name, type, inStock, netCost,price} = element;
+               //    // acc.push({_id,name, type, inStock, netCost,price});
+               //    acc.push(element);
+               //    return acc;
+               // },[])
          } 
          columnHeaders={columnHeaders}
          hidden={['_id']}

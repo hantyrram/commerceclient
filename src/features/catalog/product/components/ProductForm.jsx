@@ -5,12 +5,13 @@ import Button from '@material-ui/core/Button';
 import Chip from '@material-ui/core/Chip';
 
 export default ({onSubmit,productCategories,mode,product})=>{
+   
    let [p,setProduct] = useState(product || {});
    let [selectedCategory,setSelectedCategory] = useState({_id:'root'});
    let [openSelectCategoryDialog,setOpenSelectCategoryDialog] = useState(false);
 
    const onChange = (e)=>{
-      setProduct({...p, [e.target.name]:e.target.value});
+      setProduct({...p, [e.target.name]:e.target.value.trim()});
    }
 
    const submitHandler = (e)=>{
@@ -19,7 +20,6 @@ export default ({onSubmit,productCategories,mode,product})=>{
    }
 
    const categoriesOnSelectHandler = s => {
-      console.log('Selected',s);
       setSelectedCategory(s);
    }
    const selectCategoryModalTriggerHandler = (e)=>{
@@ -40,7 +40,6 @@ export default ({onSubmit,productCategories,mode,product})=>{
 
    const removeCategory = ()=>{
       setProduct(Object.assign({...p},{category:null}));
-      console.log(p);   
    }
 
 
@@ -69,7 +68,11 @@ export default ({onSubmit,productCategories,mode,product})=>{
                <input type="text" name="name" id="product-name" value={p.name} onChange={onChange} minLength="4"/>                  
                <label className="form-control field-description">The display name of the product</label>
             </div>
-
+            {/* <div className="form-input-control">
+               <label htmlFor="slug">Slug</label>
+               <input type="text" name="slug" id="product-slug" value={p.slug} onChange={onChange} minLength="4"/>                  
+               <label className="form-control field-description">The display name of the product</label>
+            </div> */}
             <div className="form-input-control">
                <label htmlFor="itemCondition">Item Condition</label>
                <select name="itemCondition" id="product-stockstatus" value={p.itemCondition} onChange={onChange}>

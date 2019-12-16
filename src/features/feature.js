@@ -130,7 +130,13 @@ export default (FeatureComponent,options)=>{
 
       let [error,setError] = useState(null);
 
+      let [pendingMsg,setPendingMsg] = useState(null); //create a spinner
+
       useEffect(()=>{
+         let unsubscribeToPending = subscribe('pending',function(pendingMsg){
+            setMessage(null);            
+            setError(null);
+         });
          let unsubscribeToMessage = subscribe('message',function(msg){
             console.log(msg);
             setMessage(msg);
@@ -144,6 +150,7 @@ export default (FeatureComponent,options)=>{
          });
 
          return ()=>{
+            unsubscribeToPending();
             unsubscribeToMessage();
             unsubsrcibeToError();
          };
