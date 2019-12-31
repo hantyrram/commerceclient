@@ -3,9 +3,12 @@ import StateContext from 'contexts/StateContext';
 import FeatureShortcutLink from 'components/FeatureShortcutLink';
 import feature from '../feature';
 import SCategory from 'components/SCategory';
-import useProductCategory_Create from 'actions/useProductCategory_Create';
-import useProductCategory_Delete from 'actions/useProductCategory_Delete';
-import useProductCategory_Fetch from 'actions/useProductCategory_Fetch';
+import {
+   useProductCategory_Create,
+   useProductCategory_Delete,
+   useProductCategory_Fetch
+} from 'actions/useProductCategory';
+
 
 function ProductCategories({history}){
    

@@ -3,6 +3,21 @@ import Styled from 'styled-components';
 import {BrowserRouter as Router,Route,Switch,Link} from 'react-router-dom';
 import Resources from 'features/admin/Resources';
 import Nav from 'components/Nav';
+
+import TreeView from '@material-ui/lab/TreeView';
+import TreeItem from '@material-ui/lab/TreeItem';
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import ArrowRight from '@material-ui/icons/ArrowRight';
+import CategoryRoundedIcon from '@material-ui/icons/CategoryRounded';
+import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
+import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
+import LocalShippingIcon from '@material-ui/icons/LocalShipping';
+import SettingsIcon from '@material-ui/icons/Settings';
+import SupervisedUserCircleIcon from '@material-ui/icons/SupervisedUserCircle';
+import WebIcon from '@material-ui/icons/Web';
+import LayersIcon from '@material-ui/icons/Layers';
+import ViewListIcon from '@material-ui/icons/ViewList';
+import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 // import rootReducer from './rootReducer';
 import StateContext from 'contexts/StateContext';
 import './App.css';
@@ -15,9 +30,8 @@ import useFetchApis from 'actions/useFetchApis';
 import useFetchEmployees from 'actions/useFetchEmployees';
 import {
    useProduct_FetchAll,
-   
 } from 'actions/useProduct';
-import useProductCategory_Fetch from 'actions/useProductCategory_Fetch';
+import { useProductCategory_Fetch } from 'actions/useProductCategory';
 
 const ApiList = React.lazy(()=> import(/*webpackChunkName: "feature.admin.apis.list" */'features/admin/Apis'));
 const Roles = React.lazy(()=> import(/*webpackChunkName: "feature.admin.roles" */'features/admin/Roles'));
@@ -34,8 +48,12 @@ const UserAccountRead = React.lazy(()=> import(/*webpackChunkName: "feature.admi
 const ProductCategories = React.lazy(()=> import(/*webpackChunkName: "feature.catalog.productCategory.main" */'features/catalog/ProductCategories'));
 const ProductCategoryCreate = React.lazy(()=> import(/*webpackChunkName: "feature.catalog.productCategory.create" */'features/catalog/productCategory/Create'));
 const Products = React.lazy(()=> import(/*webpackChunkName: "feature.catalog.products" */'features/catalog/Products'));
+const Attributes = React.lazy(()=> import(/*webpackChunkName: "feature.catalog.attributes" */'features/catalog/Attributes'));
 const ProductAdd = React.lazy(()=> import(/*webpackChunkName: "feature.catalog.product.add" */'features/catalog/product/Add'));
 const ProductView = React.lazy(()=> import(/*webpackChunkName: "feature.catalog.product.view" */'features/catalog/product/View'));
+const Shipping = React.lazy(()=> import(/*webpackChunkName: "feature.store.shipping" */'features/store/Shipping'));
+const General = React.lazy(()=> import(/*webpackChunkName: "feature.store.general" */'features/store/General'));
+
 
 const Page = Styled.div`
    width : 100%;
@@ -104,17 +122,21 @@ export default ({history})=>{
    let fetchAllProducts = useProduct_FetchAll();
    let fetchProductCategories = useProductCategory_Fetch();
    useEffect(()=>{
+      //???check user permission for each 
       if(!store.products){
          fetchAllProducts();
       }
       if(!store.ProductCategories){
          fetchProductCategories();
-      }   
+      }
+      if(!store.userAccounts){
+         
+      }
 
    },[]);
 
  
-
+   
    return(
       //value emulates a redux store,
       <Router>
@@ -123,76 +145,36 @@ export default ({history})=>{
                <LogoContainer>  
                   <img src="/images/hantyr_icon.svg" alt="Logo" style={{width:"100px",height:"100px"}} />
                </LogoContainer>  
-               <ul>
-                  <li>Catalog
-                     <ul>
-                        <Link to="/catalog/products">Products</Link>
-                     </ul>
-                     <ul>
-                        <Link to="/catalog/productcategories">Product Categories</Link>
-                     </ul>
-                     <ul>
-                        <Link to="/products/features">Product Features</Link>
-                     </ul>
-                     <ul>
-                        <Link to="/products/attributes">Product Attributes</Link>
-                     </ul>
-                 
-                  </li>
-               </ul>
-               <ul>
-                  <li>Access Control
-                     <ul>
-                        <Link to="/credentials">Credentials</Link>
-                     </ul>
-                     <ul>
-                        <Link to="/roles">Roles</Link>
-                     </ul>
-                     <ul>
-                        <Link to="/permissions">Permissions</Link>
-                     </ul>
-                  </li>
-               </ul>
-               <ul>
-                  <li>Personnel Management
-                     <ul>
-                        <Link to="/employees">Employees</Link>
-                     </ul>
-                  </li>
-               </ul>
-               <ul>
-                  <li>Web Admin
-                     <ul>
-                        <Link to="/admin/apis">Apis</Link>                        
-                     </ul>
-                     <ul>
-                        <Link to="/admin/resources">Resources</Link>                        
-                     </ul>
-                     <ul>
-                        <Link to="/admin/roles">Roles</Link>                        
-                     </ul>
-                     <ul>
-                        <Link to="/admin/permissions">Permissions</Link>                        
-                     </ul>
-                     <ul>
-                        <Link to="/admin/useraccounts">User Accounts</Link>                        
-                     </ul>
-                  </li>
-               </ul>
-               {/* <Nav menus={[
-               {id: 1, label: 'Products'}
-               ]}
-                  menuItems={[
-                     {menuId: 1, link: <Link to="/products">Products</Link>},
-                     {menuId: 1, link: <Link to="/products/categories">Product Categories</Link>},
-                     {menuId: 1, link: <Link to="/products/features">Product Features</Link>},
-                     {menuId: 1, link: <Link to="/products/attributes">Product Attributes</Link>},
-                  ]}
-               /> */}
+               
+               <TreeView
+                  defaultCollapseIcon={<ArrowDropDownIcon />}
+                  defaultExpandIcon={<ArrowRight />}
+                  defaultExpanded={["1","2","3","4"]}
+               >
+                  <TreeItem label="Catalog" nodeId="1">
+                     <TreeItem nodeId="11" label={<Link style={{color:"rgb(79, 58, 103)"}} to="/catalog/products">Products</Link>} icon={<ShoppingBasketIcon color="action" fontSize="small"/>}/>
+                     <TreeItem nodeId="12" label={<Link style={{color:"rgb(79, 58, 103)"}}  to="/catalog/productcategories" >Categories</Link>} icon={<CategoryRoundedIcon color="action"  fontSize="small"/>}/>
+                     <TreeItem nodeId="14" label={<Link style={{color:"rgb(79, 58, 103)"}}  to="/catalog/attributes">Attributes</Link>} icon={<LayersIcon color="action"  fontSize="small"/>}/>
+                  </TreeItem>
+                  <TreeItem label="Personnel Management" nodeId="2">
+                     <TreeItem nodeId="21" label={<Link style={{color:"rgb(79, 58, 103)"}}  to="/employees">Employees</Link>} icon={<SupervisedUserCircleIcon color="action"  fontSize="small"/>}/>
+                  </TreeItem>
+                  <TreeItem label="Store Setting" nodeId="3">
+                     <TreeItem nodeId="31" label={<Link style={{color:"rgb(79, 58, 103)"}}  to="/settings/store/general">General</Link>} icon={<SettingsIcon color="action"  fontSize="small"/>}/>
+                     <TreeItem nodeId="32" label={<Link style={{color:"rgb(79, 58, 103)"}} to="/settings/store/shipping">Shipping</Link>} icon={<LocalShippingIcon color="action"  fontSize="small"/>}/>
+                  </TreeItem>
+                  <TreeItem label="Web Administration" nodeId="4">
+                     <TreeItem nodeId="41" label={<Link style={{color:"rgb(79, 58, 103)"}}  to="/admin/apis">Apis</Link>} icon={<WebIcon color="action"/>}/>
+                     <TreeItem nodeId="42" label={<Link style={{color:"rgb(79, 58, 103)"}} to="/admin/resources">Resources</Link>} icon={<LibraryBooksIcon color="action"  fontSize="small"/>}/>
+                     <TreeItem nodeId="43" label={<Link style={{color:"rgb(79, 58, 103)"}} to="/admin/roles">Roles</Link>} icon={<SupervisedUserCircleIcon color="action"  fontSize="small"/>}/>
+                     <TreeItem nodeId="44" label={<Link style={{color:"rgb(79, 58, 103)"}} to="/admin/permissions">Permissions</Link>} icon={<ViewListIcon color="action"  fontSize="small"/>}/>
+                     <TreeItem nodeId="45" label={<Link style={{color:"rgb(79, 58, 103)"}} to="/admin/useraccounts">User Accounts</Link>} icon={<SupervisorAccountIcon color="action"  fontSize="small"/>}/>
+                  </TreeItem>
+               </TreeView>              
             </LeftSection>
             
             <RightSection>
-               <Header>Header</Header>
+               <Header>Warning!!! Turn Off Allow Origin * on production, set specific allow origin</Header>
                <Content>
                   <React.Suspense fallback={<div>Loading...</div>}>
                      <Switch>
@@ -213,7 +195,10 @@ export default ({history})=>{
                         <Route exact path="/catalog/productcategories/create" component={ProductCategoryCreate}/>
                         <Route exact path="/catalog/products" component={Products}/>
                         <Route exact path="/catalog/products/add" component={ProductAdd}/>
-                        <Route exact path="/catalog/products/:slug" component={ProductView}/>
+                        <Route exact path="/catalog/attributes" component={Attributes}/>
+                        <Route path="/catalog/products/:slug" component={ProductView}/>
+                        <Route exact path="/settings/store/general" component={General}/>
+                        <Route exact path="/settings/store/shipping" component={Shipping}/>
                      </Switch>
                      {/* <Route component={PageTransitioner}/> */}
                   </React.Suspense>

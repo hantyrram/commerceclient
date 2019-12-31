@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import './App.css';
 import StateContext from 'contexts/StateContext';
-import rootReducer from 'rootReducer';
+import rootReducer from 'reducers';
 import App from 'App2';
 
 const STORE_NAME = 'ht-store-x';
@@ -17,14 +17,14 @@ class Store{
       Object.assign(this,{...values});
    }
 
-   getHello(){
-      return 'hello';
-   }
+   // getHello(){
+   //    return 'hello';
+   // }
 
-   getEmployeeById(id){
-      if(!this.employees || this.employees.length === 0) return null;
-      return this.employees.find(e => e._id === id);
-   }
+   // getEmployeeById(id){
+   //    if(!this.employees || this.employees.length === 0) return null;
+   //    return this.employees.find(e => e._id === id);
+   // }
 }
 
 
@@ -41,6 +41,7 @@ const AppContainer = (props)=>{
    useEffect(()=>{
       window.onbeforeunload = ()=>{
          window.localStorage.setItem(STORE_NAME,JSON.stringify(store))
+         console.log('Stored',window.localStorage.getItem(STORE_NAME));
        }
    });
 

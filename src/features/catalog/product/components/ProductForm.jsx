@@ -11,7 +11,7 @@ export default ({onSubmit,productCategories,mode,product})=>{
    let [openSelectCategoryDialog,setOpenSelectCategoryDialog] = useState(false);
 
    const onChange = (e)=>{
-      setProduct({...p, [e.target.name]:e.target.value.trim()});
+      setProduct({...p, [e.target.name]:e.target.value});
    }
 
    const submitHandler = (e)=>{

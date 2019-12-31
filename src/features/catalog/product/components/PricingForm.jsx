@@ -5,7 +5,7 @@ import Button from '@material-ui/core/Button';
 import Chip from '@material-ui/core/Chip';
 import { product_FetchAll_Nok } from 'actions/action_creators/product';
 
-export default ({onSubmit,product})=>{
+export default ({product,onSubmit})=>{
    
    let [price,setPrice] = useState(product.price || {});
 

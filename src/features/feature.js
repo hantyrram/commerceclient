@@ -18,7 +18,7 @@ const Header = Styled.div`
    justify-content: space-between;
    align-items: center;
    padding: 0 .5em 0 .5em;
-   background-color: #7f4abe;
+   background-color: #373e55;
    color: #f2ebeb;
 `
 const Content = Styled.div`

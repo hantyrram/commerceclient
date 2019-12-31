@@ -8,8 +8,8 @@ import feature from '../feature';
 function Employees({history}){
    let { getStore } = useContext(StateContext);
    let fetchEmployees = useFetchEmployees();   
-   let {employees} = getStore();
-
+   let { employees } = getStore();
+   console.log(employees);
    useEffect(()=>{
       fetchEmployees();
    },[]);

@@ -13,6 +13,7 @@ export default ()=>{
       try {
          dispatch(employeesFetchPending());
          let {data} = await axios.get('/apiv1/employees');
+         console.log(data);
          if(data.ok){
             dispatch(employeesFetchOk(data.resource));
             // if(data.message){

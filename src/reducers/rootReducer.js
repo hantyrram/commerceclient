@@ -1,5 +1,8 @@
-import types from './actions/types';
+import types from '../actions/types';
 
+/**
+ * @deprecated
+ */
 export default (state, action)=>{
 
    let newState = { 
