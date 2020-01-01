@@ -66,6 +66,18 @@ const attributesReducer = (attributesState = [], action)=>{
          
          return newState;
       }
+
+      case types.ATTRIBUTE_ADDTERM_OK: {
+         let attribute = newState.find(p => p._id === action.payload._id)
+
+         attribute.terms = !attribute.terms ? 
+            attribute.terms = [...action.payload.terms]: 
+               Array.from(
+                  //create set to avoid duplicate
+                  new Set([ ...attribute.terms, ...action.payload.terms])
+               );
+         return newState;
+      }
       default: return newState;
    }
 }

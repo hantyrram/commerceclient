@@ -14,6 +14,9 @@ import {
    attribute_FetchAll_Nok,
    attribute_FetchAll_Ok,
    attribute_FetchAll_Pending,
+   attribute_AddTerm_Nok,
+   attribute_AddTerm_Ok,
+   attribute_AddTerm_Pending,
 } from './action_creators/attribute';
 import StateContext from 'contexts/StateContext';
 import { emit } from 'actionEvent';
@@ -103,3 +106,37 @@ export const useAttribute_FetchAll = ()=>{
       }
    }
 }
+
+export const useAttribute_AddTerm = ()=>{
+   
+   let {dispatch} = useContext(StateContext);
+
+   /**
+    * @param {String} term - The term to add
+    */
+   return async function(attributeId, term){
+      
+      try {
+         dispatch(attribute_AddTerm_Pending());
+         console.log(attributeId);
+         let {data} = await axios.patch(`/apiv1/catalog/attributes/${attributeId}/terms`,{ term });
+         console.log(data);
+         if(data.ok){
+            dispatch(attribute_AddTerm_Ok({_id: attributeId, terms: [data.resource]}));
+            if(data.message){
+               emit('message',data.message);
+            }
+            return data.resource;
+         }
+         dispatch(attribute_AddTerm_Nok(data.error));
+         emit('error',data.error);
+
+      } catch (error) {
+         console.log(error);
+         dispatch({type:'CLIENT_ERROR',text:'Axios Error!'});
+         emit('error',{type:'CLIENT_ERROR',text:'Axios Error!'});
+      }
+   }
+}
+
+

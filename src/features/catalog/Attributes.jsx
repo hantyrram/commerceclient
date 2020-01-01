@@ -10,18 +10,60 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import useStateContext from '../../hooks/useStateContext';
-
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import PopOver from '@material-ui/core/PopOver';
 
 import {
-   useAttribute_Create
+   useAttribute_Create,
+   useAttribute_FetchAll,
+   useAttribute_AddTerm,
 } from 'actions/useAttribute';
+
+function AddTermContextMenu({onAddTermClick}){
+
+   let [anchorEl,setAnchorEl] = useState(null);
+
+   const triggerClickHandler = (e)=>{
+      setAnchorEl(e.currentTarget);
+   }
+
+   const handleClose = e => {
+      setAnchorEl(null);
+   }
+
+   const addTermClickHandler = e =>{
+      setAnchorEl(null);
+      onAddTermClick();
+   }
+   return (
+      <React.Fragment>
+         <Chip label="..." size="small" onClick={triggerClickHandler}/>
+         <PopOver
+            open={Boolean(anchorEl)}
+            anchorEl={anchorEl}
+            onClose={handleClose}
+            anchorOrigin={{
+               vertical:'bottom',
+               horizontal: 'left'
+            }}
+         >
+            <Button size="small" onClick={addTermClickHandler}>Add Term</Button>
+         </PopOver>
+      </React.Fragment>
+   )
+}
 
 function Attributes({history}){
    
-   let [openAttributeDialog,setOpenAttributeDialog] = useState(false);
-   let [activeAttribute,setActiveAttribute] = useState({});
    let { getStore } = useStateContext();
+   let [openAttributeDialog,setOpenAttributeDialog] = useState(false);
+   let [openAttributeAddTermDialog,setOpenAttributeAddTermDialog] = useState(false);
+   let [activeAttribute,setActiveAttribute] = useState({});
+   let [activeAttributeTerm,setActiveAttributeTerm] = useState(null);
+
    const createAttribute = useAttribute_Create();
+   const addTerm = useAttribute_AddTerm();
 
    const addNewAttributeClickHandler = (e)=>{
       setActiveAttribute({});
@@ -32,6 +74,7 @@ function Attributes({history}){
       setActiveAttribute({...activeAttribute,[e.target.name]:e.target.value});
    }
 
+   //Save Attribute
    const saveAttribute = (e)=>{
       console.log('Adding',activeAttribute);
       if(!activeAttribute._id){
@@ -44,11 +87,13 @@ function Attributes({history}){
       setOpenAttributeDialog(false);
    }
 
+   //Cancel Attribute Save
    const cancelSave = (e)=>{
       setActiveAttribute({});
       setOpenAttributeDialog(false);
    }
 
+   //Attribute Link was clicked
    const clickAttribute = (attribute)=>{
       return (e) => {
          e.preventDefault();
@@ -56,6 +101,22 @@ function Attributes({history}){
          setOpenAttributeDialog(true);
       }
    }
+
+   //ADD TERM context menu was clicked,open dialog
+   const onAddTermClick = (attribute)=>{
+      return (e) => {
+         setActiveAttribute(attribute);
+         setActiveAttributeTerm(null);//always reset term field
+         setOpenAttributeAddTermDialog(true);
+      }
+   }
+
+   const fetchAttributes = useAttribute_FetchAll();
+
+   useEffect(()=>{
+      fetchAttributes();
+   },[])
+
    return(
       <div>
          <div>
@@ -67,20 +128,30 @@ function Attributes({history}){
                   <h5>Attribute</h5>
                </div>
                <div className="flextable-cell" style={{flex:2}}>
-                  <h5>Values</h5>
+                  <h5>Terms</h5>
                </div>
             </div>
             {
                getStore().attributes.map( a => {
                   return(
-                     <div className="flextable-row" style={{display:'flex',justifyContent:'space-between'}}>
+                     <div className="flextable-row" style={{display:'flex',justifyContent:'space-between',borderBottom: '1px solid #cec5c5'}}>
                         <div className="flextable-cell" style={{flex:1}}>
                            <span><a href="" onClick={clickAttribute(a)}>{a.name}</a> </span><br/>
                            <span style={{fontSize:'.8em',fontStyle:'italic'}}>{a.description}</span>
                         </div>
                         <div className="flextable-cell" style={{flex:2}}>
-                           <Chip label="Value 1" size="small"/>                 
-                           <Button size="small" color="primary"><AddCircleIcon /></Button>
+                           {
+                              (a.terms || []).map( t => 
+                                 <Chip label={t} size="medium" onDelete={ () => {
+                                       console.log('Delete Term not yet implemented');
+                                    } 
+                                 }/> 
+                                 
+                              )
+                           }                
+                           
+                           <AddTermContextMenu onAddTermClick={onAddTermClick(a)}/>
+                           
                         </div>
                      </div>
                   )
@@ -88,8 +159,8 @@ function Attributes({history}){
             }
          </div>
    
-
-         <Dialog open={openAttributeDialog} fullWidth >
+         {/* add attribute dialog */}
+         <Dialog id="attribute-add-dialog" open={openAttributeDialog} fullWidth >
             <DialogTitle>Add New Attribute</DialogTitle>
             <DialogContent>
                <div className="form-input-control">
@@ -106,6 +177,34 @@ function Attributes({history}){
             <DialogActions>
                <Button variant="contained" color="secondary" onClick={cancelSave}>Cancel</Button>
                <Button variant="contained" color="primary"  onClick={saveAttribute}>Ok</Button>
+            </DialogActions>
+         </Dialog>
+
+            {/* add term dialog */}
+          <Dialog id="attribute-addterm-dialog" open={openAttributeAddTermDialog} fullWidth >
+            <DialogTitle>New Term</DialogTitle>
+            <DialogContent>
+               <div className="form-input-control">
+                  <label htmlFor="name">Term Name</label>
+                     <input type="text" name="term" id="attribute-term" value={activeAttributeTerm} 
+                        onChange={(e)=>setActiveAttributeTerm(e.target.value)} minLength="4"/>                  
+                  <label className="form-control field-description">The name of the attribute e.g. color</label>
+               </div>               
+            </DialogContent>            
+            <DialogActions>
+               <Button variant="contained" color="secondary" 
+                  onClick={()=>{
+                     setActiveAttributeTerm(null);
+                     setOpenAttributeAddTermDialog(false); 
+                  }}> Cancel </Button>
+
+               <Button variant="contained" color="primary"  
+                  onClick={ e => {
+                     addTerm(activeAttribute._id,activeAttributeTerm);
+                     setOpenAttributeAddTermDialog(false); 
+                  } } > Ok </Button>
+                  
+               
             </DialogActions>
          </Dialog>
       </div>
