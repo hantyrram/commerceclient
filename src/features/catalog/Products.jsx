@@ -33,7 +33,7 @@ function Products({history}){
 
    return(
       !products || products.length === 0? 'No Products' : 
-      <div style={{minWidth: "100%",border:"1px solid grey"}}>
+      <div style={{minWidth: "100%"}}>
          <ActiveTable 
          key={'e1'}
          data={ products

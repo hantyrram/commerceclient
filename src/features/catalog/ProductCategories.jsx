@@ -52,7 +52,7 @@ function ProductCategories({history}){
 
    return(
       // !productCategories || productCategories.length === 0 ? 'No Product Categories' : 
-      <div style={{minWidth: "100%",border:"1px solid grey"}}>
+      <div style={{minWidth: "100%"}}>
          {/* <SingleDepthDataTreeDiv data={productCategories} rootName="Categories" onSelect={onSelect} onAdd={onAdd}/> */}
          <SCategory category={{name: 'Categories', _id: 'root'}} 
             data={productCategories === undefined? []: productCategories}  selected={selected} 

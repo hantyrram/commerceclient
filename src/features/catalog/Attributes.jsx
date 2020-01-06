@@ -18,6 +18,7 @@ import {
    useAttribute_Create,
    useAttribute_FetchAll,
    useAttribute_AddTerm,
+   useAttribute_DeleteTerm,
 } from 'actions/useAttribute';
 
 function AddTermContextMenu({onAddTermClick}){
@@ -61,9 +62,11 @@ function Attributes({history}){
    let [openAttributeAddTermDialog,setOpenAttributeAddTermDialog] = useState(false);
    let [activeAttribute,setActiveAttribute] = useState({});
    let [activeAttributeTerm,setActiveAttributeTerm] = useState(null);
-
+   
+   const fetchAttributes = useAttribute_FetchAll();
    const createAttribute = useAttribute_Create();
    const addTerm = useAttribute_AddTerm();
+   const deleteTerm = useAttribute_DeleteTerm();
 
    const addNewAttributeClickHandler = (e)=>{
       setActiveAttribute({});
@@ -111,7 +114,7 @@ function Attributes({history}){
       }
    }
 
-   const fetchAttributes = useAttribute_FetchAll();
+   
 
    useEffect(()=>{
       fetchAttributes();
@@ -143,7 +146,7 @@ function Attributes({history}){
                            {
                               (a.terms || []).map( t => 
                                  <Chip label={t} size="medium" onDelete={ () => {
-                                       console.log('Delete Term not yet implemented');
+                                       deleteTerm(a._id,t); //attribute._id,term
                                     } 
                                  }/> 
                                  

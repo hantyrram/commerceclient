@@ -8,7 +8,7 @@ export default (props)=>{
    return(
       <MenuList>
          <MenuItem>
-            <Link to='/settings/store/general'> Basic </Link>
+            <Link to='/settings/store'> Basic </Link>
          </MenuItem>
          <MenuItem>
             <Link to='/settings/store/general/address'>Address</Link>

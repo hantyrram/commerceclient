@@ -3,10 +3,19 @@ import FeatureShortcutLink from 'components/FeatureShortcutLink';
 import { BrowserRouter as Router,Switch, Route } from 'react-router-dom';
 import StateContext from 'contexts/StateContext';
 import feature from '../feature';
-
-
+import useStateContext from '../../hooks/useStateContext';
 
 function Shipping(props){
+   //get the shipping zones
+   let { getStore } = useStateContext();
+
+   let  { storeSettings : {
+            shipping }
+    } = getStore().storeSettings || { storeSettings: { } } ;
+
+    
+   //if no shipping zones display an info about setting up the shipping zones
+   //shipping zone is a country to ship to
    return(
       <form id="product-add" action="#" >   
             <div className="form-input-control form-input-control-inline">
@@ -14,7 +23,7 @@ function Shipping(props){
                <hr/>
                <div className="form-input-control" style={{maxWidth:"50%"}}>
                <label htmlFor="type">Product Type</label>
-               <select name="type" id="product-type" value={p.type} onChange={onChange}>
+               <select name="type" id="product-type" value={{}} onChange={()=>{}}>
                   <option value="standard">Standard</option>
                   <option value="bundled">Bundled</option>
                   </select>

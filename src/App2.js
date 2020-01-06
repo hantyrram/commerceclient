@@ -160,7 +160,7 @@ export default ({history})=>{
                      <TreeItem nodeId="21" label={<Link style={{color:"rgb(79, 58, 103)"}}  to="/employees">Employees</Link>} icon={<SupervisedUserCircleIcon color="action"  fontSize="small"/>}/>
                   </TreeItem>
                   <TreeItem label="Store Setting" nodeId="3">
-                     <TreeItem nodeId="31" label={<Link style={{color:"rgb(79, 58, 103)"}}  to="/settings/store/general">General</Link>} icon={<SettingsIcon color="action"  fontSize="small"/>}/>
+                     <TreeItem nodeId="31" label={<Link style={{color:"rgb(79, 58, 103)"}}  to="/settings/store">General</Link>} icon={<SettingsIcon color="action"  fontSize="small"/>}/>
                      <TreeItem nodeId="32" label={<Link style={{color:"rgb(79, 58, 103)"}} to="/settings/store/shipping">Shipping</Link>} icon={<LocalShippingIcon color="action"  fontSize="small"/>}/>
                   </TreeItem>
                   <TreeItem label="Web Administration" nodeId="4">
@@ -197,7 +197,7 @@ export default ({history})=>{
                         <Route exact path="/catalog/products/add" component={ProductAdd}/>
                         <Route exact path="/catalog/attributes" component={Attributes}/>
                         <Route path="/catalog/products/:slug" component={ProductView}/>
-                        <Route exact path="/settings/store/general" component={General}/>
+                        <Route path="/settings/store" component={General}/>
                         <Route exact path="/settings/store/shipping" component={Shipping}/>
                      </Switch>
                      {/* <Route component={PageTransitioner}/> */}

@@ -78,6 +78,16 @@ const attributesReducer = (attributesState = [], action)=>{
                );
          return newState;
       }
+      case types.ATTRIBUTE_DELETETERM_OK: {
+         let attribute = newState.find(p => p._id === action.payload._id)
+         if(attribute && attribute.terms){
+            let i = attribute.terms.findIndex(t => t === action.payload.terms[0]);
+            if(i !== -1){
+               attribute.terms.splice(i,1);
+            }
+         }
+         return newState;
+      }
       default: return newState;
    }
 }
@@ -200,12 +210,21 @@ const employeesReducer = (employees = [], action) => {
    }
 }
 
+const countriesReducer = ( countries = [], action) => {
+   let newState = [...countries];
+   switch(action.type){
+      case types.HELPERS_GETCOUNTRIES_OK : {
+         return [...action.payload];
+      }
+      default: return newState;
+   }
+}
+
 /**
  * Root Reducer
  */
 export default (state, action)=>{
 
-   console.log(state);
    let newState = { 
       ...state, 
       lastAction: action.type, 
@@ -218,7 +237,8 @@ export default (state, action)=>{
       userAccounts: userAccountsReducer(state.userAccounts,action),
       products: productsReducer(state.products,action),
       productCategories: productCategoriesReducer(state.productCategories,action),
-      attributes: attributesReducer(state.attributes,action)
+      attributes: attributesReducer(state.attributes,action),
+      countries: countriesReducer(state.countries,action)
    };
 
    switch(action.type){

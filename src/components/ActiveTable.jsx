@@ -1,10 +1,26 @@
 import React, { useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import Table from '@material-ui/core/Table';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import TableCell from '@material-ui/core/TableCell';
+import TableBody from '@material-ui/core/TableBody';
+import {makeStyles} from '@material-ui/core/styles';
+
+const useTableRowStyles = makeStyles({
+   root: {
+      backgroundColor:"grey"
+   },
+   hover: {
+      backgroundColor: "red"
+   }
+});
 
 const ActiveTable = (props)=>{
 
    let tableRef = useRef(null);
    let checkboxRef = useRef(null);
+   const tableRowClasses = useTableRowStyles();
    
 
    const renderColumnHeaders = ()=>{
@@ -12,7 +28,7 @@ const ActiveTable = (props)=>{
          return  props.columnHeaders.map((hObj,i)=>{
             let key = Object.keys(hObj)[0];
             return(
-               <th key={i}>{ hObj[key] } </th>
+               <TableCell component="th" key={i}>{ hObj[key] } </TableCell>
             )
          })
       }
@@ -21,7 +37,7 @@ const ActiveTable = (props)=>{
       let sampleData = props.data[0];
 
       return  Object.getOwnPropertyNames(sampleData).map(pName=>{
-         return <th>{pName}</th>
+         return <TableCell component="th">{pName}</TableCell>
       })
    }
 
@@ -37,9 +53,9 @@ const ActiveTable = (props)=>{
       }
       
       return (
-         <td >
+         <TableCell >
             <input type="checkbox" onChange={checkboxChangeHandler}/>
-         </td>
+         </TableCell>
       )
 
    }
@@ -52,7 +68,7 @@ const ActiveTable = (props)=>{
    function renderRows(){
       return props.data.map((dObj,i)=>{
          return (
-            <tr key={i} rowData={JSON.stringify(dObj)}>
+            <TableRow key={i} rowData={JSON.stringify(dObj)} hover>
                {
                   renderSelect(dObj)
                }
@@ -61,16 +77,16 @@ const ActiveTable = (props)=>{
                      let pName = Object.keys(hObj)[0];
                      let tdValue = String(dObj[pName]); ///??? convert all to string temporarily, because array value would result an error
                      return (
-                        <td key={ii} style={{display: (props.hidden || []).includes(hObj)?'none':'', cursor: 'inherit'}} >
+                        <TableCell key={ii} style={{display: (props.hidden || []).includes(hObj)?'none':'', cursor: 'inherit'}} >
                            { tdValue }
-                        </td>
+                        </TableCell>
                      )
                   })
                }
                {
-                  props.onRowDelete ? <td><button onClick={deleteHandler.bind({},dObj)}>Delete</button></td>: null
+                  props.onRowDelete ? <TableCell><button onClick={deleteHandler.bind({},dObj)}>Delete</button></TableCell>: null
                }
-            </tr>
+            </TableRow>
          )
       });
    }
@@ -100,10 +116,10 @@ const ActiveTable = (props)=>{
    }
    
    return(
-      <table ref={tableRef}>
-         <thead><tr>{renderColumnHeaders()}</tr></thead>
-         <tbody>{renderRows()}</tbody>
-      </table>
+      <Table ref={tableRef} size="small">
+         <TableHead><tr>{renderColumnHeaders()}</tr></TableHead>
+         <TableBody>{renderRows()}</TableBody>
+      </Table>
    )
 }
 

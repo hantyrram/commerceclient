@@ -1,8 +1,12 @@
 import React,{useState}from 'react';
-import Dialog from '@material-ui/core/Dialog';
+
 import SCategory from 'components/SCategory';
 import Button from '@material-ui/core/Button';
 import Chip from '@material-ui/core/Chip';
+import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
 
 export default ({onSubmit,productCategories,mode,product})=>{
    
@@ -102,14 +106,21 @@ export default ({onSubmit,productCategories,mode,product})=>{
             { mode === "edit" ? <Button type="submit" variant="contained">Save</Button> : <Button type="submit" variant="contained">Save Product</Button> }
             
             <Dialog open={openSelectCategoryDialog} fullWidth >
-               <SCategory category={{name: 'Categories', _id: 'root'}} 
-                  data={productCategories === undefined? []: productCategories}  selected={selectedCategory} 
-                  onSelect={categoriesOnSelectHandler} 
-               />
-               <div className="actions-container button-actions-container" style={{display:'flex',justifyContent:'flex-end',alignItems:'center'}}>
+               <DialogTitle>Choose Product Category</DialogTitle>
+               <DialogContent>
+                  <SCategory category={{name: 'Categories', _id: 'root'}} 
+                     data={productCategories === undefined? []: productCategories}  selected={selectedCategory} 
+                     onSelect={categoriesOnSelectHandler} 
+                  />
+               </DialogContent>
+               <DialogActions>
                   <Button variant="contained" color="secondary" style={{marginRight:'1em'}} onClick={selectCategoryModalCancelHandler}>Cancel</Button>
                   <Button variant="contained" color="primary"  onClick={selectCategoryModalOkHandler}>Ok</Button>
-               </div>
+               </DialogActions>
+               {/* <div className="actions-container button-actions-container" style={{display:'flex',justifyContent:'flex-end',alignItems:'center'}}>
+                  <Button variant="contained" color="secondary" style={{marginRight:'1em'}} onClick={selectCategoryModalCancelHandler}>Cancel</Button>
+                  <Button variant="contained" color="primary"  onClick={selectCategoryModalOkHandler}>Ok</Button>
+               </div> */}
             
             </Dialog>
       </form>

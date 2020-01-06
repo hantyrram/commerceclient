@@ -9,6 +9,23 @@ import useEmployee$Photo_Edit from 'actions/useEmployee$Photo_Edit';
 import feature from '../../feature';
 import Avatar from 'components/Avatar';
 import axios from '../../../axios';
+import TextField from '@material-ui/core/TextField';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+
+
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles(theme => ({
+  root: {
+    '& .MuiTextField-root': {
+      margin: theme.spacing(1),
+      width: 200,
+    },
+  },
+}));
 
 let profilePicContainerStyle = {
    minWidth: "25%",
@@ -31,6 +48,8 @@ function EmployeeEdit({match}){
    let employeeFromStore = (getStore().employees||[]).find(emp=> emp._id === match.params.id);
    let [employee,setEmployee] = useState(employeeFromStore);
    let [employeePhotoURL,setEmployeePhotoURL] = useState((employee || {}).photoURL);  
+
+   let formClasses = useStyles();
    
    //always get the fresh copy
    useEffect( () => { fetchEmployee(match.params.id) } ,[match.params.id] );
@@ -95,46 +114,40 @@ function EmployeeEdit({match}){
 
 
    return(
-      <React.Fragment>                   
-
-         <div style={{position:'relative',display:'flex',justifyContent:'center'}}>            
+      <div>
+         <Avatar imgURL={employee.photoURL || `/apiv1/employees/${employee._id}/photo`} photoChangeHandler={employeePhotoChangeHandler} />                               
+         <form className={formClasses.root} action="#" onSubmit={formSubmitHandler}>
             <h3>Employee Id: {employee.employeeId}</h3>
-            <div style={{position:'relative'}}>
-            <Avatar imgURL={employee.photoURL || `/apiv1/employees/${employee._id}/photo`} photoChangeHandler={employeePhotoChangeHandler} />
-            </div>
-            
-         </div>
-         
-         <div >
-            <form action="#" onSubmit={formSubmitHandler}>
-               <h3>Employee Id: {employee.employeeId}</h3>
-           
                <h3>Personal Information</h3>
                <hr/>
-               <div className="form-control">
-                  <label htmlFor="firstname">Firstname</label>
-                  <input type="text" name="firstname" value={employee.identity.firstname} onChange={changeHandler}/>
+               <div>
+                  <TextField fullWidth label="Firstname" type="text" name="firstname" value={employee.identity.firstname} onChange={changeHandler} required/>
+                  <TextField fullWidth label="Middlename" type="text" name="middlename" value={employee.identity.middlename} onChange={changeHandler}/>
+                  <TextField fullWidth label="LastName" type="text" name="lastname" value={employee.identity.lastname} onChange={changeHandler} required/>
                </div>
-               <div  className="form-control">
-                  <label htmlFor="middlename">Middlename</label>
-                  <input type="text" name="middlename" value={employee.identity.middlename} onChange={changeHandler}/>
+               <div>
+                  <TextField label="Date Of Birth" type="date" name="dateOfBirth" value={employee.identity.dateOfBirth} onChange={changeHandler} required/>
+                  {/* <FormControl>
+                     <InputLabel id="emp-gender-label">Gender</InputLabel>
+                     <Select labelId="emp-gender-label" name="gender" value={employee.identity.gender} onChange={changeHandler} required>
+                        <option value={null}>Select Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                     </Select>
+                  </FormControl> */}
+                  
+                  <FormControl margin="dense">
+                     <InputLabel id="emp-gender-label">Gender</InputLabel>
+                     <Select native labelId="emp-gender-label" name="gender" value={employee.identity.gender} onChange={changeHandler} required>
+                        <option value={null}>Select Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                     </Select>
+                  </FormControl>
+                  
                </div>
-               <div  className="form-control">
-                  <label htmlFor="lastname">Lastname</label>
-                  <input type="text" name="lastname" value={employee.identity.lastname} onChange={changeHandler}/>
-               </div>
-               <div  className="form-control">
-                  <label htmlFor="gender">Gender</label>
-                  <select name="gender" value={employee.identity.gender} onChange={changeHandler}>
-                     <option>Select Gender</option>
-                     <option value="male">Male</option>
-                     <option value="female">Female</option>
-                  </select>
-               </div>
-               <div  className="form-control">
-                  <label htmlFor="dateOfBirth">Date Of Birth</label>
-                  <input type="date" name="dateOfBirth" value={employee.identity.dateOfBirth} onChange={changeHandler}/>
-               </div>
+               
+               
                <h3>Address Information</h3>
                <hr/>
                <div  className="form-control">
@@ -192,8 +205,7 @@ function EmployeeEdit({match}){
                </div>
             <button type="submit" className="form-submit">Submit</button>
          </form>
-         </div>
-      </React.Fragment>
+      </div>
         
    )
    

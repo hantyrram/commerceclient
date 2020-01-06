@@ -16,3 +16,6 @@ export const attribute_AddTerm_Pending = ()=> ({type: types.ATTRIBUTE_ADDTERM_PE
 export const attribute_AddTerm_Ok = (term)=> ({type: types.ATTRIBUTE_ADDTERM_OK, payload: term});
 export const attribute_AddTerm_Nok = (error)=> ({type: types.ATTRIBUTE_ADDTERM_NOK,payload: error});
 
+export const attribute_DeleteTerm_Pending = ()=> ({type: types.ATTRIBUTE_DELETETERM_PENDING});
+export const attribute_DeleteTerm_Ok = (term)=> ({type: types.ATTRIBUTE_DELETETERM_OK, payload: term});
+export const attribute_DeleteTerm_Nok = (error)=> ({type: types.ATTRIBUTE_DELETETERM_NOK,payload: error});
