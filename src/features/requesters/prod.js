@@ -1,4 +1,4 @@
-import axios from '../../axios';
+import axios from 'axios';
 
 export const authenticate = async()=>{
   return await axios.get(`/apiv1/authenticate`);

@@ -1,62 +1,137 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 40vmin;
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+body{
+   font-family: Arial, Helvetica, sans-serif;
+   background-color: #272829;
+   min-height: 100vh;
+   width: 100vw;
+   max-width: 100vw;
   }
-  to {
-    transform: rotate(360deg);
+
+  /* page start */
+  #admin-page{
+   display: grid;
+   grid-template-columns: 1fr 4fr;
+   grid-template-areas:"header header" "sidenav main";
+   padding-left:1em;
+   padding-right:1em;
+   max-width: 100vw;
   }
-}
 
+  .page-section-header{
+   grid-area:header;
+   min-height: 3em;
+  }
 
+  .page-section-sidenav{
+   grid-area:sidenav;
+   
+  }
 
-.form-input-control{
+  .page-section-main{
+      grid-area:main;
+      background-color:white;
+      overflow-x: scroll;
+  }
+
+  /* page end */
+
+  .feature{
+   background-color:white;
+   /* box-shadow:-1px -1px 5px rgba(0,0,0, 0.20),1px 1px 5px rgba(0,0,0,.19); */
+   
+  }
+   .feature-header {
+    background-color: #1d1a38;
+    height: 2em;
+    padding-left: 1em;
+    padding-right: 1em;
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    align-items:center;
+    color: #ffffffde;
+  }
+  
+  .feature-context-title {
+   font-weight: bold;
+   color:#2b2b2b;
+   min-width: 100%;
+  }
+  .feature-content{
+   margin:1em;
    display:flex;
-   flex-direction:column;
+   flex-wrap: wrap;
+  }
+ 
+  .feature-context-content-wrapper{
+   display:flex;
+   flex-wrap:wrap-reverse;
+   width: 100%;
+   padding: 1em;
+   justify-content: center;
+  }
+  
+  .feature-context-title-separator{
+   min-width: 100%;
+   border-top-color: #efecec6b;
+  }
+
+  .feature-context-content{
+   min-width: 80%;
+  }
+
+  /* grid form */
+  .grid-form{
+   justify-content: center;
+   margin-left: 2em;
+   margin-right:2em;
+   width:100%;
+  }
+  .grid-form .form-control{
+   display: grid;
+   grid-template-columns: .8fr 2fr;
+   grid-template-areas: 'label input' 'empty error';
    margin-bottom: 1em;
-}
+  }
 
-.form-input-control label{
-   margin-bottom: .5em;
-}
+  
+  .grid-form .form-control .form-control-label{
+    grid-area: label;
+    text-align: right;
+    margin-right: 1em;
+    align-self:center; 
+    color: #4e4e4e;
+    font-size: .9em;
+   }
 
-.form-input-control input,select,textarea{
-   /* margin-left: 1em; */
-}
+   .grid-form .form-control .form-control-input{
+      grid-area: input;
+      align-self:center; 
+      margin-left: 1em;
+      height: 2em;
+      padding-left: .5em;
+      
+      /* margin-bottom: .5em; */
+      
+     }
 
-.form-input-control .field-description{
-   font-style:italic;
+   .grid-form .form-control-actions{
+      text-align: right;
+   }
+
+  .grid-form .form-control-actions .form-control-action{
+   grid-area: input;
+   padding-left: .5em;
+   width: min-content;
+   /* margin-bottom: .5em; */
+   
+  }
+
+ 
+
+  .grid-form .form-control .form-input-error{
+   grid-area: error;
+   margin-top: .5em;
    margin-left: 1em;
    font-size: .8em;
-}
-
-.form-input-control .form-input-control-inline{
-   flex-direction:row;
-}
-/* feature title #98a0ac */
-/* root e0e0e0 */
-/* right dedede    */
-/* sidenav d8d7d7 */
+   color:red;
+   padding-left: 1em;
+  }

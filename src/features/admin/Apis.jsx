@@ -1,28 +1,40 @@
 import React, { useContext,useEffect } from 'react';
-import uischema from 'uischemas/api';
-import EBrowser from 'components/EBrowser';
-import StateContext from 'contexts/StateContext';
-import useFetchApis from 'actions/useFetchApis';
-import Feature from 'components/Feature';
+import ActiveTable from 'components/ActiveTable';
+import useAppState from 'appstore/useAppState';
+import useApiRequest from 'api/useApiRequest';
+import requestTypes from 'api/requestTypes';
+import { request } from 'http';
+import feature from '../feature';
+// import {useApi_List} from 'actions/Api';
 
-export default (props)=>{
-   let { getStore } = useContext(StateContext);
-   let fetchApis = useFetchApis();
-   let {apis} = getStore();
+
+function Apis(props){
+   let { getAppState, dispatch } = useAppState();
+   let fetchApis = useApiRequest(requestTypes.API_LIST, dispatch);
+   let { apis } = getAppState();
+
    useEffect(()=>{
-      if(!apis || apis.length === 0){ // or stale
-         fetchApis();
-      }
+      fetchApis();
    },[]);
 
-   return(
-      <Feature group="Admin / Apis" >
+   const columnHeaders = [
+      { path: 'Path' },
+      { method: 'Method' },
+      { resource: 'Resource' },
+      { op: 'Operation' },
+      {serviceProvider: 'Service Provider'}
+   ]
 
-        <EBrowser uischema={uischema} entities={apis}  />    
-      
-      </Feature>
+   return(
+      <ActiveTable 
+         data={apis} 
+         columnHeaders={ columnHeaders }
+      />    
    )
-   
 }
+
+export default feature(Apis,{title:'Apis'})
+   
+
 
 

@@ -1,56 +1,34 @@
 import React,{useReducer,useEffect} from 'react';
-
 import ReactDOM from 'react-dom';
 import './index.css';
-import './App.css';
-import StateContext from 'contexts/StateContext';
-import rootReducer from 'reducers';
-import App from 'App2';
-
-const STORE_NAME = 'ht-store-x';
-
-class Store{
-   constructor(values){
-      this.identity = null;
-      this.authenticatedUser = null;
-      this.lastAction = {  type: 'INIT'  }
-      Object.assign(this,{...values});
-   }
-
-   // getHello(){
-   //    return 'hello';
-   // }
-
-   // getEmployeeById(id){
-   //    if(!this.employees || this.employees.length === 0) return null;
-   //    return this.employees.find(e => e._id === id);
-   // }
-}
-
+import './App2.css';
+import Store from 'appstore/AppStoreContext';
+import useAppStore,{ STORE_NAME } from 'appstore/useAppStore';
+import App from 'App';
 
 const AppContainer = (props)=>{
+     
    
-   let fromLocalStorage = window.localStorage.getItem(STORE_NAME)? window.localStorage.getItem(STORE_NAME): null;
+   const [state,dispatch] = useAppStore();
 
-   let initialState = new Store(JSON.parse(fromLocalStorage || '{}'));
+   const getAppState = () => state;
 
-   const [store,dispatch] = useReducer(rootReducer,initialState);
-
-   const getStore = () => store;
-   
    useEffect(()=>{
-      window.onbeforeunload = ()=>{
-         window.localStorage.setItem(STORE_NAME,JSON.stringify(store))
-         console.log('Stored',window.localStorage.getItem(STORE_NAME));
+      window.onbeforeunload = ()=>{         
+         window.localStorage.setItem(STORE_NAME,JSON.stringify(state))
        }
    });
 
+   useEffect(()=>{
+      console.log('reloaded');
+      dispatch({type:'INIT',payload:JSON.parse(window.localStorage.getItem(STORE_NAME))});
+   },[]);
 
    
    return(
-      <StateContext.Provider value={{getStore, dispatch}}>
+      <Store.Provider value={{getAppState, dispatch}}>
          <App {...props}/>
-      </StateContext.Provider>
+      </Store.Provider>
    )
 }
 

@@ -1,21 +1,21 @@
-import React, { useContext,useEffect } from 'react';
-import EBrowser from 'components/EBrowser';
-import StateContext from 'contexts/StateContext';
-import useFetchUserAccounts from 'actions/useFetchUserAccounts';
-import Feature from 'components/Feature';
+import React from 'react';
+import useAppState from 'appstore/useAppState';
+import useApiRequest from 'api/useApiRequest';
 import FeatureShortcutLink from 'components/FeatureShortcutLink';
 import feature from '../feature';
 import ActiveTable from 'components/ActiveTable';
 
 function UserAccounts({history}){
    
-   let { getStore} = useContext(StateContext);
+   let { getAppState, dispatch} = useAppState();
 
-   let fetchUserAccounts = useFetchUserAccounts();
+   let fetchUserAccounts = useApiRequest('USERACCOUNT_LIST',dispatch, ({responseData})=>{
+      return responseData.resource;
+   });
 
-   let {userAccounts} = getStore();
+   let { userAccounts } = getAppState();
 
-   useEffect(()=>{
+   React.useEffect(()=>{
       fetchUserAccounts();
    },[]);
 
@@ -23,8 +23,6 @@ function UserAccounts({history}){
    const onRowClick = (rowData)=>{
       history.push(`/admin/useraccounts/${rowData._owner}`, {state: rowData});
    }
-
-   console.log(userAccounts);
 
    const columnHeaders = [
       { _owner : 'Owner (Employee Id)'},

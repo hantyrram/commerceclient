@@ -1,1 +1,0 @@
-Any Feature that does an action must emit an action call the emit('feature_name') from eventAction

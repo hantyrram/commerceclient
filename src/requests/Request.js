@@ -1,5 +1,5 @@
 import {emit,subscribe} from '../event';
-import axios from '../axios';
+import axios from 'axios';
 import queryString from 'query-string';
 
 export default class Request{

@@ -1,36 +1,35 @@
-import React, { useContext,useEffect } from 'react';
-import uischema from 'uischemas/role';
-import EBrowser from 'components/EBrowser';
-import StateContext from 'contexts/StateContext';
-import useFetchRoles from 'actions/useFetchRoles';
-import Feature from 'components/Feature';
+import React from 'react';
+import useAppState from 'appstore/useAppState';
+import useApiRequest from 'api/useApiRequest';
 import FeatureShortcutLink from 'components/FeatureShortcutLink';
 import feature from '../feature';
 import ActiveTable from 'components/ActiveTable';
+
 function Roles({history}){
    
-   let { getStore} = useContext(StateContext);
-   let { roles } = getStore();
-   let fetchRoles = useFetchRoles();
-
+   let { getAppState, dispatch} = useAppState();
+   let { roles } = getAppState();
+   let fetchRoles = useApiRequest('ROLE_LIST',dispatch);
+  
    const columnHeaders = [
       { name: 'Role Name' },
       { label: 'Label' },
       { description: 'Description' },
    ]
 
-   useEffect(()=>{
+   React.useEffect(()=>{
       fetchRoles();
    },[]);
 
    
-   const ebrowserReadHandler = (entity)=>{
+   const onRowClick = (entity)=>{
       history.push('/admin/roles/' + entity._id, {entity} );
    }
+   // onRowClick={ebrowserReadHandler}
 
    return(
       // <EBrowser uischema={uischema} entities={roles} onRead={ebrowserReadHandler} />   
-      <ActiveTable data={roles} columnHeaders={columnHeaders} onRowClick = {ebrowserReadHandler} />
+      <ActiveTable data={roles} columnHeaders={columnHeaders}  onRowClick={onRowClick}/>
    )
    
 }

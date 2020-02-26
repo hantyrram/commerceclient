@@ -1,4 +1,4 @@
-const config = require('../../../../../../../AppData/Local/Microsoft/TypeScript/2.9/node_modules/@types/configconfig');
+const config = require('config');
 
 if(config.ENV === 'test'){
  module.exports = require('./test');

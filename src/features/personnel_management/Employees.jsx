@@ -1,15 +1,15 @@
 import React, { useContext,useEffect, useState } from 'react';
-import StateContext from 'contexts/StateContext';
-import useFetchEmployees from 'actions/useFetchEmployees';
 import FeatureShortcutLink from 'components/FeatureShortcutLink';
 import ActiveTable from 'components/ActiveTable';
 import feature from '../feature';
-
+import useAppState from 'appstore/useAppState';
+import useApiRequest from 'api/useApiRequest';
 function Employees({history}){
-   let { getStore } = useContext(StateContext);
-   let fetchEmployees = useFetchEmployees();   
-   let { employees } = getStore();
-   console.log(employees);
+   let { getAppState,dispatch } = useAppState();
+   let { employees } = getAppState();
+   let fetchEmployees = useApiRequest('EMPLOYEE_LIST',dispatch);
+   
+   console.log('employees=',getAppState());
    useEffect(()=>{
       fetchEmployees();
    },[]);
@@ -28,22 +28,23 @@ function Employees({history}){
       { joiningDate: 'Joining Date' },
       { mobileNo: 'Contact No.' },
    ]
-   return(
-      !employees || employees.length === 0 ? 'No Employees' : 
-      <ActiveTable 
-         key={'e1'}
-         data={
-               employees.reduce(function(acc,element){
+
+   const data =  employees.reduce(function(acc,element){
                   let {_id,employeeId,identity,joiningDate,mobileNo} = element;
                   let {firstname,middlename,lastname,gender,dateOfBirth} = identity;
                   acc.push({_id,employeeId,firstname,middlename,lastname,gender,dateOfBirth,joiningDate,mobileNo});
                   return acc;
                },[])
-         } 
+   return(
+      !employees || employees.length === 0 ? 'No Employees' : 
+      <ActiveTable 
+         key={'e1'}
+         data={data} 
          columnHeaders={columnHeaders}
          hidden={['_id']}
          onRowClick={onRowClick}
       />
+     
    )
    
 }

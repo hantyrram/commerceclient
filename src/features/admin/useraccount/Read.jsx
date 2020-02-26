@@ -1,7 +1,7 @@
 import React, { useContext,useEffect,useState } from 'react';
 import FeatureShortcutLink from 'components/FeatureShortcutLink';
 import feature from '../../feature';
-import StateContext from 'contexts/StateContext';
+import useAppStore from 'hook/useAppStore';
 import useFetchUserAccount from 'actions/useFetchUserAccount';
 import useUserAccount$Roles_Add from 'actions/useUserAccount$Roles_Add';
 import useUserAccount$Roles_Delete from 'actions/useUserAccount$Roles_Delete';
@@ -15,9 +15,8 @@ function UserAccountRead({match,location}){
    let deleteRoleFromUserAccount = useUserAccount$Roles_Delete();
 
    let fetchRoles = useFetchRoles();
-   let { getStore } = useContext(StateContext);
-   let { userAccounts } = getStore();
-   let { roles } = getStore();
+   let { getAppState } = useAppStore();
+   let { userAccounts,roles } = getAppState();
    let userAccount = (userAccounts || []).find(u => u._owner === match.params.employeeId);
    let [openAddRoleDialog,setOpenAddRoleDialog] = useState(false);
    //Get UserAccount 

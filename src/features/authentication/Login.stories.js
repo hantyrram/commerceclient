@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {storiesOf} from '@storybook/react';
+import {storiesOf} from 'storybook__react';
 import Login from './Login';
 
 

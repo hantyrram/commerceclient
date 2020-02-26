@@ -1,0 +1,62 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  animation: App-logo-spin infinite 20s linear;
+  height: 40vmin;
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+
+.form-input-control{
+   display:flex;
+   flex-direction:column;
+   margin-bottom: 1em;
+}
+
+.form-input-control label{
+   margin-bottom: .5em;
+}
+
+.form-input-control input,select,textarea{
+   /* margin-left: 1em; */
+}
+
+.form-input-control .field-description{
+   font-style:italic;
+   margin-left: 1em;
+   font-size: .8em;
+}
+
+.form-input-control .form-input-control-inline{
+   flex-direction:row;
+}
+/* feature title #98a0ac */
+/* root e0e0e0 */
+/* right dedede    */
+/* sidenav d8d7d7 */

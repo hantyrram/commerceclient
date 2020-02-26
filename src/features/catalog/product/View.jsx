@@ -1,7 +1,7 @@
 import React, { useState,useEffect, useContext } from 'react';
 import FeatureShortcutLink from 'components/FeatureShortcutLink';
 import { BrowserRouter as Router,Switch, Route } from 'react-router-dom';
-import StateContext from 'contexts/StateContext';
+import useAppStore from 'hooks/useAppStore';
 import feature from '../../feature';
 import ProductForm from './components/ProductForm';
 import ProductMenu from './components/ProductMenu';
@@ -11,7 +11,7 @@ import ProductInventoryForm from './components/ProductInventoryForm';
 import {
    useProduct_Update,
    useProduct_FetchAll
-} from 'actions/useProduct';
+} from 'actions/Product';
 
 
 
@@ -36,13 +36,13 @@ function View(props){
    let getProducts = useProduct_FetchAll();
 
    // let [product,setProduct] = useState(Object.assign({},props.location.state.product));
-   let { getStore } = useContext(StateContext);
+   let { getAppState } = useAppStore();
 
    let initialValue;
 
-   if(getStore().products){
+   if(getAppState().products){
       let productName = props.match.params.slug.replace(/\-/g,' ');
-      initialValue = getStore().products.find(p=> p.name === productName);
+      initialValue = getAppState().products.find(p=> p.name === productName);
    }
 
    let [product,setProduct] = useState(initialValue);
@@ -77,7 +77,7 @@ function View(props){
 
 
    // useEffect(()=>{
-   //    if(!getStore().products){ //try fetching products once
+   //    if(!getAppState().products){ //try fetching products once
    //       getProducts();
 
    //    }
@@ -91,7 +91,7 @@ function View(props){
       <Router>
       <div style={{display:'flex',justifyContent:'space-between',alignItems:''}}>
             <Switch>               
-               <Route exact path="/catalog/products/:slug" component={withProduct(ProductForm,product,onProductUpdate,{productCategories :getStore().productCategories})}/>
+               <Route exact path="/catalog/products/:slug" component={withProduct(ProductForm,product,onProductUpdate,{productCategories :getAppState().productCategories})}/>
                <Route exact path="/catalog/products/:slug/pricing" component={withProduct(PricingForm,product,onPriceSubmit)}/>
                <Route exact path="/catalog/products/:slug/inventory"  component={withProduct(ProductInventoryForm,product,onProductInventorySubmit)}/>
             </Switch>

@@ -2,13 +2,11 @@ import React, { useContext, useState, useEffect, useRef } from 'react';
 import {Link} from 'react-router-dom';
 import Feature from 'components/Feature';
 import FeatureShortcutLink from 'components/FeatureShortcutLink';
-import StateContext from 'contexts/StateContext';
-import useFetchEmployee from 'actions/useFetchEmployee';
-import useEditEmployee from 'actions/useEditEmployee';
-import useEmployee$Photo_Edit from 'actions/useEmployee$Photo_Edit';
+import useAppStore from 'hooks/useAppStore';
+import { useEmployee_Edit,useEmployee_Fetch,useEmployee$Photo_Edit } from 'actions/Employee';
 import feature from '../../feature';
 import Avatar from 'components/Avatar';
-import axios from '../../../axios';
+import axios from 'axios';
 import TextField from '@material-ui/core/TextField';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -41,11 +39,11 @@ let formContainerStyle = {
 
 function EmployeeEdit({match}){
    let employeeAvatarOverlayRef = useRef({});
-   let fetchEmployee = useFetchEmployee();
-   let editEmployee = useEditEmployee();
+   let fetchEmployee = useEmployee_Fetch();
+   let editEmployee = useEmployee_Edit();
    let uploadEmployeePhoto = useEmployee$Photo_Edit();
-   let {getStore} = useContext(StateContext);
-   let employeeFromStore = (getStore().employees||[]).find(emp=> emp._id === match.params.id);
+   let {getAppState} = useAppStore();
+   let employeeFromStore = (getAppState().employees||[]).find(emp=> emp._id === match.params.id);
    let [employee,setEmployee] = useState(employeeFromStore);
    let [employeePhotoURL,setEmployeePhotoURL] = useState((employee || {}).photoURL);  
 

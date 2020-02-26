@@ -2,9 +2,9 @@ import React, { useState,useEffect, useContext } from 'react';
 import FeatureShortcutLink from 'components/FeatureShortcutLink';
 import {
    useProduct_Create
-} from 'actions/useProduct';
+} from 'actions/Product';
 
-import StateContext from 'contexts/StateContext';
+import useAppStore from 'hooks/useAppStore';
 import feature from '../../feature';
 
 import ProductForm from './components/ProductForm';
@@ -12,8 +12,8 @@ import ProductForm from './components/ProductForm';
 
 function Add(props){
 
-   let { getStore } = useContext(StateContext);
-   let {productCategories} = getStore();
+   let { getAppState } = useAppStore();
+   let {productCategories} = getAppState();
    let createProduct = useProduct_Create();
 
    const formSubmitHandler = (product)=>{

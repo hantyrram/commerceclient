@@ -1,0 +1,46 @@
+//api endpoint definitions
+
+
+
+export default {
+   AUTH$LOGIN_EXEC: 'post:/apiv1/auth/login',
+   AUTH$LOGOUT_EXEC: 'get:/apiv1/auth/logout',
+   API_LIST: `get:/apiv1/apis`,
+   EMPLOYEE_ADD: 'post:/apiv1/employees/empid_manual',
+   EMPLOYEE_EDIT: 'patch:/apiv1/employees/',
+   EMPLOYEE$PHOTO_EDIT: 'post:/apiv1/employees/:employeeId/photo',
+   EMPLOYEE_READ: 'get:/apiv1/employees/:employeeId',
+   EMPLOYEE_LIST: 'get:/apiv1/employees',
+   EMPLOYEE_VERIFY: 'post:/apiv1/employees/verify',
+   USERACCOUNT_LIST: 'get:/apiv1/useraccounts',
+   USERACCOUNT_READ: 'get:/apiv1/useraccounts/:useraccountId',
+   USERACCOUNT$CREDENTIAL_CREATE: 'post:apiv1/useraccounts/:useraccountId/credential',
+   USERACCOUNT$CREDENTIAL_GENERATE: 'post:apiv1/useraccounts/:useraccountId/generate',
+   USERACCOUNT$ROLES_LIST: 'get:apiv1/useraccounts/:useraccountId/roles',
+   USERACCOUNT$ROLES_ADD:'post:apiv1/useraccounts/:useraccountId/roles',
+   USERACCOUNT$ROLES_DELETE: 'delete:apiv1/useraccounts/:useraccountId/roles/:roleId',
+   PERMISSION_LIST: 'get:/apiv1/permissions',
+   PRODUCT_LIST: 'get:/apiv1/products',
+   PRODUCT_CREATE: 'post:/apiv1/products',
+   PRODUCT_READ: 'get:/apiv1/products/:productId',
+   PRODUCT_DELETE: 'delete:/apiv1/products/:productId',
+   PRODUCT_UPDATE: 'patch:/apiv1/products/:productId',
+   PRODUCTCATEGORY_LIST: 'get:/apiv1/productcategories',
+   PRODUCTCATEGORY_CREATE: 'post:/apiv1/productcategories',
+   PRODUCTCATEGORY_DELETE: 'delete:/apiv1/productcategories/:productcategoryId',
+   PRODUCTATTRIBUTE_LIST: 'get:/apiv1/productattributes',
+   PRODUCTATTRIBUTE_CREATE: 'post:/apiv1/productattributes',
+   PRODUCTATTRIBUTE_UPDATE: 'patch:/apiv1/productattributes/:productattributeId',
+   PRODUCTATTRIBUTE$TERMS_ADD: 'patch:/apiv1/productattributes/:productattributeId/terms/add',
+   PRODUCTATTRIBUTE$TERMS_REMOVE: 'patch:/apiv1/productattributes/:productattributeId/terms/remove',
+   ROLE_LIST:'get:/apiv1/roles',
+   ROLE_CREATE:'post:/apiv1/roles',
+   ROLE_READ:'get:/apiv1/roles/:roleId',
+   ROLE_DELETE:'delete:/apiv1/roles/:roleId',
+   ROLE_EDIT:'patch:/apiv1/roles/:roleId',
+   ROLE$PERMISSIONS_LIST: 'get:/apiv1/roles/:roleId/permissions',
+   ROLE$PERMISSIONS_EDIT:'patch:/apiv1/roles/:roleId/permissions', //actually handled by role edit
+   ROLE$PERMISSIONS_REMOVE:'patch:/apiv1/roles/:roleId/permissions/remove',//actually handled by role edit,no use for now
+   UTIL$EXTDATA$COUNTRIES_LIST:'get:/apiv1/util/extdata/countries',
+   UTIL$EXTDATA$COUNTRYSTATES_LIST:'get:/apiv1/util/extdata/states',
+}

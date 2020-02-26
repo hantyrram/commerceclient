@@ -95,8 +95,9 @@ const ActiveTable = (props)=>{
     * Listen to <tr> click event if onRowClick prop is provided.
     */
    const addRowClickListener = ()=>{
-      if(props.onRowClick){
+      if(props.onRowClick && props.data && props.data.length > 0){
          let tbody = tableRef.current.children[1];         
+         
          for(let tr of tbody.children){
             tr.style.cursor = 'default';            
             tr.addEventListener('click',function(){
@@ -116,10 +117,13 @@ const ActiveTable = (props)=>{
    }
    
    return(
-      <Table ref={tableRef} size="small">
-         <TableHead><tr>{renderColumnHeaders()}</tr></TableHead>
-         <TableBody>{renderRows()}</TableBody>
-      </Table>
+      <div style={{maxWidth:"90%",overflowX:"scroll"}}>
+         <Table ref={tableRef} size="small">
+            <TableHead><tr>{renderColumnHeaders()}</tr></TableHead>
+            <TableBody>{renderRows()}</TableBody>
+         </Table>
+      </div>
+      
    )
 }
 

@@ -1,39 +1,35 @@
 import React, { useContext,useEffect } from 'react';
-import uischema from 'uischemas/role';
-import Feature from 'components/Feature';
-import FeatureShortcutLink from 'components/FeatureShortcutLink';
-import EForm from 'components/EForm';
-import StateContext from 'contexts/StateContext';
-import useFetchRole from 'actions/useFetchRole';
-
-import useFetchRolePermissions from 'actions/useFetchRolePermissions';
-import RolePermissionsListComponent from './permissions/List';
-import RoleForm from './components/RoleForm';
+import useAppState from 'appstore/useAppState';
+import useApiRequest from 'api/useApiRequest';
+import feature from 'features/feature';
 import {Link} from 'react-router-dom';
+import FeatureShortcutLink from 'components/FeatureShortcutLink';
+import useForm from 'hooks/useForm';
 
 //effects
 
 
-
-export default ({match,location})=>{
-   
+export function Read({match,location}){
+   //Map params.id to store.roles [found] id
    //get the id from params
    //check if id is already on the store,
-   let { getStore } = useContext(StateContext);
-   let { roles } = getStore();
-   let fetchRole = useFetchRole();
+   let { getAppState,dispatch} = useAppState();
+   let { roles } = getAppState();
+   let fetchRole = useApiRequest('ROLE_READ',dispatch);
+   // let { values: role, onChange, onSubmit, errors } = useForm();
+   const onChange = ()=>{}
    
-   let fetchRolePermissions = useFetchRolePermissions();
+   // let fetchRolePermissions = useFetchRolePermissions();
    let role = (roles || []).find(role=> role._id === match.params.id);
 
-
+   console.log(role);
    //handlers
   
 
    //fetch the role if it does not exist on the store
    function fetchRoleIfNotExist(){
       if(!role){
-         fetchRole(match.params.id);
+         fetchRole({params: {roleId: match.params.id}});
       }
    }
 
@@ -51,8 +47,7 @@ export default ({match,location})=>{
 
    
    return(
-      <Feature group="Roles" featureShortcuts={[<FeatureShortcutLink to="/admin/roles/create">Create Role</FeatureShortcutLink>]}>
-         {
+ 
             role ? <form action="#">
             <div>
                <label htmlFor="role-_id">Id</label>
@@ -60,15 +55,15 @@ export default ({match,location})=>{
             </div>
             <div>
                <label htmlFor="role-name">Name</label>
-               <input name="name" id="role-name" type="text" value={role.name}/>
+               <input name="name" id="role-name" type="text" value={role.name} onChange={onChange}/>
             </div>
             <div>
                <label htmlFor="role-label">Label</label>
-               <input name="label" id="role-label" type="text" value={role.label}/>
+               <input name="label" id="role-label" type="text" value={role.label} onChange={onChange}/>
             </div>
             <div>
                <label htmlFor="role-description">Description</label>
-               <input name="description" id="role-description" type="text" value={role.description} />
+               <input name="description" id="role-description" type="text" value={role.description} onChange={onChange}/>
             </div>
             <div>
                <label htmlFor="permissions">Permissions</label>
@@ -104,13 +99,14 @@ export default ({match,location})=>{
                }
             }}>Modify</Link>
          </form> : null
-         }
-        
-          
-       
-      </Feature>
    )
    
 }
 
 
+export default feature(Read,{
+   title: 'Role',
+   shortcutLinks: [
+      <FeatureShortcutLink to="/admin/useraccounts/create">Create New User Account</FeatureShortcutLink>
+   ]
+})

@@ -1,24 +1,34 @@
 import React, { useContext,useEffect, useState } from 'react';
-import StateContext from 'contexts/StateContext';
+import useAppState from 'appstore/useAppState';
+import useApiRequest from 'api/useApiRequest';
 import FeatureShortcutLink from 'components/FeatureShortcutLink';
 import feature from '../feature';
 import SCategory from 'components/SCategory';
-import {
-   useProductCategory_Create,
-   useProductCategory_Delete,
-   useProductCategory_Fetch
-} from 'actions/useProductCategory';
+// import {
+//    useProductCategory_Create,
+//    useProductCategory_Delete,
+//    useProductCategory_Fetch
+// } from 'actions/ProductCategory';
 
 
 function ProductCategories({history}){
    
    
-   let { getStore } = useContext(StateContext);
-   let {productCategories} = getStore();
+   let { getAppState, dispatch} = useAppState();
+   let {productCategories} = getAppState();
    let [selected,setSelected] = useState({_id: 'root'});
-   let createCategory = useProductCategory_Create();
-   let getCategories = useProductCategory_Fetch();
-   let deleteCategory = useProductCategory_Delete();
+
+   let getCategories = useApiRequest('PRODUCTCATEGORY_LIST',dispatch, ({responseData})=>{
+      return responseData.resource;
+   });
+
+   let createCategory = useApiRequest('PRODUCTCATEGORY_CREATE',dispatch,({responseData})=>{
+      return responseData.resource;
+   });
+   
+   let deleteCategory = useApiRequest('PRODUCTCATEGORY_DELETE',dispatch);
+
+
 
    useEffect(()=>{
       getCategories();
@@ -33,7 +43,9 @@ function ProductCategories({history}){
    function onDelete(category){
       console.log('Deleting',category);
       (async function(){
-         await deleteCategory(category);
+         await deleteCategory( 
+               {params: {productcategoryId: category._id}}
+               );
          getCategories();
       })()
    }
@@ -47,7 +59,7 @@ function ProductCategories({history}){
          category.parent = parent._id;
       }
       
-      createCategory(category);
+      createCategory({payload: category});
    }
 
    return(

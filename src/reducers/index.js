@@ -1,4 +1,4 @@
-import types from '../actions/types';
+import types from 'actions/types';
 
 //NOTE: MAKE SURE TO RETURN THE STATE BY DEFAULT
 
@@ -191,15 +191,17 @@ const apisReducer = (apis = [], action) => {
    }
 }
 
-const employeesReducer = (employees = [], action) => {
-   let newState = [...employees];
+const employeesReducer = (employeesState = [], action) => {
+   let newState = [...employeesState];
    switch(action.type){
       case types.EMPLOYEE_FETCH_OK : {
          newState.push(action.payload);
          return newState;
       }
-      case types.EMPLOYEES_FETCH_OK: return [...action.payload]
-      case types.EMPLOYEES_ADD_OK:   return [...newState, action.payload]
+      case types.EMPLOYEE_FETCHALL_OK: {
+         return [...action.payload]
+      }
+      case types.EMPLOYEE_ADD_OK:   return [...newState, action.payload]
       case types.EMPLOYEE$PHOTO_EDIT_OK: {
          let employee = newState.find(e => e._id === action.payload._id)
          employee.photo = action.payload.photo;
@@ -209,6 +211,7 @@ const employeesReducer = (employees = [], action) => {
       default: return newState;
    }
 }
+
 
 const countriesReducer = ( countries = [], action) => {
    let newState = [...countries];
@@ -220,12 +223,53 @@ const countriesReducer = ( countries = [], action) => {
    }
 }
 
+//country states
+const statesReducer = ( states = {}, action) => {
+   let newState = Object.assign({},states);
+   console.log(action.payload);
+   switch(action.type){
+      case types.HELPERS_GETSTATES_OK : {
+         return { ...newState, ...action.payload } // e.g. action.payload = {'United States': []}
+         // return {...action.payload }
+      }
+      default: return newState;
+   }
+}
+
+const permissionsReducer = (permissionsState = [],action)=>{
+   let newState = [...permissionsState];
+   if(action.type === 'FETCH_PERMISSIONS_OK'){
+      return [...action.payload];
+   }
+   return newState;
+}
+
+const resourcesReducer = (resourcesReducer = [],action)=>{
+   let newState = [...resourcesReducer];
+   if(action.type === 'GET_RESOURCES_OK'){
+      return [...action.payload];
+   }
+   return newState;
+}
+
+const storeSettingsReducer = (storeSettings = {},action) => {
+   let newState = { ...storeSettings };
+   
+   switch(action.type){
+      case 'Store$updateBasic_Ok' : {
+         return { ...newState, basic: action.payload } 
+      }
+      default: return newState;
+   }
+}
+
+
 /**
  * Root Reducer
  */
 export default (state, action)=>{
 
-   let newState = { 
+   return { 
       ...state, 
       lastAction: action.type, 
       lastActionPayload: action.payload, 
@@ -238,12 +282,21 @@ export default (state, action)=>{
       products: productsReducer(state.products,action),
       productCategories: productCategoriesReducer(state.productCategories,action),
       attributes: attributesReducer(state.attributes,action),
-      countries: countriesReducer(state.countries,action)
+      helpersData: {
+         
+      },
+      permissions: permissionsReducer(state.permissions,action),
+      resources: resourcesReducer(state.resources,action),
+      //helpersData
+      countries: countriesReducer(state.countries,action),
+      states: statesReducer(state.states,action),
+      storeSettings: storeSettingsReducer(state.storeSettings,action)
    };
 
-   switch(action.type){
-      case 'GET_RESOURCES_OK': return {...newState, resources: action.payload}
-      case 'FETCH_PERMISSIONS_OK': return {...newState, permissions: action.payload}
-      default: return newState;
-   }
+   
+   // switch(action.type){
+   //    case 'GET_RESOURCES_OK': return {...newState, resources: action.payload}
+   //    case 'FETCH_PERMISSIONS_OK': return {...newState, permissions: action.payload}
+   //    default: return newState;
+   // }
 }

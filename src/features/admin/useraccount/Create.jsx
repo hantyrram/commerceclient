@@ -1,13 +1,13 @@
 import React, { useState,useEffect, useRef } from 'react';
 import FeatureShortcutLink from 'components/FeatureShortcutLink';
 import feature from '../../feature';
-import useVerifyEmployee from 'actions/useVerifyEmployee';
+import {useEmployee_Verify} from 'actions/Employee';
 import useGenerateCredential from 'actions/useGenerateCredential';
 import useCreateUserAccountCredential from 'actions/useCreateUserAccountCredential';
 
 function UserAccountCreate(props){
 
-   const verifyEmployee = useVerifyEmployee();
+   const verifyEmployee = useEmployee_Verify();
    const generateCredential = useGenerateCredential();
    const createUserAccountCredential = useCreateUserAccountCredential();
    const [employeeId,setEmployeeId] = useState(null);

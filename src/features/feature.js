@@ -1,8 +1,7 @@
 //HOC, wraps all features
 import React, { useState,useContext, useEffect } from 'react';
 import Styled from 'styled-components';
-import StateContext from 'contexts/StateContext';
-import { subscribe } from '../actionEvent';
+import { subscribe } from 'actionEvent';
 
 const Wrapper = Styled.div`
  min-height: 100%;
@@ -34,18 +33,36 @@ const AlertBox = Styled.div`
  * A Feature wrapper.
  */
 function Feature(props){
+   // return (
+   //    <Wrapper>
+   //       <Header>
+   //          {props.title}
+   //          {props.group} {props.feature ? `/ ${props.feature}` : null}
+   //          <FeatureShortcuts>{props.featureShortcuts ? props.featureShortcuts.map(FS=>FS):null}</FeatureShortcuts>
+   //       </Header>   
+   //       <Content>
+        
+   //       {props.children}
+   //       </Content>
+   //    </Wrapper>
+   // )
    return (
-      <Wrapper>
-         <Header>
-            {props.title}
+      <div className="feature">
+         <div className="feature-header">
+            <div className="feature-title">{props.title}</div>
             {props.group} {props.feature ? `/ ${props.feature}` : null}
             <FeatureShortcuts>{props.featureShortcuts ? props.featureShortcuts.map(FS=>FS):null}</FeatureShortcuts>
-         </Header>   
-         <Content>
-        
-         {props.children}
-         </Content>
-      </Wrapper>
+         </div>   
+         <div className="feature-content">
+            <div className="feature-context-title">{props.title}</div>
+            <div className="feature-context-content-wrapper">
+               <div className="feature-context-content">
+                  {props.children}      
+               </div>
+            </div>
+         
+         </div>
+      </div>
    )
 }
 

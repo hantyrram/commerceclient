@@ -1,5 +1,5 @@
 import React, { useContext,useEffect, useState } from 'react';
-import StateContext from 'contexts/StateContext';
+
 import feature from '../feature';
 import Button from '@material-ui/core/Button';
 import Chip from '@material-ui/core/Chip';
@@ -9,17 +9,12 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import useStateContext from '../../hooks/useStateContext';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-import PopOver from '@material-ui/core/PopOver';
+import PopOver from '@material-ui/core/Popover';
+import useApiRequest from 'api/useApiRequest';
+import useAppState from 'appstore/useAppState';
 
-import {
-   useAttribute_Create,
-   useAttribute_FetchAll,
-   useAttribute_AddTerm,
-   useAttribute_DeleteTerm,
-} from 'actions/useAttribute';
 
 function AddTermContextMenu({onAddTermClick}){
 
@@ -57,16 +52,26 @@ function AddTermContextMenu({onAddTermClick}){
 
 function Attributes({history}){
    
-   let { getStore } = useStateContext();
+   let { getAppState,dispatch } = useAppState();
    let [openAttributeDialog,setOpenAttributeDialog] = useState(false);
    let [openAttributeAddTermDialog,setOpenAttributeAddTermDialog] = useState(false);
    let [activeAttribute,setActiveAttribute] = useState({});
    let [activeAttributeTerm,setActiveAttributeTerm] = useState(null);
    
-   const fetchAttributes = useAttribute_FetchAll();
-   const createAttribute = useAttribute_Create();
-   const addTerm = useAttribute_AddTerm();
-   const deleteTerm = useAttribute_DeleteTerm();
+   const addTermOnBeforeDispatch = ({requestParams,responseData})=>{
+      return {_id: requestParams.productattributeId, terms: [responseData.resource]}
+   }
+
+   
+   const deleteTermOnBeforeDispatch = ({requestParams,requestPayload})=>{
+      console.log(requestPayload);
+      return {_id: requestParams.productattributeId, terms: [requestPayload.term]}
+   }
+
+   const fetchAttributes = useApiRequest('PRODUCTATTRIBUTE_LIST',dispatch);   
+   const createAttribute = useApiRequest('PRODUCTATTRIBUTE_CREATE',dispatch);
+   const addTerm = useApiRequest('PRODUCTATTRIBUTE$TERMS_ADD',dispatch,addTermOnBeforeDispatch);
+   const deleteTerm = useApiRequest('PRODUCTATTRIBUTE$TERMS_REMOVE',dispatch,deleteTermOnBeforeDispatch);
 
    const addNewAttributeClickHandler = (e)=>{
       setActiveAttribute({});
@@ -135,7 +140,7 @@ function Attributes({history}){
                </div>
             </div>
             {
-               getStore().attributes.map( a => {
+               getAppState().attributes.map( a => {
                   return(
                      <div className="flextable-row" style={{display:'flex',justifyContent:'space-between',borderBottom: '1px solid #cec5c5'}}>
                         <div className="flextable-cell" style={{flex:1}}>
@@ -146,7 +151,13 @@ function Attributes({history}){
                            {
                               (a.terms || []).map( t => 
                                  <Chip label={t} size="medium" onDelete={ () => {
-                                       deleteTerm(a._id,t); //attribute._id,term
+                                       deleteTerm(
+                                             {
+                                                params: {productattributeId: a._id},
+                                                payload: {term: t}
+                                             }
+                                       )
+                                       // deleteTerm(a._id,t); //attribute._id,term
                                     } 
                                  }/> 
                                  
@@ -204,6 +215,10 @@ function Attributes({history}){
                <Button variant="contained" color="primary"  
                   onClick={ e => {
                      addTerm(activeAttribute._id,activeAttributeTerm);
+                     addTerm({
+                        params: {productattributeId: activeAttribute._id},
+                        payload: {term: activeAttributeTerm}
+                     })
                      setOpenAttributeAddTermDialog(false); 
                   } } > Ok </Button>
                   

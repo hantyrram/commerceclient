@@ -1,19 +1,18 @@
 import React, { useContext,useEffect, useState } from 'react';
-import StateContext from 'contexts/StateContext';
+import useAppState from 'appstore/useAppState';
+
 import FeatureShortcutLink from 'components/FeatureShortcutLink';
 import feature from '../feature';
-import {
-   useProduct_FetchAll
-} from 'actions/useProduct';
+import useApiRequest from 'api/useApiRequest';
 
 import ActiveTable from 'components/ActiveTable';
 
 function Products({history}){
    
    
-   let { getStore } = useContext(StateContext);
-   let {products} = getStore();
-   let getProducts = useProduct_FetchAll();
+   let { getAppState, dispatch } = useAppState();
+   let { products } = getAppState();
+   let getProducts = useApiRequest('PRODUCT_LIST',dispatch);
 
    useEffect(()=>{
       getProducts();

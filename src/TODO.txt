@@ -1,1 +1,8 @@
-Delete Term from product attributes
+1. Modify getStates helper so that if no country is passed as param, it will return all getStates
+ {'Country One': [...states],'Country Two': [...states]}
+
+ by default United States' states will be returned since the universal-tutorial api, supports no param request.
+
+
+2. Modify AddressForm such that when i select a country it and the country i selected has states then the states select
+input element must be shown.
