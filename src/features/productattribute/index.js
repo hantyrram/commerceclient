@@ -1,16 +1,11 @@
-import React, { useContext,useEffect, useState } from 'react';
-
+import React, { useEffect, useState } from 'react';
 import feature from '../feature';
 import Button from '@material-ui/core/Button';
 import Chip from '@material-ui/core/Chip';
-import AddCircleIcon from '@material-ui/icons/AddCircle';
-import ActiveTable from 'components/ActiveTable';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
 import PopOver from '@material-ui/core/Popover';
 import useApiRequest from 'api/useApiRequest';
 import useAppState from 'appstore/useAppState';
@@ -87,7 +82,9 @@ function Attributes({history}){
       console.log('Adding',activeAttribute);
       if(!activeAttribute._id){
          //immature validation don't save on undefined name
-         activeAttribute.name && activeAttribute.name.length > 3 ?createAttribute(activeAttribute): null;
+         activeAttribute.name && activeAttribute.name.length > 3 ? 
+               createAttribute({payload: activeAttribute})
+         : null;
       }else{
          //updateAttribute
          console.log('Updating',activeAttribute);
@@ -214,7 +211,7 @@ function Attributes({history}){
 
                <Button variant="contained" color="primary"  
                   onClick={ e => {
-                     addTerm(activeAttribute._id,activeAttributeTerm);
+                     // addTerm(activeAttribute._id,activeAttributeTerm);
                      addTerm({
                         params: {productattributeId: activeAttribute._id},
                         payload: {term: activeAttributeTerm}

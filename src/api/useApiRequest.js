@@ -15,29 +15,39 @@ import axios from '../axios';
  * @param {Object} responseData - The response of the api request data
  */
 function defaultOnBeforeDispatch({requestParams,requestPayload,responseData}){
-   console.log(responseData.resource);
    return responseData.resource;
 }
 
 const HTTP_REQUEST_METHODS = ['get','post','put','patch','delete','connect','head','trace','options']
    
 /**
- * Replaces params on request path with the values of the params object.
+ * 
+ * Replaces params/optional params on currentPath with the values of the passed params object.
+ * E.g. if params = { keyone:'keyonevalue',keytwo:'keytwovalue'} & 
+ * currentPath = "apiv1/test/:keyone/pathpath/:keytwo".
+ * Output will be "apiv1/test/keyonevalue/pathpath/keytwovalue".
  * 
  * @param {string} currentPath - The request path.
- * @param {Object} params - Object with keys maps to currentPath params e.g. if currentPath has :test param
+ * @param {Object} params - Object with keys that maps to currentPath params e.g. if currentPath has :test param
  * then currentPath will be replaced with params.test's value.
+ * @return {string} - The path with params and/or optional params inserted.
  */
 function insertParamsOnRequestPath(currentPath,params){
-   let newPath = currentPath.replace(/:\w+/g, function(match){
+   //match optional ? for path with optional parameter
+   let newPath = currentPath.replace(/:\w+\??/g, function(match){ 
       let key = match.replace(':','');
-      // if params = { keyone:'keyonevalue',keytwo:'keytwovalue'}
-      // and requestPath = apiv1/test/:keyone/pathpath/:keytwo
-      //resulting requestPath = apiv1/test/keyonevalue/pathpath/keytwovalue
+      if(key.includes('?')){ 
+         //if an optional parameter was matched,remove before using as key
+         key = key.replace('?','');
+      }
       let paramValue = params[key]; 
       return paramValue;
    });
    return newPath;
+}
+
+function hasOptionalParam(currentPath){
+   return /:\w+\?/.test(currentPath);
 }
 
 /**
@@ -62,9 +72,15 @@ function insertParamsOnRequestPath(currentPath,params){
  * @param {function} dispatch - A function that is passed with the created {@see ApiRequest~Action}
  * @param {function} onBeforeDispatch - A function t
  */
-export default function useApiRequest(requestType, dispatch = ()=>{}, onBeforeDispatch = defaultOnBeforeDispatch) {
+export default function useApiRequest(requestType, dispatch, onBeforeDispatch = defaultOnBeforeDispatch) {
 
-   return async function({params,payload} = {}){
+   /**
+    * param = Object key matches the api param definition
+    * payload - object or string
+    * query = string for now
+    */
+   return async function({params,payload,query} = {}){
+      
       let type  = requestTypes[requestType];
       console.log('useApiRequest params',params);
       console.log('useApiRequest payload',payload);
@@ -85,8 +101,23 @@ export default function useApiRequest(requestType, dispatch = ()=>{}, onBeforeDi
       let requestPath = api.slice(indexOfRequestMethodSeparator + 1, api.length);
 
       if(params){ //insert params on the request path
+                       //NOTE: encodeURI
+         // requestPath = encodeURI( insertParamsOnRequestPath(requestPath,params) ); //root
          requestPath = insertParamsOnRequestPath(requestPath,params);
       }
+
+      //IMPORTANT, if param is optional and no param was passed, replace :param? portion of path with ''
+      if(hasOptionalParam(requestPath) && !params){
+         requestPath = requestPath.replace(/:\w+\?/,'');
+      }
+
+      if(query){
+         requestPath += `?${query}`;
+      }
+
+      requestPath = encodeURI(requestPath);
+
+      console.log('Request sent to ', requestPath, 'with Params',JSON.stringify(params));
 
       try {
          // dispatch({type: `${type}_PENDING`});
@@ -100,18 +131,39 @@ export default function useApiRequest(requestType, dispatch = ()=>{}, onBeforeDi
          }
 
          let { data } = axiosResponse;     
-         console.log('useApiRequest data',data);
-         if(data.ok){
+         
+         if(axiosResponse.status >= 200 && axiosResponse.status < 300){ // && data.ok will not work on psgc data,raw data
             let modPayload = onBeforeDispatch({requestParams: params, requestPayload: payload,responseData: data}); //pass back the original params & payload
-            dispatch({type: `${type}_OK`, payload: modPayload });
+            
+            console.log(data);
+            if(dispatch && typeof(dispatch) === 'function'){
+               dispatch({type: `${type}_OK`, payload: modPayload });
+            }
+            if(data.message){ // ???? SHOULD BE OPTIONAL, ADD AS AN OPTION
+               emit('message',data.message);
+            }
             return data;
          }
 
-         dispatch({type: `${type}_NOK`, error: data.error });
+
+         dispatch && typeof(dispatch) === 'function' ? dispatch({type: `${type}_NOK`, error: data.error }) : null;
+         emit('error',data.error);
          return data.error;
       } catch (error) {
-         console.log(error);
-         dispatch({type:'CLIENT_ERROR',text:'Axios Error!'});
+       
+         if(error.response && error.response.data){
+              //error.response.data.error = actual server generated error object 
+               dispatch && typeof(dispatch) === 'function' ? 
+                  dispatch({type:'CLIENT_ERROR',text: error.response.data.error.text || 'Axios Error!'}) 
+               :null;
+
+              emit('error',{type:'CLIENT_ERROR',text: error.response.data.error.text || 'Axios Error!'});
+              return;
+         }
+         
+         dispatch && typeof(dispatch) === 'function' ? 
+            dispatch({type:'CLIENT_ERROR',text:'Axios Error!'})
+         : null;
          emit('error',{type:'CLIENT_ERROR',text:'Axios Error!'});
       }
    }

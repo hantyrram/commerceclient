@@ -1,8 +1,11 @@
-1. Modify getStates helper so that if no country is passed as param, it will return all getStates
- {'Country One': [...states],'Country Two': [...states]}
+1. work on useApiRequest what if there is query string? such as the psgc data query
+2. working on AddressForm component, line 65 need query
+3. add the minimized filter on each data on psgc before response
 
- by default United States' states will be returned since the universal-tutorial api, supports no param request.
+put product feature on product   
+   - list = show product list
+   - Form = show product form, FYI Product has context forms e.g Pricing, Inventory
 
 
-2. Modify AddressForm such that when i select a country it and the country i selected has states then the states select
-input element must be shown.
+work on  Shipping Methods feature, add shipping method to shipping zone,
+

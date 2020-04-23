@@ -1,7 +1,6 @@
-import React, { useState,useEffect, useRef } from 'react';
+import React, { useState} from 'react';
 import FeatureShortcutLink from 'components/FeatureShortcutLink';
-import {useProductCategory_Create} from 'actions/ProductCategory';
-import feature from '../../feature';
+import feature from '../feature';
 
 function Create(props){
    

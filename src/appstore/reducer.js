@@ -1,5 +1,6 @@
 import types from 'actions/types';//remove this once apiRequestActionTypes is fixed.
 import apiRequestActionTypes from '../api/apiRequestActionTypes';
+import shipping from 'features/shipping';
 
 //NOTE: MAKE SURE TO RETURN THE STATE BY DEFAULT
 
@@ -18,9 +19,10 @@ const productsReducer = (productsState = [], action)=>{
       }
 
       case apiRequestActionTypes.PRODUCT_UPDATE_OK: {
-         let product = newState.find(p => p._id === action.payload._id)
+
+         let product = newState.find(p => p._id === action.payload._id);
          
-         product = Object.assign(product,{...action.payload})
+         Object.assign(product,{...action.payload})
          
          return newState;
       }
@@ -109,6 +111,7 @@ const userAccountsReducer = (userAccounts = [], action) => {
       }
       case apiRequestActionTypes.USERACCOUNT$ROLES_ADD_OK: {
          let { username, role } = action.payload;
+         console.log(username,role);
          let userAccount = newState.find( ua => (ua.credential || {}).username === username );
          if(userAccount){ 
             if(!userAccount.roles){
@@ -125,9 +128,9 @@ const userAccountsReducer = (userAccounts = [], action) => {
          return newState;
       }
       case apiRequestActionTypes.USERACCOUNT$ROLES_DELETE_OK: {
-         let { username, role } = action.payload;
+         let { username, roleId } = action.payload;
          let userAccount = newState.find( ua => (ua.credential || {}).username === username );
-         let i = ((userAccount || {}).roles || []).findIndex(r => r._id === role._id);
+         let i = ((userAccount || {}).roles || []).findIndex(r => r._id === roleId);
          ((userAccount || {}).roles || []).splice(i,1);
          return newState;
       }
@@ -220,10 +223,10 @@ const employeesReducer = (employeesState = [], action) => {
 
 const countriesReducer = ( countries = [], action) => {
    let newState = [...countries];
+   
    switch(action.type){
-      case apiRequestActionTypes.UTIL$EXTDATA$COUNTRIES_LIST_OK : {
+      case apiRequestActionTypes.UTIL$EXTDATA$COUNTRY_LIST_OK : 
          return [...action.payload];
-      }
       default: return newState;
    }
 }
@@ -232,8 +235,19 @@ const countriesReducer = ( countries = [], action) => {
 const statesReducer = ( states = {}, action) => {
    let newState = Object.assign({},states);
    switch(action.type){
-      case apiRequestActionTypes.UTIL$EXTDATA$COUNTRYSTATES_LIST_OK : {
-         return { ...newState, ...action.payload } // e.g. action.payload = {'United States': []}
+      case apiRequestActionTypes.UTIL$EXTDATA$COUNTRYSTATE_LIST_OK : {
+         return { ...action.payload } // e.g. action.payload = {'United States': []}
+         // return {...action.payload }
+      }
+      default: return newState;
+   }
+}
+//country states
+const citiesReducer = ( cities = {}, action) => {
+   let newState = Object.assign({},cities);
+   switch(action.type){
+      case apiRequestActionTypes.UTIL$EXTDATA$COUNTRYCITY_LIST_OK : {
+         return { ...action.payload } // e.g. action.payload = {'United States': []}
          // return {...action.payload }
       }
       default: return newState;
@@ -256,14 +270,61 @@ const resourcesReducer = (resourcesReducer = [],action)=>{
    return newState;
 }
 
-const storeSettingsReducer = (storeSettings = {},action) => {
-   let newState = { ...storeSettings };
-   
+
+const storeSettingsReducer =  (storeSettings = [],action) => {
+   let newState = [...storeSettings];
    switch(action.type){
-      case 'Store$updateBasic_Ok' : {
-         return { ...newState, basic: action.payload } 
+      case apiRequestActionTypes.STORESETTING_LIST_OK: {
+         return [ ...action.payload ]
       }
+         
+      case apiRequestActionTypes.STORESETTING$BASIC_EDIT_OK: {
+         let basicSetting = newState.find( s=> s.name === 'StoreSetting.Basic');
+         if(!basicSetting){
+            newState.push( action.payload );
+         }else{
+            Object.assign(basicSetting, action.payload);
+         }
+
+         return newState;
+      }
+      case apiRequestActionTypes.STORESETTING$SHIPPING$SHIPPINGORIGIN_EDIT_OK: {
+         let shippingOrigin = newState.find( s=> s.name === 'StoreSetting.Shipping.ShippingOrigin');
+         if(!shippingOrigin){
+            newState.push( action.payload );
+         }else{
+            Object.assign(shippingOrigin, action.payload);
+         }
+
+         return newState;
+      }
+     
+         
       default: return newState;
+   }
+
+}
+
+const shippingZonesReducer = (state = [],action)=>{
+   let newState = [...state];
+   switch(action.type){
+      case apiRequestActionTypes.STORESETTING$SHIPPING$SHIPPINGZONE_ADD_OK : {
+         newState.push( action.payload );
+      }break;
+      case apiRequestActionTypes.STORESETTING$SHIPPING$SHIPPINGZONE_EDIT_OK : {
+         let shippingZone = newState.find( sz => sz._id === action.payload._id);
+         Object.assign(shippingZone, action.payload);
+      }break;
+      case apiRequestActionTypes.STORESETTING$SHIPPING$SHIPPINGZONE_LIST_OK : {
+         return  action.payload;
+      }break;
+   }
+   return newState;
+}
+
+const psgcReducer = (state = {}, action)=>{
+   if(action.type === 'UTIL$EXTDATA$PSGC_READ_OK'){
+      
    }
 }
 
@@ -272,9 +333,17 @@ const storeSettingsReducer = (storeSettings = {},action) => {
  * Root Reducer
  */
 export default (state, action)=>{
-   
+
+   let newState = { ...state }
+
+   //INIT is triggered on page reload, init from localStorage, state = localStorage state
+   if(action.type === 'INIT'){ 
+      newState = { ...newState, ...action.payload } // 
+      // return newState;
+   }
+
    return { 
-      ...state, 
+      ...newState,
       lastAction: action.type, 
       lastActionPayload: action.payload, 
       lastActionMessage: (action.payload || {}).message,
@@ -291,7 +360,10 @@ export default (state, action)=>{
       //helpersData
       countries: countriesReducer(state.countries,action),
       states: statesReducer(state.states,action),
-      storeSettings: storeSettingsReducer(state.storeSettings,action)
+      cities: citiesReducer(state.cities,action),
+      storeSettings: storeSettingsReducer(state.storeSettings,action),
+      shippingZones: shippingZonesReducer(state.shippingZones,action),
+      psgc: psgcReducer(state.psgc,action)
    };
 
    

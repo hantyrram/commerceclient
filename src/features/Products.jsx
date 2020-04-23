@@ -1,14 +1,10 @@
-import React, { useContext,useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import useAppState from 'appstore/useAppState';
-
-import FeatureShortcutLink from 'components/FeatureShortcutLink';
-import feature from '../feature';
+import feature from './feature';
 import useApiRequest from 'api/useApiRequest';
-
 import ActiveTable from 'components/ActiveTable';
 
-function Products({history}){
-   
+function List({history}){
    
    let { getAppState, dispatch } = useAppState();
    let { products } = getAppState();
@@ -26,14 +22,12 @@ function Products({history}){
       { netCost: 'Net Cost' },
    ]
 
-   const activeTableSelectHandler = (rowData)=>{
-      history.push({pathname: `/catalog/products/${rowData.name.replace(/\s/g,'-')}`, state:{ product:rowData} });
+   const activeTableSelectHandler = (product)=>{
+      history.push({pathname: `/catalog/products/${product.slug}`, state:{ product } });
    }
 
    return(
-      !products || products.length === 0? 'No Products' : 
-      <div style={{minWidth: "100%"}}>
-         <ActiveTable 
+      <ActiveTable 
          key={'e1'}
          data={ products
                // products.reduce(function(acc,element){
@@ -47,19 +41,18 @@ function Products({history}){
          hidden={['_id']}
          onRowClick={activeTableSelectHandler}
       />   
-         
-      </div>
    )
-   
 }
 
-export default feature(Products,{
-   title: 'Products',
-   shortcutLinks: [
-      <FeatureShortcutLink to="/catalog/products/add">New Product</FeatureShortcutLink>
-   ]
-})
 
+function Main(props){
+   return(
+      <div className="feature-context">
+      <div className="feature-context-title">Products</div>
+         <List {...props}/>
+      </div>
+   )
+}
 
-
+export default feature(Main,{ title : 'Products'});
 

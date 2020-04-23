@@ -35,3 +35,11 @@ code {
     monospace;
 }
 
+:root{
+   --border-and-line-color: #cec5c5;
+}
+
+hr{
+   border: .5px solid var(--border-and-line-color);
+}
+

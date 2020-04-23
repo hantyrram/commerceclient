@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import AddIcon from '@material-ui/icons/AddCircle';
 import RemoveIcon from '@material-ui/icons/RemoveCircle';
 
-export default function Category({category, data, selected, onSelect , onAdd , onDelete }){
+export function CategoryTree({category, data, selected, onSelect , onAdd , onDelete }){
 
    let [c,setC] = useState(category);
    let [mode,setMode] = useState(null);
@@ -138,7 +138,7 @@ export default function Category({category, data, selected, onSelect , onAdd , o
          {
             ch.map(child=>{
                //onSelect,onAdd,selected, is passed down recursively
-               return <Category 
+               return <CategoryTree 
                         category={child} data={data} selected={selected} 
                         onSelect={onSelect} onAdd={onAdd} onDelete={onDelete}
                      />
@@ -156,7 +156,7 @@ export default function Category({category, data, selected, onSelect , onAdd , o
 }
 
 
-Category.propTypes = {
+CategoryTree.propTypes = {
    /**
     * The Category object
     */

@@ -8,12 +8,11 @@ import TableBody from '@material-ui/core/TableBody';
 import {makeStyles} from '@material-ui/core/styles';
 
 const useTableRowStyles = makeStyles({
-   root: {
-      backgroundColor:"grey"
-   },
    hover: {
-      backgroundColor: "red"
-   }
+      '&:hover': {
+        backgroundColor: '#bedbd0 !important',
+      }
+    }
 });
 
 const ActiveTable = (props)=>{
@@ -68,7 +67,7 @@ const ActiveTable = (props)=>{
    function renderRows(){
       return props.data.map((dObj,i)=>{
          return (
-            <TableRow key={i} rowData={JSON.stringify(dObj)} hover>
+            <TableRow  key={i} rowData={JSON.stringify(dObj)} classes={{ ...tableRowClasses }} hover>
                {
                   renderSelect(dObj)
                }
@@ -99,17 +98,36 @@ const ActiveTable = (props)=>{
          let tbody = tableRef.current.children[1];         
          
          for(let tr of tbody.children){
-            tr.style.cursor = 'default';            
-            tr.addEventListener('click',function(){
+            tr.style.cursor = 'default';   
+            tr.onclick = function(e){
                if(props.onRowClick){
                   props.onRowClick(JSON.parse(tr.attributes.rowData.value));
                }
-            });
+            }
+            //the below causes multiple click props.onRowClick call
+            // tr.addEventListener('click',function(e){
+            //    // console.dir(e.target.tagName === e.currentTarget.tagName);
+            //    if(e.target.tagName === e.currentTarget.tagName){
+            //       e.stopPropagation();
+            //    }
+            //    if(props.onRowClick){
+            //       props.onRowClick(JSON.parse(tr.attributes.rowData.value));
+            //    }
+
+            // });
+
          }
       }
    }
 
+  
+   
+
    useEffect(addRowClickListener,[props.onRowClick,props.data]);
+
+
+
+   // useEffect(addRowClickListener,[props.onRowClick]);
    // useEffect(addCheckboxChangeListener,[props.onRowSelect]);
 
    if(!props.data || props.data.length === 0){
@@ -117,7 +135,7 @@ const ActiveTable = (props)=>{
    }
    
    return(
-      <div style={{maxWidth:"90%",overflowX:"scroll"}}>
+      <div className="active-table" style={{maxWidth:"100%",overflowX:"scroll", padding: "1em",border: "1px solid #cec5c5"}}>
          <Table ref={tableRef} size="small">
             <TableHead><tr>{renderColumnHeaders()}</tr></TableHead>
             <TableBody>{renderRows()}</TableBody>
@@ -135,6 +153,7 @@ ActiveTable.propTypes = {
     */
    onRowClick: PropTypes.func, 
    onRowSelect: PropTypes.func, // function called if row is selected, optional
+   rowHoverColor: PropTypes.string, // color of the row on mouse hover
    rowActionHandlers: PropTypes.array, // optional array of functions that accept the rowData, must return a Component e.g. button
    data: PropTypes.array, //array of objects
    //array of Objects 
@@ -142,7 +161,7 @@ ActiveTable.propTypes = {
    //e.g. {firstname: 'First Name'} where firstname is a key of data[i]
    columnHeaders: PropTypes.array, 
    hidden: PropTypes.array, // array of string which is the property of the data to hide, e.g. _id if you don't want to show id
-   onRowDelete: PropTypes.func // a function that will be called when the delete button is clicked
+   onRowDelete: PropTypes.func, // a function that will be called when the delete button is clicked,
 }
 
 

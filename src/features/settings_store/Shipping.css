@@ -1,0 +1,14 @@
+#feature-shipping{
+   display: flex;
+   flex-direction: row;
+   flex-wrap:wrap-reverse;
+   min-width: 100%;
+}
+
+#feature-shipping .context-main{
+   min-width: 75%;
+}
+
+#feature-shipping .context-menu{
+   min-width: 25%;
+}

@@ -1,9 +1,8 @@
-import React, { useContext,useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import useAppState from 'appstore/useAppState';
 import useApiRequest from 'api/useApiRequest';
-import FeatureShortcutLink from 'components/FeatureShortcutLink';
 import feature from '../feature';
-import SCategory from 'components/SCategory';
+import { CategoryTree } from './components';
 // import {
 //    useProductCategory_Create,
 //    useProductCategory_Delete,
@@ -66,7 +65,7 @@ function ProductCategories({history}){
       // !productCategories || productCategories.length === 0 ? 'No Product Categories' : 
       <div style={{minWidth: "100%"}}>
          {/* <SingleDepthDataTreeDiv data={productCategories} rootName="Categories" onSelect={onSelect} onAdd={onAdd}/> */}
-         <SCategory category={{name: 'Categories', _id: 'root'}} 
+         <CategoryTree category={{name: 'Categories', _id: 'root'}} 
             data={productCategories === undefined? []: productCategories}  selected={selected} 
             onSelect={onSelect} 
             onAdd={onAdd} 
@@ -79,8 +78,8 @@ function ProductCategories({history}){
 
 export default feature(ProductCategories,{
    title: 'Product Categories',
-   shortcutLinks: [
-      <FeatureShortcutLink to="/catalog/productcategories/create">New Product Category</FeatureShortcutLink>
+   links: [
+      { path : '/catalog/productcategories/create', label: 'New Product Category'}
    ]
 })
 
