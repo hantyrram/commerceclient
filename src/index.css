@@ -1,5 +1,5 @@
 body {
-   background-color: #dfe0e0;
+   background-color: #e8ecec;
    /* margin: 0;
    padding: 0; */
    font-family: "Segoe UI", "Roboto", "Oxygen",
@@ -12,6 +12,7 @@ body {
    /* ie hide scrollbar/keep functionality */
    -ms-overflow-style: none;
    min-height: 100vh;
+   margin:unset;
 }
 
 body::-webkit-scrollbar{
@@ -36,8 +37,18 @@ code {
 }
 
 :root{
-   --border-and-line-color: #cec5c5;
-}
+   --border-and-line-color: #e2dddd;
+   --featurecontextmenu-color: #92bdae;
+   --hover-background-color: #e2dddd;
+   --formheader-background-color: #c6c9c7;
+   --shade-primary-zero: #040303eb;
+   --shade-primary-one: #040303d9;
+   --shade-primary-two: #04030378;
+   --shade-primary-three: #04030359;
+   --shade-primary-ten: #0403031c;
+   --forecolor-primary-zero: white;
+   --forecolor-primary-one: #b1b0b0;
+}  
 
 hr{
    border: .5px solid var(--border-and-line-color);

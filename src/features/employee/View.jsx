@@ -40,36 +40,17 @@ function View({match}){
    let fetchEmployee = useApiRequest('EMPLOYEE_READ',dispatch);
    let editEmployee = useApiRequest('EMPLOYEE_EDIT',dispatch);
    let uploadEmployeePhoto = useApiRequest('EMPLOYEE$PHOTO_EDIT',dispatch);
-   let employeeFromStore = (getAppState().employees||[]).find(emp=> emp._id === match.params.id);
-   let [employee,setEmployee] = useState(employeeFromStore);
-   let [employeePhotoURL,setEmployeePhotoURL] = useState((employee || {}).photoURL);  
 
+   // let employeeFromStore = getAppState().employees.find(emp=> emp._id === match.params.id);
+   // let [employee,setEmployee] = useState(employeeFromStore);
+   let employee = getAppState().employees.find(emp=> emp._id === match.params.id) || {};
+   let md5 = employee.photo && employee.photo.md5 || '';
    let formClasses = useStyles();
    
    //always get the fresh copy
    useEffect( () => { 
          fetchEmployee({ params: { employeeId: match.params.id}});
    },[match.params.id] );
-   
-   
-   useEffect(()=>{
-      if(employeeFromStore){
-         setEmployee(employeeFromStore);
-         if(employeeFromStore.photoURL){
-            setEmployeePhotoURL(employeeFromStore.photoURL);
-            return ()=>{URL.revokeObjectURL(employeeFromStore.photoURL)};
-         }
-      }
-      
-   },[employeeFromStore]);
-
-   useEffect(()=>{
-    if(employeePhotoURL){
-      setEmployeePhotoURL(employeeFromStore.photoURL);
-      return ()=>{URL.revokeObjectURL(employeeFromStore.photoURL)};
-    }
-   },[employeePhotoURL]);
-
 
    const formSubmitHandler = (e)=>{
       e.preventDefault();
@@ -83,7 +64,8 @@ function View({match}){
       let formData = new FormData();
       formData.set(e.currentTarget.name,e.currentTarget.files[0]);
       console.log(employee._id,formData);
-      uploadEmployeePhoto(employee._id,formData);
+      // uploadEmployeePhoto(employee._id,formData);
+      uploadEmployeePhoto({params: {employeeId: employee._id}, payload: formData});
    }
 
    const changeHandler = (e)=>{
@@ -113,14 +95,15 @@ function View({match}){
 
    return(
       <div className="feature-context">
-         <Avatar imgURL={employee.photoURL || `/apiv1/employees/${employee._id}/photo`} photoChangeHandler={employeePhotoChangeHandler} />                               
+         {/* md5 here is only used to bust image browser cache,it does not have any implication on the request */}
+         <Avatar imgURL={`/apiv1/employees/${employee._id}/photo?md5=${md5}`} photoChangeHandler={employeePhotoChangeHandler} />                               
          <form className={formClasses.root} action="#" onSubmit={formSubmitHandler} className="grid-form">
-            <h3>Employee Id: {employee.employeeId}</h3>
+               <h3>Employee Id: {employee.employeeId}</h3>
                <h3>Personal Information</h3>
                <hr/>
                <div  className="form-control">
                   <label htmlFor="firstname">Firstname</label>
-                  <input type="text" name="firstname" value={employee.identity.firstname} onChange={changeHandler} required/>
+                  <input type="text" name="firstname" value={employee.identity.firstname} onChange={changeHandler} required className="form-input-control"/>
                </div>
                <div  className="form-control">
                   <label htmlFor="middlename">Middlename</label>

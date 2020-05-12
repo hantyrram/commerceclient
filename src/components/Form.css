@@ -1,0 +1,69 @@
+.form-header {
+   display:flex;
+   justify-content: space-between;
+   align-items: center;
+   background-color:var(--formheader-background-color);
+}
+
+.grid-form h5{
+   margin: unset;
+}
+.grid-form .form-control{
+   display: grid;
+   grid-template-columns: .8fr 2fr;
+   grid-template-areas: 'label input' 'empty description' 'empty error';
+   margin-bottom: .25em;
+   align-items:center;
+}
+
+
+.grid-form .form-control .form-control-label{
+   grid-area: label;
+   text-align: right;
+   margin-right: 1em;
+   align-self:center; 
+   color: #4e4e4e;
+   font-size: .9em;
+}
+
+.grid-form .form-control .form-control-input{ /* input,select container*/
+   box-sizing: border-box; /* somehow fixes select and input height uniformity*/
+   grid-area: input;
+   align-self:center; 
+   margin-left: 1em;
+   /* height: 2.5em; */
+   padding-left: .5em;
+/* margin-bottom: .5em; */
+
+}
+.grid-form input,select{
+   height: 2em;
+   border: .5px solid #c1bebe;
+}
+
+.grid-form .form-control-action{
+   display: flex;
+   justify-content: flex-end;
+/* margin-bottom: .5em; */
+}
+
+.grid-form .form-control-action > *{
+   margin-left: 1em;
+
+}
+
+.grid-form .form-control .form-input-error{
+grid-area: error;
+margin-top: .5em;
+margin-left: 1em;
+font-size: .8em;
+color:red;
+padding-left: 1em;
+}
+.field-description{
+grid-area: description;
+margin-top: .5em;
+font-size: .8em;
+font-style: italic;
+margin-left: 1.5em;
+}

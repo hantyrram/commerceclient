@@ -6,6 +6,7 @@ import './Mui.css';
 import Store from 'appstore/AppStoreContext';
 import useAppStore,{ STORE_NAME } from 'appstore/useAppStore';
 import App from 'App';
+const Login = React.lazy(()=> import(/*webpackChunkName: "feature.auth.login" */'features/auth/Login'));
 
 const AppContainer = (props)=>{
      
@@ -19,6 +20,7 @@ const AppContainer = (props)=>{
       window.onbeforeunload = (e)=>{    
          // window.localStorage.removeItem(STORE_NAME);     
          window.localStorage.setItem(STORE_NAME,JSON.stringify(state));
+         window.localStorage.setItem("LAST_PATH",window.location.pathname);
       }
 
    })

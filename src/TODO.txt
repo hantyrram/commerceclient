@@ -1,11 +1,15 @@
-1. work on useApiRequest what if there is query string? such as the psgc data query
-2. working on AddressForm component, line 65 need query
-3. add the minimized filter on each data on psgc before response
 
-put product feature on product   
-   - list = show product list
-   - Form = show product form, FYI Product has context forms e.g Pricing, Inventory
+schemaValidator, fix text on validation error make it clear
+fix product schema what properties we need
 
+refreshing the page, can't redirect to last path because the routes aren't yet defined, redirect is on the admin page
 
-work on  Shipping Methods feature, add shipping method to shipping zone,
+create a pattern for the shipping cost on ShippingMethod.json
+Add a preview of a product
+Add product photos
 
+!!!was able to login, even with redis = down
+
+Create a product image displayer component
+   - A previewer with clickable thumbnails in the bottom
+Fix product schema follow documentation

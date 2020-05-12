@@ -219,7 +219,6 @@ export default function Address({data,onSubmit,readOnly, validator}){
 }
 
 export function PhilippinesAddressForm({data,onSubmit,readOnly, validator}){
-   console.log(data);
    let { dispatch } = useAppState();
    let [ psgc, setPsgc] = useState({}); //used for PH only
    let [ provinces, setProvinces ] = useState([]);
@@ -227,7 +226,6 @@ export function PhilippinesAddressForm({data,onSubmit,readOnly, validator}){
    let [formState,setFormState] = useState({ country : 'Philippines', phlIslandGroup:'luzon', ...data});
    let [errors, setErrors] = useState();
    let fetchPSGC = useApiRequest('UTIL$EXTDATA$PSGC_READ', null, ({responseData})=>{
-      console.log(responseData);
       return responseData;
    });
    
@@ -277,10 +275,6 @@ export function PhilippinesAddressForm({data,onSubmit,readOnly, validator}){
    },[]);
 
    useEffect(()=>{
-      setFormState({...data});
-   },[data]);
-
-   useEffect(()=>{
       if(province){
          (async ()=>{
             let municipalities = await fetchPSGC({query: `prov=${formState.province}&geolevel=mun`});//add query BUT useApiRequest does not yet support queries         
@@ -288,6 +282,10 @@ export function PhilippinesAddressForm({data,onSubmit,readOnly, validator}){
          })()
       }
    },[]);
+
+   useEffect(()=>{
+      setFormState({...data});
+   },[data]);
 
 
    useEffect(()=>{
@@ -350,7 +348,7 @@ export function PhilippinesAddressForm({data,onSubmit,readOnly, validator}){
                   <select name="province" id="province" 
                      value={formState.province} className="form-control-input" onChange={onChange}>
                      {
-                        provinces.map( e => <option value={e.Name} >{e.Name}</option>)
+                        provinces.map( (e,i) => <option key={i} value={e.Name} >{e.Name}</option>)
                      }         
                   </select>
                   <span className="form-input-error">{errors && errors.province}</span>
@@ -364,7 +362,7 @@ export function PhilippinesAddressForm({data,onSubmit,readOnly, validator}){
                   <select name="municipality" id="municipality" 
                      value={formState.municipality} className="form-control-input" onChange={onChange}>
                      {
-                        municipalities.map( e => <option value={e.Name}>{e.Name}</option>)
+                        municipalities.map((e,i) => <option key={i} value={e.Name}>{e.Name}</option>)
                      }         
                   </select>
                   <span className="form-input-error">{errors && errors.municipality}</span>

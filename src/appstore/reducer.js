@@ -1,6 +1,5 @@
 import types from 'actions/types';//remove this once apiRequestActionTypes is fixed.
 import apiRequestActionTypes from '../api/apiRequestActionTypes';
-import shipping from 'features/shipping';
 
 //NOTE: MAKE SURE TO RETURN THE STATE BY DEFAULT
 
@@ -13,6 +12,16 @@ const productsReducer = (productsState = [], action)=>{
       case apiRequestActionTypes.PRODUCT_CREATE_OK: {
          return [...newState, action.payload];
       }
+
+      case apiRequestActionTypes.PRODUCT_READ_OK: {
+         let product = newState.find(p=> p._id === action.payload._id);
+         if(product){
+            Object.assign(product,action.payload);
+         }else{
+            newState.push(action.payload);
+         }
+         return newState;
+      }
      
       case apiRequestActionTypes.PRODUCT_LIST_OK: {
          return [ ...action.payload ]
@@ -24,6 +33,30 @@ const productsReducer = (productsState = [], action)=>{
          
          Object.assign(product,{...action.payload})
          
+         return newState;
+      }
+
+      case apiRequestActionTypes.PRODUCT$IMAGES_ADD_OK: {
+         //payload = Product.Image
+         let product = newState.find(p => p._id === action.payload.metadata.owner);
+         console.log(product);
+         console.log(action.payload);
+         let images = [...product.images, action.payload];
+         Object.assign(product, { images } );
+         console.log(newState);
+         return newState;
+      }
+      case apiRequestActionTypes.PRODUCT$IMAGES_DELETE_OK: {
+         //payload = {product_id, _id} where _id = image id
+         let product = newState.find(p => p._id === action.payload.product_id);
+         if( product && product.images && product.images.length > 0){
+            let imageIndex = product.images.findIndex( img => img._id === action.payload._id);
+            if(imageIndex !== -1){
+               product.images.splice(imageIndex,1);
+               console.log('Deleting Image');
+            }
+         }
+         console.log(newState);
          return newState;
       }
       default: return newState;
@@ -211,9 +244,9 @@ const employeesReducer = (employeesState = [], action) => {
       }
       case apiRequestActionTypes.EMPLOYEE_ADD_OK:   return [...newState, action.payload]
       case apiRequestActionTypes.EMPLOYEE$PHOTO_EDIT_OK: {
+         console.log(action.payload);
          let employee = newState.find(e => e._id === action.payload._id)
-         employee.photo = action.payload.photo;
-         employee.photoURL = action.payload.photoURL;
+         employee.photo = action.payload;
          return newState;
       }
       default: return newState;
@@ -313,7 +346,31 @@ const shippingZonesReducer = (state = [],action)=>{
       }break;
       case apiRequestActionTypes.STORESETTING$SHIPPING$SHIPPINGZONE_EDIT_OK : {
          let shippingZone = newState.find( sz => sz._id === action.payload._id);
+         if(shippingZone){
+            Object.assign(shippingZone, action.payload);
+         }
+         return newState;
+      }
+      case apiRequestActionTypes.STORESETTING$SHIPPING$SHIPPINGZONE_DELETE_OK : {
+         let i = newState.findIndex( sz => sz._id === action.payload._id);
+         if(i !== -1){
+            newState.splice(i,1);
+         }
+         return newState;
+      }
+      case apiRequestActionTypes.STORESETTING$SHIPPING$SHIPPINGZONE$SHIPPINGMETHOD_ADD_OK : {
+         let shippingZone = newState.find( sz => sz._id === action.payload._id);
          Object.assign(shippingZone, action.payload);
+         console.log(shippingZone);
+         console.log(newState);
+         return newState;
+      }
+      case apiRequestActionTypes.STORESETTING$SHIPPING$SHIPPINGZONE$SHIPPINGMETHOD_DELETE_OK : {
+         let shippingZone = newState.find( sz => sz._id === action.payload._id);
+         if(shippingZone){
+            Object.assign(shippingZone, action.payload);
+         }
+         return newState;
       }break;
       case apiRequestActionTypes.STORESETTING$SHIPPING$SHIPPINGZONE_LIST_OK : {
          return  action.payload;
@@ -328,6 +385,20 @@ const psgcReducer = (state = {}, action)=>{
    }
 }
 
+const identityReducer = ( identity = null, action)=>{
+   switch(action.type){
+      case "AUTH$LOGIN_EXEC_OK":{
+         return action.payload;
+      }
+      case "AUTH$LOGOUT_EXEC_OK":{
+         return null;
+      }
+      case "AUTH$AUTHENTICATE_EXEC_OK":{
+         return action.payload;
+      }
+   }
+   return identity;
+}
 
 /**
  * Root Reducer
@@ -342,12 +413,18 @@ export default (state, action)=>{
       // return newState;
    }
 
+   // if(action.type === 'AUTH$LOGIN_EXEC_OK'){
+   //    console.log('LoginOk',action.payload);
+   //    newState = { ...newState , identity: action.payload }
+   // }
+
    return { 
       ...newState,
       lastAction: action.type, 
       lastActionPayload: action.payload, 
       lastActionMessage: (action.payload || {}).message,
       lastActionError: (action.payload || {}).error, 
+      identity: identityReducer(state.identity,action),
       apis: apisReducer(state.apis,action),
       roles: rolesReducer(state.roles,action),
       employees: employeesReducer(state.employees,action),

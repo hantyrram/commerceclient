@@ -1,0 +1,72 @@
+
+
+
+#admin-page{
+   display: grid;
+   grid-template-columns: 1fr 4fr;
+   grid-template-areas:"header header" "sidenav main";
+   max-width: 100vw;
+}
+
+.page-section-header{
+   grid-area:header;
+   min-height: 3em;
+   display: grid;
+   grid-template-areas:"left right";
+   background-color: var(--shade-primary-zero);
+}
+
+.page-section-header-left{
+   display: flex;
+   grid-area: left;
+}
+.page-section-header-right{
+   display: flex;
+   grid-area: right;
+   justify-content: flex-end;
+}
+
+.page-section-header-right .flex-item{
+   margin:0 .5em 0 .5em;
+}
+
+.page-section-sidenav{
+   grid-area:sidenav;
+   min-width: 220px;
+   min-height: 100vh;
+   background-color: var(--shade-primary-one);
+   color: var(--forecolor-primary-one) !important;
+}
+
+.page-section-sidenav a{
+   color: var(--forecolor-primary-one) !important;
+}
+
+/*
+* Override :focused style of the MuiTreeItem
+*/
+
+/* .page-section-sidenav .MuiTreeItem-root:focus > .MuiTreeItem-content {
+   background-color:#025069;
+} */
+
+
+.page-section-main{
+   grid-area:main;      
+}
+
+#logout-btn{
+   border: none;
+   background-color: inherit;
+   text-decoration: none;
+   color: #a20909;
+   letter-spacing: 1.5px;
+   cursor: default;
+   padding: .5em;
+}
+
+#logout-btn:hover{
+   background-color: var(--hover-background-color);
+}
+
+

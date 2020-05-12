@@ -82,8 +82,6 @@ export default function useApiRequest(requestType, dispatch, onBeforeDispatch = 
    return async function({params,payload,query} = {}){
       
       let type  = requestTypes[requestType];
-      console.log('useApiRequest params',params);
-      console.log('useApiRequest payload',payload);
       if(!type){
          emit('error',{type:'CLIENT_ERROR',text:'Unsupported Api Request Type. Contact Administrator.'});
          return;
@@ -130,12 +128,13 @@ export default function useApiRequest(requestType, dispatch, onBeforeDispatch = 
             axiosResponse = await axios[requestMethod](requestPath);
          }
 
-         let { data } = axiosResponse;     
+         let { data } = axiosResponse;    
+         
+         console.log('Axios Response', axiosResponse);
          
          if(axiosResponse.status >= 200 && axiosResponse.status < 300){ // && data.ok will not work on psgc data,raw data
             let modPayload = onBeforeDispatch({requestParams: params, requestPayload: payload,responseData: data}); //pass back the original params & payload
             
-            console.log(data);
             if(dispatch && typeof(dispatch) === 'function'){
                dispatch({type: `${type}_OK`, payload: modPayload });
             }
@@ -150,9 +149,10 @@ export default function useApiRequest(requestType, dispatch, onBeforeDispatch = 
          emit('error',data.error);
          return data.error;
       } catch (error) {
-       
-         if(error.response && error.response.data){
+         console.log(error);
+         if(error.response && error.response.data && error.response.data.error){
               //error.response.data.error = actual server generated error object 
+             
                dispatch && typeof(dispatch) === 'function' ? 
                   dispatch({type:'CLIENT_ERROR',text: error.response.data.error.text || 'Axios Error!'}) 
                :null;

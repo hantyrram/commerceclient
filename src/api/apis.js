@@ -4,12 +4,14 @@
 
 export default {
    AUTH$LOGIN_EXEC: 'post:/apiv1/auth/login',
-   AUTH$LOGOUT_EXEC: 'get:/apiv1/auth/logout',
+   AUTH$LOGOUT_EXEC: 'post:/apiv1/auth/logout',
+   AUTH$AUTHENTICATE_EXEC: 'post:/apiv1/auth/authenticate',
    API_LIST: `get:/apiv1/apis`,
    EMPLOYEE_LIST: 'get:/apiv1/employees',
    EMPLOYEE_ADD: 'post:/apiv1/employees/empid_manual',
    EMPLOYEE_EDIT: 'patch:/apiv1/employees/:employeeId',
    EMPLOYEE$PHOTO_EDIT: 'post:/apiv1/employees/:employeeId/photo',
+   EMPLOYEE$PHOTO_READ: 'get:/apiv1/employees/:employeeId/photo',
    EMPLOYEE_READ: 'get:/apiv1/employees/:employeeId',
    EMPLOYEE_VERIFY: 'post:/apiv1/employees/verify',
    USERACCOUNT_LIST: 'get:/apiv1/useraccounts',
@@ -19,12 +21,14 @@ export default {
    USERACCOUNT$ROLES_LIST: 'get:/apiv1/useraccounts/:useraccountId/roles',
    USERACCOUNT$ROLES_ADD:'post:/apiv1/useraccounts/:username/roles',
    USERACCOUNT$ROLES_DELETE: 'delete:/apiv1/useraccounts/:username/roles/:roleId',
-   PERMISSION_LIST: 'get:/apiv1/permissions',
+   PERMISSION_LIST: 'get:/apiv1/permissions',   
    PRODUCT_LIST: 'get:/apiv1/products',
    PRODUCT_CREATE: 'post:/apiv1/products',
    PRODUCT_READ: 'get:/apiv1/products/:productId',
    PRODUCT_DELETE: 'delete:/apiv1/products/:productId',
    PRODUCT_UPDATE: 'patch:/apiv1/products/:productId',
+   PRODUCT$IMAGES_ADD: 'post:/apiv1/products/:_id/images',
+   PRODUCT$IMAGES_DELETE: 'delete:/apiv1/products/:product_id/images/:_id',
    PRODUCTCATEGORY_LIST: 'get:/apiv1/productcategories',
    PRODUCTCATEGORY_CREATE: 'post:/apiv1/productcategories',
    PRODUCTCATEGORY_DELETE: 'delete:/apiv1/productcategories/:productcategoryId',
@@ -53,5 +57,10 @@ export default {
    STORESETTING$SHIPPING$SHIPPINGZONE_LIST: 'get:/apiv1/storesettings/shipping/shippingzones',
    STORESETTING$SHIPPING$SHIPPINGZONE_ADD: 'post:/apiv1/storesettings/shipping/shippingzones',
    STORESETTING$SHIPPING$SHIPPINGZONE_EDIT: 'put:/apiv1/storesettings/shipping/shippingzones/:shippingZoneId',
+   STORESETTING$SHIPPING$SHIPPINGZONE_DELETE: 'delete:/apiv1/storesettings/shipping/shippingzones/:_id',
+   STORESETTING$SHIPPING$SHIPPINGZONE$SHIPPINGMETHOD_ADD: 'patch:/apiv1/storesettings/shipping/shippingzones/:shippingZoneId/shippingmethods',
+   STORESETTING$SHIPPING$SHIPPINGZONE$SHIPPINGMETHOD_DELETE: 'delete:/apiv1/storesettings/shipping/shippingzones/:shippingZoneId/shippingmethods/:_name',
    STORESETTING$SHIPPING$SHIPPINGORIGIN_EDIT: 'patch:/apiv1/storesettings/shipping/shippingorigin',
+   SEARCH_EXEC: 'get:/apiv1/search'
+   //search?resource=product,key=slug,slug=abc,limit=1
 }

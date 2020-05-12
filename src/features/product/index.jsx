@@ -10,6 +10,7 @@ function Main(props){
       </div>
          <List {...props}/>
       </div>
+           
    )
 }
 

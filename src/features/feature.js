@@ -97,10 +97,12 @@ export default (Component,options)=>{
       },[])
 
       useEffect(()=>{
+         console.log(window.location.pathname);
          setMessage(null);
       },[window.location.pathname]);
 
       useEffect(()=>{
+         console.log(window.location.pathname);
          setError(null);
       },[window.location.pathname]);
 

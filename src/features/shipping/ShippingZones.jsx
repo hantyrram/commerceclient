@@ -1,11 +1,13 @@
-import React, { useEffect,useState } from 'react';
+import React, { useEffect,useState  } from 'react';
+
 import useAppState from 'appstore/useAppState';
 import useApiRequest from 'api/useApiRequest';
-import useForm from 'hooks/useForm';
-import Button from '@material-ui/core/Button';
-import AddIcon from '@material-ui/icons/Add';
-import {makeStyles} from '@material-ui/core/styles';
 import ActiveTable from 'components/ActiveTable';
+import { makeStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined';
+import AddIcon from '@material-ui/icons/Add';
+import useForm from 'hooks/useForm';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -13,23 +15,9 @@ import DialogContent from '@material-ui/core/DialogContent';
 import shippingMethods from './shippingMethods';
 import Form from 'components/Form';
 
-const useAddShippingBtnStyle = makeStyles({
-   root:{
-      textTransform:"none",
-      fontWeight:"unset",
-      lineHeight:"unset",
-      margin: "1em",
-      '&:hover':{
-         fontWeight:600
-      }
-   },
-   contained: {
-      backgroundColor:"#f3d1db",
-      color: "#444344"
-   }
- });
 
 function AddShippingMethodDialog({open,cancelHandler,confirmHandler}){
+ 
    const { 
       values, 
       errors, 
@@ -93,8 +81,24 @@ function AddShippingMethodDialog({open,cancelHandler,confirmHandler}){
    )
 }
 
-export function ShippingZoneForm({data}){
-   
+export function ShippingZoneForm(props){
+   let { data } = props;
+   const useAddShippingBtnStyle = makeStyles({
+      root:{
+         textTransform:"none",
+         fontWeight:"unset",
+         lineHeight:"unset",
+         margin: "1em",
+         '&:hover':{
+            fontWeight:600
+         }
+      },
+      contained: {
+         backgroundColor:"#f3d1db",
+         color: "#444344"
+      }
+    });
+  
    const addShippingBtnStyle = useAddShippingBtnStyle();
    let {dispatch} = useAppState();
 
@@ -105,6 +109,7 @@ export function ShippingZoneForm({data}){
    const islandGroups = ['Luzon','Visayas','Mindanao'];
    const [psgc,setPsgc] = useState({});
    const [openAddShippingMethodDialog,setOpenAddShippingMethodDialog] = useState(false);
+   const [closeForm,setCloseForm] = useState(false);
 
    //region type identifies the specifity of the zone's location, e.g. if both phlIslandGroup & province 
    //has values, regionType is equal to province since it is more specific, this helps in identifying,
@@ -203,13 +208,11 @@ export function ShippingZoneForm({data}){
       setFormFieldValue(newData);
    },[ data && data._id])
 
-   
-   
 
 
    return(
       // <Form action="" onSubmit = {onSubmit} className="grid-form padded bordered">
-      <Form action="" closeable onClose={} onSubmit={onSubmit}>
+      <Form action="" closeable onClose={props.onClose} onSubmit={onSubmit} title="Shipping Zone">
          <input type="hidden" name="region" value={values.region} onChange={onChangeIntercept}/>
          <input type="hidden" name="regionType" value={values.regionType} onChange={onChangeIntercept}/>
          <div className="form-control">
@@ -297,5 +300,130 @@ export function ShippingZoneForm({data}){
             confirmHandler={addShippingMethodHandler}
          />
       </Form>
+   )
+}
+
+
+export default function ShippingZones(props){
+   
+   const useFormCloseBtnStyle = makeStyles({
+      root: {
+         fontWeight:"unset",
+         lineHeight:"unset",
+         textTransform:"unset",
+         "&hover": {
+            hover: {
+               fontWeight: 600
+            }
+         }
+      },
+      outlined: {
+       borderBottom: "none",
+       borderColor:"var(--border-and-line-color)"
+   
+      }
+    });
+ 
+    const useAddShippingZoneBtnStyle = makeStyles({
+      root: {
+         fontWeight:"unset",
+         lineHeight:"unset",
+         textTransform:"unset",
+         "&hover": {
+            hover: {
+               fontWeight: 600
+            }
+         }
+      }
+   })
+   
+
+   const { getAppState,dispatch } = useAppState();
+   const { shippingZones } = getAppState();
+   const [selectedShippingZone,setSelectedShippingZone] = useState(null);
+   const getShippingZones = useApiRequest('STORESETTING$SHIPPING$SHIPPINGZONE_LIST',dispatch);
+   const deleteShippingZone = useApiRequest("STORESETTING$SHIPPING$SHIPPINGZONE_DELETE",dispatch);
+   const formCloseBtnClasses = useFormCloseBtnStyle();
+   const formAddShippingBtnClasses = useAddShippingZoneBtnStyle();
+   
+   useEffect(()=>{//fetch shipping zones 
+      getShippingZones();
+   },[]);
+
+   return(
+      <div id="shippingzones-context" className="feature-context">
+         <div className="feature-context-title">
+            Shipping Zones
+            {/* <div style={{minWidth: "100%",textAlign:"left"}}>
+               
+            </div> */}
+            <Button size="small" color="primary" 
+               variant="contained" classes={formAddShippingBtnClasses} 
+                  startIcon={<AddIcon />} 
+                     onClick={
+                           e => {
+                              if(selectedShippingZone === null){ //form not visible
+                                 setSelectedShippingZone({});//display
+                              }else{
+                                 setSelectedShippingZone(null);//toggle hide
+                              }
+                           } 
+                        }>
+                  Add Shipping Zone
+            </Button>
+         </div>
+         
+         {
+            selectedShippingZone !== null?
+            <div>
+               <div style={{minWidth: "100%",textAlign:"right"}}>
+                  <Button 
+                     startIcon={<CloseOutlinedIcon fontSize="small" color="secondary"/>} 
+                        variant="outlined" classes={{...formCloseBtnClasses}} 
+                           onClick={
+                              e => {
+                                 setSelectedShippingZone(null);//toggle hide
+                              }
+                            }>
+                     close
+                  </Button>
+               </div>
+               {/* always retrieve the data from shippingZones, in order to retrieve the fresh data
+                  e.g. in order to get the updated shipping methods of the shipping zone 
+               */}
+               <ShippingZoneForm 
+                     data={shippingZones.find(sz=> sz._id === selectedShippingZone._id)}
+                     onClose={ e => setSelectedShippingZone(null) }
+               />
+            </div>
+            :null
+         }
+         <br />
+         <ActiveTable 
+               columnHeaders={
+                  [
+                     {zoneName: 'Zone Name'},
+                     {region: 'Region'}, //ui generated data
+                     {regionType: 'Region Type'},
+                  ]
+               }
+               hidden={['_id','country','phlIslandGroup','province']}
+               data={
+                  shippingZones.map( s => {
+                     let region = s.country;
+                     if(s.phlIslandGroup){
+                        region += `, ${s.phlIslandGroup}`;
+                     }
+                     if(s.province){
+                        region += `, ${s.province}`;
+                     }
+                     return { ...s, region} //region = concat of country,phlIslandGroup,province
+                  })
+               } 
+
+               onRowClick = { rowdata => setSelectedShippingZone(rowdata) }
+               onRowDelete = { rowdata => deleteShippingZone({ params: { _id: rowdata._id } }) }
+            />
+      </div>
    )
 }

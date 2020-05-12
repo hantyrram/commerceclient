@@ -8,11 +8,18 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
+import {makeStyles} from '@material-ui/core';
 import useForm from 'hooks/useForm';
 
+const useChipStyle = makeStyles({
+   root: {
+      width: "fit-content",
+      marginLeft: "1em"
+   }
+})
 
 export function ProductForm({ product }){
-
+   const chipClasses = useChipStyle();
    let { getAppState, dispatch } = useAppState();
    let { productCategories } = getAppState();
    let fetchProductCategories = useApiRequest('PRODUCTCATEGORY_LIST',dispatch);
@@ -67,7 +74,12 @@ export function ProductForm({ product }){
    },[])
 
    return(
-      <form id="product-add" action="#" onSubmit={onSubmit} className="grid-form">   
+     
+      <div className="feature-context">
+         <div className="feature-context-title">
+            Basic Product Info
+         </div>
+         <form id="product-add" action="#" onSubmit={onSubmit} className="grid-form">   
             <div className="form-control">
                <span>
                   <a href="#" onClick={selectCategoryModalTriggerHandler} >
@@ -77,10 +89,10 @@ export function ProductForm({ product }){
                {/* <span> */}
                   {/* using hidden input element to be able to utilize onChange of useForm */}
                   {/* Chip is used as some kind of proxy for the ui */}
-                  <input ref={categoryRef} type="hidden" name={values.category} /> 
+                  <input ref={categoryRef} type="hidden" name={values.category} className="form-control-input"/> 
                   {
                       values.category ? 
-                        <Chip size="small" label={values.category.name} onDelete={removeCategory} /> 
+                        <Chip size="small" className={chipClasses.root} label={values.category.name} onDelete={removeCategory} /> 
                      : null
                   }
                {/* </span> */}
@@ -88,21 +100,22 @@ export function ProductForm({ product }){
             </div>   
             <div className="form-control">
                <label htmlFor="type">Product Type</label>
-               <select name="type" id="product-type" value={values.type} onChange={onChange}>
+               <select name="type" id="product-type" value={values.type} onChange={onChange} className="form-control-input">
                   <option value="standard">Standard</option>
                   <option value="bundled">Bundled</option>
                </select>
             </div >
             <div className="form-control">
                <label htmlFor="name">Product Name</label>
-               <input type="text" name="name" id="product-name" value={values.name} onChange={productNameChangeHandler} minLength="4"/>                  
+               <input type="text" name="name" id="product-name" value={values.name} onChange={productNameChangeHandler} minLength="4" className="form-control-input"/>                  
                <label className="field-description">The display name of the product</label>
             </div>
             <div className="form-control">
                <label htmlFor="name">Slug</label>
                <input type="text" name="slug" id="product-slug" 
                   value={values.slug || values.name.replace(/\s/g,'-')} 
-                  onChange={onChange} minLength="4"
+                  onChange={onChange} minLength="4" 
+                  className="form-control-input"
                />                  
                <label className="field-description">URL friendly name</label>
             </div>
@@ -113,7 +126,7 @@ export function ProductForm({ product }){
             </div> */}
             <div className="form-control">
                <label htmlFor="itemCondition">Item Condition</label>
-               <select name="itemCondition" id="product-stockstatus" value={values.itemCondition} onChange={onChange}>
+               <select name="itemCondition" id="product-stockstatus" value={values.itemCondition} onChange={onChange} className="form-control-input">
                   <option value="new">New</option>
                   <option value="used">Used</option>
                </select>
@@ -122,7 +135,7 @@ export function ProductForm({ product }){
             <div className="form-control">
                <label htmlFor="description">Product Description</label>
                <textarea style={{minHeight:"10em",maxWidth:"100%"}}type="text" 
-                  name="description" id="product-description" value={values.description} onChange={onChange} />
+                  name="description" id="product-description" value={values.description} onChange={onChange} className="form-control-input"/>
                <label className="field-description">This information will be displayed alongside the product on the customers screen.</label>
             </div>      
             {/* <div className="form-control">
@@ -135,7 +148,7 @@ export function ProductForm({ product }){
             </div> */}
             <div className="form-control">
                <label htmlFor="netCost">Net Cost</label>
-               <input type="text" name="netCost" value={values.netCost} onChange={onChange} />
+               <input type="text" name="netCost" value={values.netCost} onChange={onChange} className="form-control-input"/>
                <label className="field-description">The cost of acquiring the product</label>
             </div>      
             
@@ -161,7 +174,7 @@ export function ProductForm({ product }){
             
             </Dialog>
       </form>
-            
+      </div>
    )
 }
 
@@ -178,24 +191,29 @@ export function PricingForm({ product }){
       });
    };
 
-   let {values,onSubmit,onChange,errors} = useForm({initialValues: product.price, onSubmitCallback});
+   let {values,onSubmit,onChange,errors} = useForm({initialValues: product.price || {}, onSubmitCallback});
 
 
    return(
-      <form id="product-price-edit" action="#" onSubmit={onSubmit} className="grid-form">   
-            <h3>Price For : {product.name}</h3>
-            <div className="form-control">
-               <label htmlFor="regular">Regular Price</label>
-               <input type="text" name="regular" id="price-regular" value={values.regular} onChange={onChange} />                  
-            </div >
-            <div className="form-control">
-               <label htmlFor="discounted">Discounted Price</label>
-               <input type="text" name="discounted" id="price-discounted" value={values.discounted} onChange={onChange}/>                  
-               <label className="field-description">Will be shown as the current price if set </label>
-            </div>
-            <Button type="submit" variant="contained">Set Price</Button>
-            
-      </form>
+      <div className="feature-context">
+         <div className="feature-context-title">
+         Pricing : {product.name}
+         </div>
+         <form id="product-price-edit" action="#" onSubmit={onSubmit} className="grid-form">   
+               <div className="form-control">
+                  <label htmlFor="regular">Regular Price</label>
+                  <input type="text" name="regular" id="price-regular" value={values.regular} onChange={onChange} />                  
+               </div >
+               <div className="form-control">
+                  <label htmlFor="discounted">Discounted Price</label>
+                  <input type="text" name="discounted" id="price-discounted" value={values.discounted} onChange={onChange}/>                  
+                  <label className="field-description">Will be shown as the current price if set </label>
+               </div>
+               <Button type="submit" variant="contained">Set Price</Button>
+               
+         </form>
+      </div>
+
             
    )
 }
@@ -275,29 +293,38 @@ export function ProductInventoryForm({ product }){
 
    
    return(
-      <form id="product-inventory-edit" action="#" onSubmit={onSubmit} className="grid-form">   
-            <h3>Inventory Of : {product.name}</h3>
-            <div className="form-control" style={{maxWidth:"50%"}}>
+      <div className="feature-context">
+         <div className="feature-context-title">
+            Inventory : {product.name}
+         </div>
+         <form id="product-inventory-edit" action="#" onSubmit={onSubmit} className="grid-form">   
+            <div className="form-control" >
                <label htmlFor="InStock" >Stock Status</label>
-               <span style={{display:'flex'}}>
-                  <input ref={outOfStockRef} type="radio" name="stockStatus" id="inventory-outofstock" value={OUT_OF_STOCK} onChange={inStockChangeHandler} /> Out Of Stock                 
-               </span>               
-               <span style={{display:'flex'}}>
-                  <input ref={inStockRef} type="radio" name="stockStatus" id="inventory-instock"  value={IN_STOCK} onChange={inStockChangeHandler} /> In Stock                  
-               </span>
-               
+               <div className="form-control-input">
+                  <span style={{display: "flex",alignItems:"center"}}>
+                     <input ref={outOfStockRef} type="radio" name="stockStatus" 
+                        id="inventory-outofstock" value={OUT_OF_STOCK} onChange={inStockChangeHandler} /> Out Of Stock                 
+                  </span>
+                  <span style={{display: "flex",alignItems:"center"}}>
+                     <input ref={inStockRef} type="radio" name="stockStatus" 
+                        id="inventory-instock"  value={IN_STOCK} onChange={inStockChangeHandler} /> In Stock                  
+                  </span>
+                  
+               </div>
             </div >
             {
                stockStatus === IN_STOCK ? 
                <React.Fragment>
                      <div className="form-control">
                         <label htmlFor="quantity">Available Quantity</label>
-                        <input type="number" name="quantity" id="inventory-quantity" value={inventory.quantity} min="1" onChange={onChange} />                  
+                           <input type="number" name="quantity" id="inventory-quantity" 
+                              value={inventory.quantity} min="1" onChange={onChange} className="form-control-input"/>                  
                         <label className="field-description">The current available quantity </label>
                      </div>
                      <div className="form-control">
                         <label htmlFor="alertLevel">Alert Level</label>
-                        <input type="number" name="alertLevel" id="inventory-alertlevel" value={inventory.alertLevel} onChange={onChange}/>                  
+                        <input type="number" name="alertLevel" id="inventory-alertlevel" 
+                           value={inventory.alertLevel} onChange={onChange} className="form-control-input"/>                  
                         <label className="field-description">The minimum number of quantity to trigger alert</label>
                      </div>
                </React.Fragment>
@@ -317,21 +344,26 @@ export function ProductInventoryForm({ product }){
                      </div>
                </div> */}
         
-            <div className="form-control" style={{maxWidth:"50%"}}>
+            <div className="form-control" >
                <label htmlFor="outOfStockOption" >Out Of Stock Options</label>
-               <span style={{display:'flex'}}>
-                  <input type="radio" name="outOfStockOption" id="inventory-outofstockoption"  value={OUT_OF_STOCK_OPTIONS.DisplayAndAllowOrders} onChange={onChange} /> Display Product and Allow Orders                
-               </span>
-               <span style={{display:'flex'}}>
-                  <input  type="radio" name="outOfStockOption" id="inventory-outofstockoption" value={OUT_OF_STOCK_OPTIONS.DisplayButDontAllowOrders} onChange={onChange} /> Display But Don't Allow Orders
-               </span>       
-               <span style={{display:'flex'}}>
-                  <input  type="radio" name="outOfStockOption" id="inventory-outofstockoption" value={OUT_OF_STOCK_OPTIONS.DoNotDisplay} onChange={onChange} /> Don't Display          
-               </span>            
+               <div className="form-control-input">
+                  <span style={{display: "flex",alignItems:"center"}}>
+                     <input type="radio" name="outOfStockOption" id="inventory-outofstockoption"  value={OUT_OF_STOCK_OPTIONS.DisplayAndAllowOrders} onChange={onChange} /> Display Product and Allow Orders                
+                  </span>
+                  <span style={{display: "flex",alignItems:"center"}}>
+                     <input type="radio" name="outOfStockOption" id="inventory-outofstockoption" value={OUT_OF_STOCK_OPTIONS.DisplayButDontAllowOrders} onChange={onChange} /> Display But Don't Allow Orders
+                  </span>
+                  <span style={{display: "flex",alignItems:"center"}}>
+                     <input type="radio" name="outOfStockOption" id="inventory-outofstockoption" value={OUT_OF_STOCK_OPTIONS.DoNotDisplay} onChange={onChange} /> Don't Display          
+                  </span>
+               </div>
             </div >
-            <Button type="submit" variant="contained">Save</Button>
-            
+            <div className="form-control-action">
+               <Button type="submit" variant="contained">Save</Button>
+            </div>
       </form>
+      </div>
+     
             
    )
 }
@@ -351,24 +383,29 @@ export function ProductShippingForm({product}){
    //how to calculate the cost?
 
    return(
-      <form action="" onSubmit={onSubmit} className="grid-form">
-         <div className="form-control">
-            <label htmlFor="regular">Product Weight</label>
-            <input type="text" name="productWeight" id="price-regular" value={shipping.productWeight} onChange={onChange} />                  
-         </div >
-         <h4>Dimension</h4>
-         <div className="form-control">
-            <label htmlFor="regular">Product Height</label>
-            <input type="text" name="productHeight" id="price-regular" value={shipping.productWeight} onChange={onChange} />                  
-         </div >
-         <div className="form-control">
-            <label htmlFor="regular">Product Length</label>
-            <input type="text" name="productLength" id="price-regular" value={shipping.productLength} onChange={onChange} />                  
-         </div >
-         <div className="form-control">
-            <label htmlFor="regular">Product Width</label>
-            <input type="text" name="productWidth" id="price-regular" value={shipping.productWidth} onChange={onChange} />                  
-         </div >
-      </form>
+      <div className="feature-context">
+         <div className="feature-context-title">
+            Shipping : {product.name}
+         </div>
+         <form action="" onSubmit={onSubmit} className="grid-form">
+            <div className="form-control">
+               <label htmlFor="regular">Product Weight</label>
+               <input type="text" name="productWeight" id="price-regular" value={shipping.productWeight} onChange={onChange} />                  
+            </div >
+            <h4>Dimension</h4>
+            <div className="form-control">
+               <label htmlFor="regular">Product Height</label>
+               <input type="text" name="productHeight" id="price-regular" value={shipping.productWeight} onChange={onChange} />                  
+            </div >
+            <div className="form-control">
+               <label htmlFor="regular">Product Length</label>
+               <input type="text" name="productLength" id="price-regular" value={shipping.productLength} onChange={onChange} />                  
+            </div >
+            <div className="form-control">
+               <label htmlFor="regular">Product Width</label>
+               <input type="text" name="productWidth" id="price-regular" value={shipping.productWidth} onChange={onChange} />                  
+            </div >
+         </form>
+      </div>
    )
 }

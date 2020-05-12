@@ -4,6 +4,7 @@ import Feature from 'components/Feature';
 import FeatureShortcutLink from 'components/FeatureShortcutLink';
 import useAppStore from 'hooks/useAppStore';
 import { useEmployee_Edit,useEmployee_Fetch,useEmployee$Photo_Edit } from 'actions/Employee';
+import useApiRequest from 'api/useApiRequest';
 import feature from '../../feature';
 import Avatar from 'components/Avatar';
 import axios from 'axios';
@@ -39,9 +40,12 @@ let formContainerStyle = {
 
 function EmployeeEdit({match}){
    let employeeAvatarOverlayRef = useRef({});
-   let fetchEmployee = useEmployee_Fetch();
-   let editEmployee = useEmployee_Edit();
-   let uploadEmployeePhoto = useEmployee$Photo_Edit();
+
+   // let fetchEmployee = useEmployee_Fetch();
+   // let editEmployee = useEmployee_Edit();
+   // let uploadEmployeePhoto = useEmployee$Photo_Edit();
+   let fetchEmployee = useApiRequest("EMPLOYEE_READ",dispatch);
+
    let {getAppState} = useAppStore();
    let employeeFromStore = (getAppState().employees||[]).find(emp=> emp._id === match.params.id);
    let [employee,setEmployee] = useState(employeeFromStore);
