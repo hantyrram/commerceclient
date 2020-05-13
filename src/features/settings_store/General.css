@@ -1,0 +1,18 @@
+
+.feature-context{
+   display:grid;
+   grid-template-areas: 'feature-context-header-section' 'feature-context-main-section';
+}
+
+.feature-context-header-section{
+   grid-area: feature-context-header-section;
+   min-width: 100%;
+}
+
+.feature-context-main-section{
+   min-width: 100%;
+   grid-area: feature-context-main-section;
+   display:wrap;
+   justify-content: center;
+}
+

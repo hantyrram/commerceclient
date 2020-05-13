@@ -1,17 +1,17 @@
 import React, { Component, useContext, useEffect } from 'react';
-import axios from '../../axios';
+import axios from 'axios';
 import getResources from 'action_creators/getResources';
 import EBrowser from 'components/EBrowser';
-import StateContext from 'contexts/StateContext';
+import useAppStore from 'hooks/useAppStore';
 import resourceUISchema from 'uischemas/resource';
-import feature from 'features/feature';
+import feature from '../feature';
 import FeatureShortcutLink from 'components/FeatureShortcutLink';
 
 function Resources(props){
      
-   let { getStore,dispatch } = useContext(StateContext);
+   let { getAppState,dispatch } = useAppStore();
    
-   let { resources } = getStore() || [];
+   let { resources } = getAppState() || [];
 
    useEffect(function(){
       (async ()=>{

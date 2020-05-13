@@ -8,7 +8,6 @@
 let subscribers = [];
 
 export const emit = (actionName,artifact)=>{
- 
  let actionSubscribers = subscribers.filter(function(actionSubscriber){
     return actionSubscriber.actionName === actionName;
  });

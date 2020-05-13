@@ -1,94 +1,69 @@
 //HOC, wraps all features
-import React, { useState,useContext, useEffect } from 'react';
-import Styled from 'styled-components';
-import StateContext from 'contexts/StateContext';
-import { subscribe } from '../actionEvent';
+import React, { useState, useEffect } from 'react';
+import { subscribe } from 'actionEvent';
 
-const Wrapper = Styled.div`
- min-height: 100%;
- min-width:100%;
- height:inherit;
- background-color: white;
-`
 
-const Header = Styled.div`
-   height: 3em;
-   display: flex;
-   flex-direction: row;
-   justify-content: space-between;
-   align-items: center;
-   padding: 0 .5em 0 .5em;
-   background-color: #7f4abe;
-   color: #f2ebeb;
-`
-const Content = Styled.div`
-  padding: 1em;
-`
-const FeatureShortcuts = Styled.div`
-
-`
-const AlertBox = Styled.div`
-   border: 1px solid grey;
-`
-/**
- * A Feature wrapper.
- */
-function Feature(props){
-   return (
-      <Wrapper>
-         <Header>
-            {props.title}
-            {props.group} {props.feature ? `/ ${props.feature}` : null}
-            <FeatureShortcuts>{props.featureShortcuts ? props.featureShortcuts.map(FS=>FS):null}</FeatureShortcuts>
-         </Header>
-         <Content>
-         {props.children}
-         </Content>
-      </Wrapper>
-   )
+let style = {
+   margin: "1em",
+   padding: ".5em"
 }
 
 const ErrorBox = ({error})=>{
 
-   // let [error,setError] = useState(null);
-
-   // useEffect(()=>{
-   //    let unsubsrcibe = subscribe('error',function(err){
-   //       console.log(err);
-   //       setError(err);
-   //    });
-   //    return unsubsrcibe;
-   // },[])
-
+   let errStyle = {
+      ...style,
+      padding: ".5em",
+      marginBottom: ".5em",
+      backgroundColor: "#ffd7dc",
+      color: "#790d0d"
+   }
+   console.log(error.text);
    return(
       error ? 
-      <div> {error.text} </div> : null
+      <div style={errStyle}> {error.text} </div> : null
    )
 }
 
 const MessageBox = ({message})=>{
 
-   // let [message,setMessage] = useState(null);
+   
+   let msgStyle = {
+      ...style,
+   }
 
-   // useEffect(()=>{
-   //    let unsubscribe = subscribe('message',function(msg){
-   //       setMessage(msg);
-   //    });
-
-   //    return unsubscribe;
-   // },[])
-
-
+   switch(message.type){
+      case 'SUCCESS': 
+      msgStyle = {
+            ...msgStyle, 
+            backgroundColor: "#cff1d0",
+            colort: "#024a0e"
+         }
+      break;
+      case 'WARNING': 
+      msgStyle = {
+            ...msgStyle, 
+            backgroundColor: "#f3dfca",
+            colort: "#63220e"
+         }
+      break;
+      default: {
+         msgStyle = {
+            ...msgStyle, 
+            backgroundColor: "#e1f7f9",
+            colort: "#0c4356"
+         }
+      }
+   }
 
    return(
       message ? 
-      <div> {message.text} </div> : null
+      <div style={msgStyle}> {message.text} </div> : null
    )
 }
 
 
 
-export default (FeatureComponent,options)=>{
+export default (Component,options)=>{
 
    return (props)=>{
 
@@ -96,39 +71,67 @@ export default (FeatureComponent,options)=>{
 
       let [error,setError] = useState(null);
 
+      let [pendingMsg,setPendingMsg] = useState(null); //create a spinner
+
       useEffect(()=>{
+         let unsubscribeToPending = subscribe('pending',function(pendingMsg){
+            setMessage(null);            
+            setError(null);
+         });
          let unsubscribeToMessage = subscribe('message',function(msg){
-            console.log(msg);
             setMessage(msg);
             setError(null);
          });
    
          let unsubsrcibeToError = subscribe('error',function(err){
-            console.log(err);
             setError(err);
             setMessage(null);
          });
 
          return ()=>{
+            unsubscribeToPending();
             unsubscribeToMessage();
             unsubsrcibeToError();
          };
 
       },[])
 
+      useEffect(()=>{
+         console.log(window.location.pathname);
+         setMessage(null);
+      },[window.location.pathname]);
+
+      useEffect(()=>{
+         console.log(window.location.pathname);
+         setError(null);
+      },[window.location.pathname]);
 
       return(
-         <Feature title={(options || {}).title} featureShortcuts={(options || {}).shortcutLinks}>
+         <div className="feature">            
+            {/* <div className={options && options.type === 'context'? `feature-header feature-context-header`: "feature-header feature-main-header"}> */}
+            <div className="feature-header">
+               {/* <div className={options && options.type === 'context'? `feature-title feature-context-title`: "feature-header feature-main-title"}>{options && options.title}</div> */}
+               <div className="feature-title">
+                  <div className="title">{options && options.title}</div>
+                  <div className="links">
+                     {
+                        options && options.links && options.links.map( link => <a href={link.path}>{link.label}</a>)
+                     }
+                  </div>
+               </div>
+              
+            </div>
             {
                message? <MessageBox message={message}/>: null
             }
             {
                error? <ErrorBox error={error}/> : null
             }
-            {/* <ErrorBox />
-            <MessageBox /> */}
-            <FeatureComponent {...props} />
-         </Feature>
+            <div className="feature-content">
+               <Component {...props}/>
+            </div>
+            
+         </div>
       )
    }
 }

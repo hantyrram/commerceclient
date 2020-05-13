@@ -1,7 +1,7 @@
 import React, { useState,useEffect } from 'react';
 import Feature from 'components/Feature';
 import FeatureShortcutLink from 'components/FeatureShortcutLink';
-import useAddEmployee from 'actions/useAddEmployee';
+import { useEmployee_Add } from 'actions/Employee';
 import feature from '../../feature';
 
 function EmployeeAdd(props){
@@ -14,7 +14,7 @@ function EmployeeAdd(props){
       country: 'Philippines'
    };
 
-   let addEmployee = useAddEmployee();
+   let addEmployee = useEmployee_Add();
 
    const [employee,setEmployee] = useState(initialFormState);
    

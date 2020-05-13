@@ -1,52 +1,256 @@
-.App {
-  text-align: center;
-}
+/* body{
+   font-family: Arial, Helvetica, sans-serif;
+   background-color: #e4e8ef;
+   min-height: 100vh;
+  } */
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 40vmin;
-}
+  /* page start */
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
 
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+  /* .page-section-header{
+      grid-area:header;
+      min-height: 3em;
+      display: grid;
+      grid-template-areas:"left right";
   }
-  to {
-    transform: rotate(360deg);
+
+  .page-section-header-left{
+      display: flex;
+      grid-area: left;
+   }
+  .page-section-header-right{
+      display: flex;
+      grid-area: right;
+      justify-content: flex-end;
+      white-space: 2em;
   }
-}
 
-/* div {
-  border-style:dotted;
-  border-color:orange;
-  border-width: 1px;
-} */
+  .page-section-sidenav{
+      grid-area:sidenav;
+      min-width: 220px;
+  }
 
-body{
-  background-color: #e7ebf2;
-  background-image: linear-gradient(to bottom right, #E9ECF1, #e9ecf0); 
-  font-size: .9em;
+  .page-section-main{
+      grid-area:main;      
+  } */
 
-}
-input, select {
-   color: #595555;
-}
+  /* page end */
 
-a {
-   text-decoration: none;
-}
+  .feature{
+      background-color:white;
+      box-shadow:-1px -1px 5px rgba(0,0,0, 0.20),1px 1px 5px rgba(0,0,0,.19);
+      padding-bottom: 1em;
+  }
+   .feature-header {
+      display: flex;
+      min-height: 3em;
+      align-items: center;
+      justify-content: space-between;
+      background-color: var(--shade-primary-ten);
+      color: black;
+      padding-left: .5em;
+      padding-right: .5em;
+  }
+
+  .feature-header .feature-title {
+      
+      display:grid;
+      min-width: 100%;
+      grid-template-columns: 1fr 1fr;
+      grid-template-areas: 'title links';
+  }
+
+  .feature-header .feature-title .title{
+      grid-area: title;
+   }
+
+   .feature-header .feature-title .links{
+      grid-area: links;
+      text-align: right;
+      color: #ffffffde !important;
+   }
+
+   .feature-header .feature-title .links a{
+      color: #ffffffde !important;
+      border: 1px solid  #ffffffde;
+      padding: .25em;
+      margin-left: 1em;
+   }
+
+   .feature-header .feature-title .links a:hover{
+      border: 1px solid red;
+      background-color: red;
+   }
+
+   .feature-main-header {
+      background-color: #1d1a38;
+   }
+
+  .feature-content{
+      margin:1em;
+      display:flex;
+      flex-wrap: wrap;
+      align-items: center;
+  }
+
+  .feature-context-wrapper{/* wraps the feature context actual content*/
+      /* consume all space of the feature content */
+      display: flex;
+      min-width: 100%;
+      /* context content centered when there is no context-menu */
+      justify-content: center; 
+  }
+
+  .feature-context-wrapper-main-section{
+     /* consume 80% to give space to the feature-context-menu */
+     min-width: 80%;
+     max-width: 80%;
+     justify-content: center;
+     margin-right: 1em;
+  }
+
+  .feature-context-wrapper-menu-section{ /* context menu wrapper section*/
+      margin-top: 1em;
+      max-width:20%;
+  }
+
+  .feature-context{
+     min-width: 100%;
+  }
+  .feature-context-title{
+      margin-bottom: 1em;
+      padding-bottom: .5em;
+      border-bottom: 1px solid #cfcfcf;
+      color: #676565;
+      font-weight: bold;
+      min-width: 100%;
+      display: flex;
+      justify-content: space-between;
+   }
+
+   .feature-context-title-separator{
+      min-width: 100%;
+      border-top-color: #efecec6b;
+   }
+
+  
+  .feature-context-main{
+   /* min-width: 80%; */
+   /* max-width: 80%; */
+      /* min-width: 100%; */
+  }
+
+   /* grid form */
+   .grid-form{
+      justify-content: center;
+   }
+
+   .padded{
+      padding: 2em;
+   }
+
+   .bordered{
+      border: 1px solid var(--border-and-line-color);
+   }
+
+   .grid-form h5{
+      margin: unset;
+   }
+   .grid-form .form-control{
+      display: grid;
+      grid-template-columns: .8fr 2fr;
+      grid-template-areas: 'label input' 'empty description' 'empty error';
+      margin-bottom: .25em;
+      align-items:center;
+   }
+
+  
+  .grid-form .form-control .form-control-label{
+      grid-area: label;
+      text-align: right;
+      margin-right: 1em;
+      align-self:center; 
+      color: #4e4e4e;
+      font-size: .9em;
+   }
+
+  .grid-form .form-control .form-control-input{ /* input,select container*/
+      box-sizing: border-box; /* somehow fixes select and input height uniformity*/
+      grid-area: input;
+      align-self:center; 
+      margin-left: 1em;
+      /* height: 2.5em; */
+      padding-left: .5em;
+   /* margin-bottom: .5em; */
+   
+  }
+  .grid-form input,select{
+      height: 2em;
+      border: .5px solid #c1bebe;
+   }
+
+  .grid-form .form-control-action{
+      display: flex;
+      justify-content: flex-end;
+   /* margin-bottom: .5em; */
+  }
+
+  .grid-form .form-control-action > *{
+      margin-left: 1em;
+
+   }
+
+  .grid-form .form-control .form-input-error{
+   grid-area: error;
+   margin-top: .5em;
+   margin-left: 1em;
+   font-size: .8em;
+   color:red;
+   padding-left: 1em;
+  }
+  .field-description{
+   grid-area: description;
+   margin-top: .5em;
+   font-size: .8em;
+   font-style: italic;
+   margin-left: 1.5em;
+  }
+
+  #page-login{
+     display:flex;
+     justify-content: center;
+     align-items: center;
+     min-height: 100vh;
+  }
+
+  #feature-login{
+     width: 50%;
+     height: 65%;
+     min-height: 65%;
+     border: 1px solid red;
+     margin-bottom: 5em;
+  }
+
+  /* #admin-page{
+      display: grid;
+      grid-template-columns: 1fr 4fr;
+      grid-template-areas:"header header" "sidenav main";
+      max-width: 100vw;
+   }
+
+  #logout-btn{
+      border: none;
+      background-color: inherit;
+      text-decoration: none;
+      color: #a20909;
+      letter-spacing: 1.5px;
+      cursor: default;
+      padding: .5em;
+  }
+
+  #logout-btn:hover{
+      background-color: var(--hover-background-color);
+   } */
+
+
+  

@@ -1,4 +1,4 @@
-import React, { useContext,useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 const Table = styled.table`
  border-collapse: collapse;

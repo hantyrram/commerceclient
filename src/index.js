@@ -1,41 +1,41 @@
-import React,{useReducer} from 'react';
-
+import React,{useReducer,useEffect} from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import './App.css';
-import StateContext from 'contexts/StateContext';
-import rootReducer from 'rootReducer';
-import App from 'App2';
-
-class Store{
-   constructor(){
-      this.identity = null;
-      this.authenticatedUser = null;
-      this.lastAction = {  type: 'INIT'  }
-   }
-
-   getHello(){
-      return 'hello';
-   }
-
-   getEmployeeById(id){
-      if(!this.employees || this.employees.length === 0) return null;
-      return this.employees.find(e => e._id === id);
-   }
-}
-
+import './Mui.css';
+import Store from 'appstore/AppStoreContext';
+import useAppStore,{ STORE_NAME } from 'appstore/useAppStore';
+import App from 'App';
+const Login = React.lazy(()=> import(/*webpackChunkName: "feature.auth.login" */'features/auth/Login'));
 
 const AppContainer = (props)=>{
-   let initialState = new Store();
+     
+   
+   const [state,dispatch] = useAppStore();
 
-   const [store,dispatch] = useReducer(rootReducer,initialState);
+   const getAppState = () => state;
 
-   const getStore = () => store;
+   useEffect(()=>{
+
+      window.onbeforeunload = (e)=>{    
+         // window.localStorage.removeItem(STORE_NAME);     
+         window.localStorage.setItem(STORE_NAME,JSON.stringify(state));
+         window.localStorage.setItem("LAST_PATH",window.location.pathname);
+      }
+
+   })
+
+   useEffect(()=>{
+      console.log('reloaded');
+      dispatch({type:'INIT',payload: JSON.parse(window.localStorage.getItem(STORE_NAME))});
+      // dispatch({type:'INIT',payload: {}});
+   },[]);
+
    
    return(
-      <StateContext.Provider value={{getStore, dispatch}}>
+      <Store.Provider value={{getAppState, dispatch}}>
          <App {...props}/>
-      </StateContext.Provider>
+      </Store.Provider>
    )
 }
 

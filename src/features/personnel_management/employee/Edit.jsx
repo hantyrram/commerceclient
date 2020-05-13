@@ -2,35 +2,56 @@ import React, { useContext, useState, useEffect, useRef } from 'react';
 import {Link} from 'react-router-dom';
 import Feature from 'components/Feature';
 import FeatureShortcutLink from 'components/FeatureShortcutLink';
-import StateContext from 'contexts/StateContext';
-import useFetchEmployee from 'actions/useFetchEmployee';
-import useEditEmployee from 'actions/useEditEmployee';
-import useEmployee$Photo_Edit from 'actions/useEmployee$Photo_Edit';
+import useAppStore from 'hooks/useAppStore';
+import { useEmployee_Edit,useEmployee_Fetch,useEmployee$Photo_Edit } from 'actions/Employee';
+import useApiRequest from 'api/useApiRequest';
 import feature from '../../feature';
 import Avatar from 'components/Avatar';
-import axios from '../../../axios';
+import axios from 'axios';
+import TextField from '@material-ui/core/TextField';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+
+
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles(theme => ({
+  root: {
+    '& .MuiTextField-root': {
+      margin: theme.spacing(1),
+      width: 200,
+    },
+  },
+}));
 
 let profilePicContainerStyle = {
    minWidth: "25%",
    justifyContent: "center",
-   display: "inline-block",
+   // display: "inline-block",
    verticalAlign: "top"
 }
 
 let formContainerStyle = {
-   display: "inline-block",
+   // display: "inline-block",
    minWidth: "75%"
 }
 
 function EmployeeEdit({match}){
    let employeeAvatarOverlayRef = useRef({});
-   let fetchEmployee = useFetchEmployee();
-   let editEmployee = useEditEmployee();
-   let uploadEmployeePhoto = useEmployee$Photo_Edit();
-   let {getStore} = useContext(StateContext);
-   let employeeFromStore = (getStore().employees||[]).find(emp=> emp._id === match.params.id);
+
+   // let fetchEmployee = useEmployee_Fetch();
+   // let editEmployee = useEmployee_Edit();
+   // let uploadEmployeePhoto = useEmployee$Photo_Edit();
+   let fetchEmployee = useApiRequest("EMPLOYEE_READ",dispatch);
+
+   let {getAppState} = useAppStore();
+   let employeeFromStore = (getAppState().employees||[]).find(emp=> emp._id === match.params.id);
    let [employee,setEmployee] = useState(employeeFromStore);
    let [employeePhotoURL,setEmployeePhotoURL] = useState((employee || {}).photoURL);  
+
+   let formClasses = useStyles();
    
    //always get the fresh copy
    useEffect( () => { fetchEmployee(match.params.id) } ,[match.params.id] );
@@ -95,129 +116,98 @@ function EmployeeEdit({match}){
 
 
    return(
-      <React.Fragment>
-         <div style={profilePicContainerStyle}>
-            {/* <div id="htcomp-employee-avatar" style={{position:"relative"}}>
-               <label id="employee-avatar">
-                  <img src={`/apiv1/employees/${employee._id}/photo`} alt="avatar" height="200" width="200" 
-                  style={{cursor:"pointer",position:"absolute",left:0,top:0,opacity:1}}/>
-               </label>
-               <label ref={employeeAvatarOverlayRef} id="employee-avatar-overlay" style={{
-                  justifyContent: "center",
-                  display:"flex",
-                  alignItems: "center",
-                  height: "200px",
-                  width: "200px",
-                  cursor: "pointer",
-                  position: "absolute",
-                  left:0,
-                  top:0,
-                  opacity: 0,
-                  zIndex: 3,
-                  backgroundColor: "rgba(210,205,205,.53)"
-
-               }} >
-                  <input type="file" name="employeeAvatar" hidden={true} onChange={employeePhotoChangeHandler}/>
-                  <b>Change Photo</b>
-               </label>
-            </div>  */}
-            {/* htcomp avatar end */}
-            {/* <Avatar imgURL={`/apiv1/employees/${employee._id}/photo`} photoChangeHandler={employeePhotoChangeHandler} /> */}
-            <Avatar imgURL={employee.photoURL || `/apiv1/employees/${employee._id}/photo`} photoChangeHandler={employeePhotoChangeHandler} />
-         </div>
-         <div style={formContainerStyle}>
-            <form action="#" onSubmit={formSubmitHandler}>
-               <h3>Employee Id: {employee.employeeId}</h3>
-               {/* <div>
-                  <label htmlFor="employeeId">Employee Id</label>
-                  <input type="text" name="employeeId" value={employee.employeeId} onChange={changeHandler} disabled/>
-               </div> */}
+      <div>
+         <Avatar imgURL={employee.photoURL || `/apiv1/employees/${employee._id}/photo`} photoChangeHandler={employeePhotoChangeHandler} />                               
+         <form className={formClasses.root} action="#" onSubmit={formSubmitHandler}>
+            <h3>Employee Id: {employee.employeeId}</h3>
                <h3>Personal Information</h3>
                <hr/>
                <div>
-                  <label htmlFor="firstname">Firstname</label>
-                  <input type="text" name="firstname" value={employee.identity.firstname} onChange={changeHandler}/>
+                  <TextField fullWidth label="Firstname" type="text" name="firstname" value={employee.identity.firstname} onChange={changeHandler} required/>
+                  <TextField fullWidth label="Middlename" type="text" name="middlename" value={employee.identity.middlename} onChange={changeHandler}/>
+                  <TextField fullWidth label="LastName" type="text" name="lastname" value={employee.identity.lastname} onChange={changeHandler} required/>
                </div>
                <div>
-                  <label htmlFor="middlename">Middlename</label>
-                  <input type="text" name="middlename" value={employee.identity.middlename} onChange={changeHandler}/>
+                  <TextField label="Date Of Birth" type="date" name="dateOfBirth" value={employee.identity.dateOfBirth} onChange={changeHandler} required/>
+                  {/* <FormControl>
+                     <InputLabel id="emp-gender-label">Gender</InputLabel>
+                     <Select labelId="emp-gender-label" name="gender" value={employee.identity.gender} onChange={changeHandler} required>
+                        <option value={null}>Select Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                     </Select>
+                  </FormControl> */}
+                  
+                  <FormControl margin="dense">
+                     <InputLabel id="emp-gender-label">Gender</InputLabel>
+                     <Select native labelId="emp-gender-label" name="gender" value={employee.identity.gender} onChange={changeHandler} required>
+                        <option value={null}>Select Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                     </Select>
+                  </FormControl>
+                  
                </div>
-               <div>
-                  <label htmlFor="lastname">Lastname</label>
-                  <input type="text" name="lastname" value={employee.identity.lastname} onChange={changeHandler}/>
-               </div>
-               <div>
-                  <label htmlFor="gender">Gender</label>
-                  <select name="gender" value={employee.identity.gender} onChange={changeHandler}>
-                     <option>Select Gender</option>
-                     <option value="male">Male</option>
-                     <option value="female">Female</option>
-                  </select>
-               </div>
-               <div>
-                  <label htmlFor="dateOfBirth">Date Of Birth</label>
-                  <input type="date" name="dateOfBirth" value={employee.identity.dateOfBirth} onChange={changeHandler}/>
-               </div>
+               
+               
                <h3>Address Information</h3>
                <hr/>
-               <div>
+               <div  className="form-control">
                   <label htmlFor="country">Country</label>
-                  {/* change to select */}
                   <input type="text" name="country" value={employee.country} onChange={changeHandler}/>
                </div>
-               <div>
+               <div  className="form-control">
                   <label htmlFor="city">City</label>
                   <input type="text" name="city" value={employee.city} onChange={changeHandler}/>
                </div>
-               <div>
+               <div  className="form-control">
                   <label htmlFor="address">Address</label>
                   <input type="text" name="address" value={employee.address} onChange={changeHandler}/>
                </div>
-               <div>
+               <div  className="form-control">
                   <label htmlFor="zipcode">Zip Code</label>
                   <input type="text" name="zipcode" value={employee.zipcode} onChange={changeHandler}/>
                </div>
             
                <h3>Employee Information</h3>
                <hr/>
-               <div>
+               <div  className="form-control">
                   <label htmlFor="joiningDate">Joining Date</label>
                   <input type="date" name="joiningDate"  value={employee.joiningDate} onChange={changeHandler}/>
                </div>
-               <div>
+               <div  className="form-control">
                   <label htmlFor="jobTitle">Job Title</label>
                   <input type="text" name="jobTitle" value={employee.jobTitle} onChange={changeHandler}/>
                </div>
-               <div>
+               <div  className="form-control">
                   <label htmlFor="designation">Designation</label>
                   <input type="text" name="designation" value={employee.designation} onChange={changeHandler}/>
                </div>
-               <div>
+               <div  className="form-control">
                   <label htmlFor="department">Department</label>
                   <input type="text" name="department" value={employee.department} onChange={changeHandler}/>
                </div>
                <h3>Contacts</h3>
                <hr/>
-               <div>
+               <div  className="form-control">
                   <label htmlFor="email">Personal Email</label>
                   <input type="email" name="email"  value={employee.email} onChange={changeHandler}/>
                </div>
-               <div>
+               <div  className="form-control">
                   <label htmlFor="mobileNo">Personal Mobile No.</label>
                   <input type="text" name="mobileNo" value={employee.mobileNo} onChange={changeHandler}/>
                </div>
-               <div>
+               <div  className="form-control">
                   <label htmlFor="companyIssuedEmail">Internal Email</label>
                   <input type="email" name="companyIssuedEmail" value={employee.companyIssuedEmail} onChange={changeHandler}/>
                </div>
-               <div>
+               <div  className="form-control">
                   <label htmlFor="companyIssuedMobileNo">Internal Mobile No.</label>
                   <input type="text" name="companyIssuedMobileNo" value={employee.companyIssuedMobileNo} onChange={changeHandler}/>
                </div>
-            <button type="submit">Submit</button>
+            <button type="submit" className="form-submit">Submit</button>
          </form>
-         </div>
-      </React.Fragment>
+      </div>
         
    )
    

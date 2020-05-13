@@ -1,27 +1,34 @@
-import React, { useContext,useEffect,useState} from 'react';
-import Feature from 'components/Feature';
+import React, { useEffect,useState } from 'react';
+import useAppState from 'appstore/useAppState';
 import FeatureShortcutLink from 'components/FeatureShortcutLink';
-import StateContext from 'contexts/StateContext';
-import useFetchRole from 'actions/useFetchRole';
-import useFetchPermissions from 'actions/useFetchPermissions';
-import useEditRole from 'actions/useEditRole';
-import useDeleteRole from 'actions/useDeleteRole';
+import feature from 'features/feature';
+import useApiRequest from 'api/useApiRequest';
 
 
-export default ({match,location})=>{
+function RolePermissionEditor(){
+
+}
+
+function Edit({match,location}){
    
    //get the id from params
    //check if id is already on the store,
-   let { getStore } = useContext(StateContext);
-   let fetchRole = useFetchRole();
-   let editRole = useEditRole();
-   let deleteRole = useDeleteRole();
-   let fetchAllPermissions = useFetchPermissions();
+   let { getAppState,dispatch } = useAppState();
 
-   // let {role} = (location.state || {})
-   let [role,setRole] = useState((location.state || {}).role); //from location
+   let fetchRole = useApiRequest('ROLE_READ',dispatch);
+   let editRole = useApiRequest('ROLE_EDIT',dispatch);
+   let deleteRole = useApiRequest('ROLE_DELETE',dispatch,({requestPayload})=>{
+      return requestPayload; // the original role
+   });
    
-   // let [role,setRole] = useState((roles || []).find(role=> role._id === match.params.id));
+   // let fetchRolePermissions = useApiRequest('ROLE$PERMISSIONS_LIST',dispatch, ({requestParams,responseData})=>{
+   //    console.log(requestParams);
+   //    return {_id: requestParams.roleId, permissions:responseData.resource}
+   // });
+
+   let fetchAllPermissions = useApiRequest('PERMISSION_LIST',dispatch);
+
+   let [role,setRole] = useState((location.state || {}).role); //from location
    
    function roleChangeHandler(e){
       let newRole = Object.assign({},role);
@@ -33,6 +40,9 @@ export default ({match,location})=>{
       let resource = e.target.getAttribute("resource");
       let action = e.target.getAttribute("action");
 
+      console.log(resource);
+      console.log(action);
+      
       let index = role.permissions.findIndex(permission=>permission[resource]);//resource exist
 
       let foundPermission = role.permissions[index];
@@ -43,7 +53,7 @@ export default ({match,location})=>{
          setRole(newRole);
          return;
       }
-      //resource doest not yet exist on the role's permissions, push
+      //resource does not yet exist on the role's permissions, push
       let newRole = Object.assign({},role);
       let permission = {
          [resource]: {
@@ -51,16 +61,19 @@ export default ({match,location})=>{
          }
       } 
       newRole.permissions.push(permission);
+      console.log(newRole);
       setRole(newRole);
 
    }
 
    const roleDeleteHandler = ()=>{
-      deleteRole(role);
+      deleteRole({params: {roleId:match.params.id},payload: role});
    }
 
    function roleSaveHandler(e){
-      editRole(role);
+      console.log(role);
+      console.log(match.params);
+      editRole({params: {roleId:match.params.id},payload: role});
    }
 
    //effects useEffect
@@ -69,23 +82,30 @@ export default ({match,location})=>{
       // if(!role){
       //    fetchRole(match.params.id);
       // }
-      fetchRole(match.params.id);
+      fetchRole({params: {roleId:match.params.id}});
    }
 
-   function fetchPermissionsIfNotExist(){
-      if(!getStore().permissions){
-         fetchAllPermissions();
-      }
-   }
+   // function fetchRolePermissionsIfNotExist(){
+   //    if(!getAppState().permissions){
+   //       fetchAllPermissions({params: {roleId:match.params.id}});
+   //    }
+   // }
+
+   // useEffect(fetchRolePermissionsIfNotExist,[]);
 
    useEffect(fetchRoleIfNotExist,[]);
-   useEffect(fetchPermissionsIfNotExist,[]);
+
+   useEffect(()=>{
+      fetchAllPermissions();
+   },[]);
+   
+
    return(
-      <Feature group="Roles" featureShortcuts={[<FeatureShortcutLink to="/admin/roles/create">Create Role</FeatureShortcutLink>]}>
-         <div>{getStore().lastAction === 'ROLE_EDIT_NOK'? JSON.stringify(getStore().lastActionPayload.text):null}</div>
-         <div>{getStore().lastAction === 'ROLE_EDIT_OK'? 'Role Update Success!':null}</div>
-         <div>{getStore().lastAction === 'ROLE_DELETE_OK'? 'Role Delete Success!':null}</div>
-         {
+      // <Feature group="Roles" featureShortcuts={[<FeatureShortcutLink to="/admin/roles/create">Create Role</FeatureShortcutLink>]}>
+      //    <div>{getAppState().lastAction === 'ROLE_EDIT_NOK'? JSON.stringify(getAppState().lastActionPayload.text):null}</div>
+      //    <div>{getAppState().lastAction === 'ROLE_EDIT_OK'? 'Role Update Success!':null}</div>
+      //    <div>{getAppState().lastAction === 'ROLE_DELETE_OK'? 'Role Delete Success!':null}</div>
+      //    {
             role ? 
             <form action="#" onSubmit={(e)=>e.preventDefault()}>
                <div>
@@ -105,9 +125,10 @@ export default ({match,location})=>{
                   <input name="description" id="role-description" type="text" defaultValue={role.description} onChange={roleChangeHandler}/>
                </div>
                <div>                  
-                  <label htmlFor="permissions">Permissions</label>
+                  <label htmlFor="permissions">
+                     Permissions {!role.permissions? '(No Permissions)': null}
+                  </label>
                   {
-                     role.permissions && role.permissions.length > 0 ?
                      <table>
                            <thead>
                               <th>Resource</th>
@@ -115,7 +136,7 @@ export default ({match,location})=>{
                            </thead>
                            <tbody>
                               {
-                                 (getStore().permissions || []).map(p=>{
+                                 (getAppState().permissions).map(p=>{
                                     let permission = Object.assign({},p);
                                     let resource  = Object.getOwnPropertyNames(permission)[0];
                                     let actions = Object.getOwnPropertyNames(permission[resource]);
@@ -154,19 +175,24 @@ export default ({match,location})=>{
                               }
                            </tbody>
                         </table>  
-                        : <i> Role Has No Permissions</i>
                   }
                </div>
                <button onClick={roleSaveHandler} type="button">Save</button>
                <button onClick={roleDeleteHandler} type="button">Delete</button>
             </form> : null
-         }
+      //    }
         
           
        
-      </Feature>
+      // </Feature>
    )
    
 }
 
 
+export default feature(Edit,{
+   title: 'Role',
+   shortcutLinks: [
+      <FeatureShortcutLink to="/admin/useraccounts/create">Create New User Account</FeatureShortcutLink>
+   ]
+})

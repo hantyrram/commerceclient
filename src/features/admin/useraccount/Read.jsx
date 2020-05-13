@@ -1,33 +1,47 @@
 import React, { useContext,useEffect,useState } from 'react';
 import FeatureShortcutLink from 'components/FeatureShortcutLink';
 import feature from '../../feature';
-import StateContext from 'contexts/StateContext';
-import useFetchUserAccount from 'actions/useFetchUserAccount';
-import useUserAccount$Roles_Add from 'actions/useUserAccount$Roles_Add';
-import useUserAccount$Roles_Delete from 'actions/useUserAccount$Roles_Delete';
-import useFetchRoles from 'actions/useFetchRoles';
+import useAppState from 'appstore/useAppState';
+import useApiRequest from 'api/useApiRequest';
 import ActiveTable from 'components/ActiveTable';
 import Dialog from '@material-ui/core/Dialog';
 
 function UserAccountRead({match,location}){
-   let fetchUserAccount = useFetchUserAccount();
-   let addRoleToUserAccount = useUserAccount$Roles_Add();
-   let deleteRoleFromUserAccount = useUserAccount$Roles_Delete();
+   
 
-   let fetchRoles = useFetchRoles();
-   let { getStore } = useContext(StateContext);
-   let { userAccounts } = getStore();
-   let { roles } = getStore();
+   let { getAppState,dispatch } = useAppState();
+   let fetchUserAccount = useApiRequest('USERACCOUNT_READ',dispatch);
+   
+   let addRoleToUserAccount = useApiRequest('USERACCOUNT$ROLES_ADD',dispatch,({requestParams,responseData})=>{
+      return {username: requestParams.username, role: responseData.resource};
+   });
+
+   let deleteRoleFromUserAccount =  
+      useApiRequest('USERACCOUNT$ROLES_DELETE',dispatch,({requestParams})=>{
+         return {username: requestParams.username, roleId: requestParams.roleId}
+      });
+
+   let fetchRoles = useApiRequest('ROLE_LIST',dispatch);
+
+   let { userAccounts,roles } = getAppState();
+
    let userAccount = (userAccounts || []).find(u => u._owner === match.params.employeeId);
+
    let [openAddRoleDialog,setOpenAddRoleDialog] = useState(false);
    //Get UserAccount 
    const retrieveUserAccountOnline = ()=>{
-      fetchUserAccount(match.params.employeeId);
+      fetchUserAccount( { params: { useraccountId: match.params.employeeId } }); //useraccountid = employeeid
    }
 
    const onUserAccountRoleDelete = (role)=>{
       console.log(role);
-      deleteRoleFromUserAccount(userAccount.credential.username,role);
+      // deleteRoleFromUserAccount(userAccount.credential.username,role);
+      deleteRoleFromUserAccount({
+         params: {
+            username: userAccount.credential.username,
+            roleId: role._id
+         }
+      });
    }
 
    const addRoleClickHandler= ()=>{
@@ -39,7 +53,13 @@ function UserAccountRead({match,location}){
    function rolesRowSelectHandler(rowSelected){
       
       if(rowSelected.selected){
-         addRoleToUserAccount(userAccount.credential.username,rowSelected.rowData);
+         // addRoleToUserAccount(userAccount.credential.username,rowSelected.rowData);
+         addRoleToUserAccount({
+            params: {
+               username: userAccount.credential.username
+            },
+            payload: rowSelected.rowData
+         });
          setOpenAddRoleDialog(false);
       }
       
@@ -88,7 +108,6 @@ function UserAccountRead({match,location}){
                columnHeaders={rolesColumnHeaders}
                hidden={['_id','permissions']}
                onRowSelect={rolesRowSelectHandler}
-               
             />
          </Dialog>
       </form>

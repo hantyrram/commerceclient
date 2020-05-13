@@ -1,0 +1,15 @@
+.MuiButton-root{
+   border-radius: 0 !important;
+}
+
+.MuiDialog-container .MuiPaper-rounded{
+   border-radius: 0 !important;
+}
+
+.MuiTreeItem-content:hover::after{
+   content: '';
+   width: 20px;
+   height: 20px;
+   clip-path: polygon(0 50%,100% 100%,100% 0);
+   background-color: white;
+}
