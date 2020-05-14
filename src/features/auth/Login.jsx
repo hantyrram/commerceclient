@@ -59,7 +59,7 @@ export default function Login (props){
             </div>
             <div className="form-control">
                <label htmlFor="password">Password </label>
-               <input type="text" name="password" value={values.password} onChange={onChange} className="form-control-input"/>
+               <input type="password" name="password" value={values.password} onChange={onChange} className="form-control-input"/>
                <span className="form-input-error">{errors && errors.password}</span>
             </div>
             <div className="form-control-action">
