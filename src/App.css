@@ -227,7 +227,7 @@
      width: 50%;
      height: 65%;
      min-height: 65%;
-     border: 1px solid var(--shade-primary-three);
+     border: 1em solid var(--shade-primary-ten);
      margin-bottom: 5em;
   }
 
