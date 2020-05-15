@@ -390,11 +390,17 @@ const identityReducer = ( identity = null, action)=>{
       case "AUTH$LOGIN_EXEC_OK":{
          return action.payload;
       }
+      case "AUTH$LOGIN_EXEC_NOK":{
+         return null;
+      }
       case "AUTH$LOGOUT_EXEC_OK":{
          return null;
       }
       case "AUTH$AUTHENTICATE_EXEC_OK":{
          return action.payload;
+      }
+      case "AUTH$AUTHENTICATE_EXEC_NOK":{
+         return null;
       }
    }
    return identity;
