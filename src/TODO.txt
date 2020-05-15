@@ -13,3 +13,6 @@ Add product photos
 Create a product image displayer component
    - A previewer with clickable thumbnails in the bottom
 Fix product schema follow documentation
+
+
+unauthorized still displays admin page,
