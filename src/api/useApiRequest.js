@@ -148,16 +148,15 @@ export default function useApiRequest(requestType, dispatch, onBeforeDispatch = 
          dispatch && typeof(dispatch) === 'function' ? dispatch({type: `${type}_NOK`, error: data.error }) : null;
          emit('error',data.error);
          return data.error;
-      } catch (error) {
+      } catch (error) {//NOTE 400 status codes are thrown
          console.log(error);
          if(error.response && error.response.data && error.response.data.error){
               //error.response.data.error = actual server generated error object 
-             
                dispatch && typeof(dispatch) === 'function' ? 
-                  dispatch({type:'CLIENT_ERROR',text: error.response.data.error.text || 'Axios Error!'}) 
+                  dispatch({type: `${type}_NOK`, error: error.response.data.error || 'Axios Error!'}) 
                :null;
 
-              emit('error',{type:'CLIENT_ERROR',text: error.response.data.error.text || 'Axios Error!'});
+              emit('error',{type:error.response.data.error.type, text: error.response.data.error.text || 'Axios Error!'});
               return;
          }
          
