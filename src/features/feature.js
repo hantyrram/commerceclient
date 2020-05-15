@@ -8,7 +8,7 @@ let style = {
    padding: ".5em"
 }
 
-const ErrorBox = ({error})=>{
+export const ErrorBox = ({error})=>{
 
    let errStyle = {
       ...style,
