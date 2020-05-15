@@ -17,18 +17,17 @@ const AppContainer = (props)=>{
 
    useEffect(()=>{
 
-      window.onbeforeunload = (e)=>{    
-         // window.localStorage.removeItem(STORE_NAME);     
-         window.localStorage.setItem(STORE_NAME,JSON.stringify(state));
-         window.localStorage.setItem("LAST_PATH",window.location.pathname);
-      }
+      // window.onbeforeunload = (e)=>{    
+      //    // window.localStorage.removeItem(STORE_NAME);     
+      //    window.localStorage.setItem(STORE_NAME,JSON.stringify(state));
+      //    window.localStorage.setItem("LAST_PATH",window.location.pathname);
+      // }
 
    })
 
    useEffect(()=>{
       console.log('reloaded');
-      dispatch({type:'INIT',payload: JSON.parse(window.localStorage.getItem(STORE_NAME))});
-      // dispatch({type:'INIT',payload: {}});
+      // dispatch({type:'INIT',payload: JSON.parse(window.localStorage.getItem(STORE_NAME))});
    },[]);
 
    
