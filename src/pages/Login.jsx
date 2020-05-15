@@ -5,9 +5,10 @@ import useAppState from 'appstore/useAppState';
 import useApiRequest from 'api/useApiRequest';
 
 export default (props)=>{
-
+   //ok where at /auth/login
+   //let's check if there is a U_SID cookie
    const {getAppState, dispatch} = useAppState();
-
+   const { identity,lastAction } = getAppState();
    const authenticate = useApiRequest("AUTH$AUTHENTICATE_EXEC",dispatch);   
 
    let U_SID;
@@ -19,18 +20,18 @@ export default (props)=>{
    }
 
    useEffect(()=>{//has session id try to authenticate
-      if(!getAppState().identity && U_SID){
+      if(!identity && U_SID && !lastAction.type.includes('AUTH$AUTHENTICATE')){
          authenticate();
       }
    },[]);
-   
-   if(getAppState().identity){
-      return <Redirect to={"/"} />
+
+   if(identity){
+      return <Redirect to="/" />
    }
 
    return(
       <div id="page-login">
-         <Login />
+         <Login {...props} />
       </div>
    )
 }

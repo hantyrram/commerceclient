@@ -3,55 +3,35 @@ import Button from '@material-ui/core/Button';
 import useForm from 'hooks/useForm';
 import useApiRequest from 'api/useApiRequest';
 import useAppState from 'appstore/useAppState';
-import feature from 'features/feature';
+import {ErrorBox} from '../feature';
+import { subscribe } from '../../actionEvent';
 
 export default function Login (props){
 
-   // let U_SID;
-   //  if(document.cookie){
-   //    U_SID = document.cookie.split(';').find(c=>{
-   //      return c.trim().split('=')[0] === 'U_SID';
-   //    });
-   //  }
    const { getAppState, dispatch } = useAppState();
    const login = useApiRequest('AUTH$LOGIN_EXEC',dispatch);
-
+   const [error, setError] = useState(null);
    const onSubmitCallback = ({values}) => {
       login({payload: values});
    }
-   // const [sessionCookie,setSessionCookie] = useState(U_SID);
    const { values,errors,onChange,onSubmit } = useForm({initialValues:{},onSubmitCallback});
    
-   // const authenticate = useApiRequest("AUTH$AUTHENTICATE_EXEC",dispatch);   
-
-
-   // const authenticate = ()=>{
-   //    if(sessionCookie){
-   //       (async ()=>{
-   //          try {
-   //             let artifact = await authentication();
-   //             if(artifact.status === 'ok'){
-   //                setCredential(artifact.data.entity);
-   //                return;
-   //             }
-   //             setSessionCookie(null);
-   //          } catch (error) {
-   //             console.log(error);
-   //             setSessionCookie(null);
-   //          }
-   //       })()
-   //    }
-   // }
-
-   // useEffect(()=>{
-   //    if(sessionCookie){
-   //       authenticate();
-   //    }
-   // },[]);
+   useEffect(()=>{
+      //Note: returning unsubscribe
+      return subscribe('error', (error)=>{
+         setError(error);
+      });
+      
+   });
 
    return(
       <div id="feature-login">
+         { error && getAppState().lastAction === 'AUTH$LOGIN_EXEC_NOK' ? <ErrorBox error={error} /> : null }
          <form action="" onSubmit = {onSubmit} className="grid-form padded bordered">
+            <div className="form-control">
+               <h3>Login</h3>
+               <hr/>
+            </div>
             <div className="form-control">
                <label htmlFor="username">Username </label>
                <input type="text" name="username" value={values.username} onChange={onChange} className="form-control-input"/>
