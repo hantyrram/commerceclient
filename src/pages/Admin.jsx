@@ -18,6 +18,7 @@ import ViewListIcon from '@material-ui/icons/ViewList';
 import {makeStyles} from '@material-ui/core';
 import useApiRequest from 'api/useApiRequest';
 import useAppState from 'appstore/useAppState';
+import {STORE_NAME} from 'appstore/useAppStore';
 import Avatar from '@material-ui/core/Avatar';
 import './Admin.css';
 
@@ -104,29 +105,27 @@ export default ({history})=>{
    const avatarClasses = useAvatarStyle();
    const treeViewClasses = useTreeViewStyle();
    const treeItemClasses = useTreeItemStyle();
-
    const {getAppState, dispatch} = useAppState();
    const logout = useApiRequest("AUTH$LOGOUT_EXEC",dispatch);
-   
+   const { identity } = getAppState();   
 
    const logoutHandler = e => {
       console.log('Loggging Out');
-      window.localStorage.removeItem("LAST_PATH");
+      window.localStorage.removeItem(STORE_NAME);
       logout();
    }
 
-   console.log(getAppState().identity);
-
-   if(!getAppState().identity){
-      return <Redirect to="/auth/login" />
-   }
-
+   console.log('User Identity',identity);
 
    useEffect(()=>{
       if(window.localStorage.getItem("LAST_PATH")){
          history.push(window.localStorage.getItem("LAST_PATH"))
       }
    },[]);
+
+   if(!identity){
+      return <Redirect to="/auth/login" />
+   }
 
 
    return(
