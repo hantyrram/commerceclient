@@ -57,16 +57,16 @@ export default ({product})=>{
                         <label htmlFor="productImage">Add Product Image</label>
                         <input name="productImage" type="file" onChange={handleAddImage}/>  
                      </form>
-                     <form action="">
+                     {/* <form action="">
                         <input accept="image/*" formmethod="post" formaction={`/apiv1/products/${product._id}/images`} 
                            name="productImage" type="image" height="300" formtarget="_top" alt="Add Product Image" />  
-                     </form>
+                     </form> */}
                   </div>
                   <GridList cols={3} cellHeight={200}>
                      {
                         product.images.map( i => 
                            <GridListTile key={i._id} cols={1}>
-                              <img src={`/apiv1/products/${product._id}/images/${i._id}?bust=${Date.now()}`} alt={i.title} />
+                              <img src={`/cbo/apiv1/products/${product._id}/images/${i._id}?bust=${Date.now()}`} alt={i.title} />
                               <GridListTileBar 
                                  className={gridTitleBarClasses.root}
                                  actionIcon = {

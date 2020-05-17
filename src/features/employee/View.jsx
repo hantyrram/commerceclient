@@ -96,7 +96,7 @@ function View({match}){
    return(
       <div className="feature-context">
          {/* md5 here is only used to bust image browser cache,it does not have any implication on the request */}
-         <Avatar imgURL={`/apiv1/employees/${employee._id}/photo?md5=${md5}`} photoChangeHandler={employeePhotoChangeHandler} />                               
+         <Avatar src={`/cbo/apiv1/employees/${employee._id}/photo?md5=${md5}`} photoChangeHandler={employeePhotoChangeHandler} />                               
          <form className={formClasses.root} action="#" onSubmit={formSubmitHandler} className="grid-form">
                <h3>Employee Id: {employee.employeeId}</h3>
                <h3>Personal Information</h3>
