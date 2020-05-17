@@ -134,7 +134,7 @@ export default ({history})=>{
             <div className="page-section-header">
                <div className="page-section-header-Left">Logo Here</div>
                <div className="page-section-header-right">
-                  <Avatar classes={treeViewClasses} className="flex-item" alt="Employee" src={`/apiv1/employees/${getAppState().identity._id}/photo/`} />
+                  <Avatar classes={treeViewClasses} className="flex-item" alt="Employee" src={`/cbo/apiv1/employees/${getAppState().identity._id}/photo/`} />
                   <button className="flex-item" id="logout-btn" onClick={logoutHandler} >Logout</button>
                </div>
             </div>
