@@ -16,11 +16,11 @@ const useStyles = makeStyles({
  });
 
 /**
- * @param {String} imgURL The url of the image.
+ * @param {String} src The url of the image.
  * @param {String} inputName The name that will be used on the file input element.
  * @param {function} onPhotoChange The change handler of the file input element.
  */
-export default ({imgURL,inputName,photoChangeHandler})=>{
+export default ({src,inputName,photoChangeHandler})=>{
 
    let employeeAvatarOverlayRef = useRef({});
    let classes = useStyles();
@@ -43,9 +43,9 @@ export default ({imgURL,inputName,photoChangeHandler})=>{
    return(
       <div id="htcomp-employee-avatar"style={{position:"relative"}}>
         <label id="employee-avatar">
-            <img src={imgURL} alt="avatar" height="150" width="150" 
+            <img src={src} alt="avatar" height="150" width="150" 
             style={{cursor:"pointer",position:"absolute",left:0,top:0,opacity:1}}/>
-            <img src={imgURL} alt="avatar" height="150" width="150" 
+            <img src={src} alt="avatar" height="150" width="150" 
             style={{cursor:"pointer"}}/>
          </label>
          <label ref={employeeAvatarOverlayRef} id="employee-avatar-overlay" style={{
