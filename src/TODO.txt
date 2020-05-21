@@ -19,3 +19,14 @@ Fix duplicate key error when editing employee image / In Production.
 
 Test the new API locally /cbo Added
 
+TypeError: Cannot read property 'reduce' of undefined
+    at Object.getPermissions (/home/ubuntu/apps/commerce/app/functions/getPermissions.js:18:16)
+    at permission_list (/home/ubuntu/apps/commerce/app/services/Permission_List.js:9:27)
+    at Layer.handle [as handle_request] (/home/ubuntu/apps/commerce/node_modules/express/lib/router/layer.js:95:5)
+    at next (/home/ubuntu/apps/commerce/node_modules/express/lib/router/route.js:137:13)
+    at reqAttachments (/home/ubuntu/apps/commerce/app/__defineApis.js:20:10)
+    at Layer.handle [as handle_request] (/home/ubuntu/apps/commerce/node_modules/express/lib/router/layer.js:95:5)
+    at next (/home/ubuntu/apps/commerce/node_modules/express/lib/router/route.js:137:13)
+    at Route.dispatch (/home/ubuntu/apps/commerce/node_modules/express/lib/router/route.js:112:3)
+    at Layer.handle [as handle_request] (/home/ubuntu/apps/commerce/node_modules/express/lib/router/layer.js:95:5)
+    at /home/ubuntu/apps/commerce/node_modules/express/lib/router/index.js:281:22
