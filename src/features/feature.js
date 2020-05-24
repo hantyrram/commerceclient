@@ -1,6 +1,7 @@
 //HOC, wraps all features
 import React, { useState, useEffect } from 'react';
 import { subscribe } from 'actionEvent';
+import Button from '@material-ui/core/Button';
 
 
 let style = {
@@ -115,7 +116,7 @@ export default (Component,options)=>{
                   <div className="title">{options && options.title}</div>
                   <div className="links">
                      {
-                        options && options.links && options.links.map( link => <a href={link.path}>{link.label}</a>)
+                        options && options.links && options.links.map( link => <Button variant="contained" color="primary" component="a" href={link.path}>{link.label}</Button>)
                      }
                   </div>
                </div>

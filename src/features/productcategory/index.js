@@ -3,6 +3,7 @@ import useAppState from 'appstore/useAppState';
 import useApiRequest from 'api/useApiRequest';
 import feature from '../feature';
 import { CategoryTree } from './components';
+import Feature from 'components/Feature';
 // import {
 //    useProductCategory_Create,
 //    useProductCategory_Delete,
@@ -63,25 +64,26 @@ function ProductCategories({history}){
 
    return(
       // !productCategories || productCategories.length === 0 ? 'No Product Categories' : 
-      <div style={{minWidth: "100%"}}>
+      <Feature 
+         title="Product Categories"
+         // actions={<Link to="/catalog/productcategories/create">Add New Category</Link>}
+      >
          {/* <SingleDepthDataTreeDiv data={productCategories} rootName="Categories" onSelect={onSelect} onAdd={onAdd}/> */}
-         <CategoryTree category={{name: 'Categories', _id: 'root'}} 
-            data={productCategories === undefined? []: productCategories}  selected={selected} 
-            onSelect={onSelect} 
-            onAdd={onAdd} 
-            onDelete={onDelete}
-         />
-      </div>
+         
+         <div style={{width:"100%",border:"1px solid #cbc7c7"}}>
+            <CategoryTree category={{name: 'Categories', _id: 'root'}} 
+               data={productCategories === undefined? []: productCategories}  selected={selected} 
+               onSelect={onSelect} 
+               onAdd={onAdd} 
+               onDelete={onDelete}
+            />
+         </div>
+      </Feature>
    )
    
 }
 
-export default feature(ProductCategories,{
-   title: 'Product Categories',
-   links: [
-      { path : '/catalog/productcategories/create', label: 'New Product Category'}
-   ]
-})
+export default ProductCategories;
 
 
 

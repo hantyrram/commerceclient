@@ -91,7 +91,7 @@ export function CategoryTree({category, data, selected, onSelect , onAdd , onDel
 
 
    return(
-      <div ref={divRef}>
+      <div ref={divRef} style={{width:"100%"}}>
          
          <div >
             <span ref={spanRef} 

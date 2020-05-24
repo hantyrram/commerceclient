@@ -9,7 +9,7 @@ const productsReducer = (productsState = [], action)=>{
 
    switch(action.type){
 
-      case apiRequestActionTypes.PRODUCT_CREATE_OK: {
+      case apiRequestActionTypes.PRODUCT_ADD_OK: {
          return [...newState, action.payload];
       }
 

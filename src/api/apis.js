@@ -23,7 +23,7 @@ export default {
    USERACCOUNT$ROLES_DELETE: 'delete:/cbo/apiv1/useraccounts/:username/roles/:roleId',
    PERMISSION_LIST: 'get:/cbo/apiv1/permissions',   
    PRODUCT_LIST: 'get:/cbo/apiv1/products',
-   PRODUCT_CREATE: 'post:/cbo/apiv1/products',
+   PRODUCT_ADD: 'post:/cbo/apiv1/products',
    PRODUCT_READ: 'get:/cbo/apiv1/products/:productId',
    PRODUCT_DELETE: 'delete:/cbo/apiv1/products/:productId',
    PRODUCT_UPDATE: 'patch:/cbo/apiv1/products/:productId',

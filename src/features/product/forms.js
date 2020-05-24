@@ -18,15 +18,20 @@ const useChipStyle = makeStyles({
    }
 })
 
-export function ProductForm({ product }){
+export function ProductForm({ product = {} }){
    const chipClasses = useChipStyle();
    let { getAppState, dispatch } = useAppState();
    let { productCategories } = getAppState();
    let fetchProductCategories = useApiRequest('PRODUCTCATEGORY_LIST',dispatch);
    let updateProduct = useApiRequest('PRODUCT_UPDATE',dispatch);
+   let addProduct = useApiRequest('PRODUCT_ADD',dispatch);
    let categoryRef = useRef();
 
-   const onSubmitCallback = ({changedValues})=>{
+   const onSubmitCallback = ({values,changedValues})=>{
+      if(!product._id){
+         addProduct({payload: changedValues });
+         return;
+      }
       updateProduct({ 
          params: { productId: product._id },
          payload: changedValues 
@@ -82,7 +87,7 @@ export function ProductForm({ product }){
          <form id="product-add" action="#" onSubmit={onSubmit} className="grid-form">   
             <div className="form-control">
                <span>
-                  <a href="#" onClick={selectCategoryModalTriggerHandler} >
+                  <a id="selectcategory-dialog-trigger" href="#" onClick={selectCategoryModalTriggerHandler} >
                      {values.category? 'Change Product Category': 'Select Product Category'}
                   </a>
                </span>
@@ -99,21 +104,23 @@ export function ProductForm({ product }){
                
             </div>   
             <div className="form-control">
-               <label htmlFor="type">Product Type</label>
+               <label htmlFor="name" className="required">Product Name</label>
+               <input type="text" name="name" id="product-name" value={values.name} onChange={productNameChangeHandler} minLength="4" className="form-control-input large" required/>                  
+               <label className="field-description">The display name of the product</label>
+            </div>
+            <div className="form-control">
+               <label htmlFor="type" className="required">Product Type</label>
                <select name="type" id="product-type" value={values.type} onChange={onChange} className="form-control-input">
                   <option value="standard">Standard</option>
                   <option value="bundled">Bundled</option>
                </select>
             </div >
+            
             <div className="form-control">
-               <label htmlFor="name">Product Name</label>
-               <input type="text" name="name" id="product-name" value={values.name} onChange={productNameChangeHandler} minLength="4" className="form-control-input"/>                  
-               <label className="field-description">The display name of the product</label>
-            </div>
-            <div className="form-control">
-               <label htmlFor="name">Slug</label>
+               <label htmlFor="name" className="required">Slug</label>
                <input type="text" name="slug" id="product-slug" 
-                  value={values.slug || values.name.replace(/\s/g,'-')} 
+                  // value={values.slug || values.name.replace(/\s/g,'-')} 
+                  value={values.slug} 
                   onChange={onChange} minLength="4" 
                   className="form-control-input"
                />                  
@@ -124,13 +131,13 @@ export function ProductForm({ product }){
                <input type="text" name="slug" id="product-slug" value={p.slug} onChange={onChange} minLength="4"/>                  
                <label className="field-description">The display name of the product</label>
             </div> */}
-            <div className="form-control">
+            {/* <div className="form-control">
                <label htmlFor="itemCondition">Item Condition</label>
                <select name="itemCondition" id="product-stockstatus" value={values.itemCondition} onChange={onChange} className="form-control-input">
                   <option value="new">New</option>
                   <option value="used">Used</option>
                </select>
-            </div>
+            </div> */}
             
             <div className="form-control">
                <label htmlFor="description">Product Description</label>
@@ -147,14 +154,15 @@ export function ProductForm({ product }){
                <input type="text" name="upc" value={product.upc} onChange={onChange} />
             </div> */}
             <div className="form-control">
-               <label htmlFor="netCost">Net Cost</label>
+               <label htmlFor="netCost" className="required">Product Acquisition Cost</label>
                <input type="text" name="netCost" value={values.netCost} onChange={onChange} className="form-control-input"/>
                <label className="field-description">The cost of acquiring the product</label>
             </div>      
             
             <div className="form-control-action">
-               <Button type="submit" variant="contained">Save Product</Button>
+               <Button type="submit" variant="contained" color="primary">Save Product</Button>
             </div>
+            {/* Dialog Triggered by #selectcategory-dialog-trigger */}
             <Dialog open={openSelectCategoryDialog} fullWidth >
                <DialogTitle>Choose Product Category</DialogTitle>
                <DialogContent>
@@ -167,11 +175,6 @@ export function ProductForm({ product }){
                   <Button variant="contained" color="secondary" style={{marginRight:'1em'}} onClick={selectCategoryModalCancelHandler}>Cancel</Button>
                   <Button variant="contained" color="primary"  onClick={selectCategoryModalOkHandler}>Ok</Button>
                </DialogActions>
-               {/* <div className="actions-container button-actions-container" style={{display:'flex',justifyContent:'flex-end',alignItems:'center'}}>
-                  <Button variant="contained" color="secondary" style={{marginRight:'1em'}} onClick={selectCategoryModalCancelHandler}>Cancel</Button>
-                  <Button variant="contained" color="primary"  onClick={selectCategoryModalOkHandler}>Ok</Button>
-               </div> */}
-            
             </Dialog>
       </form>
       </div>

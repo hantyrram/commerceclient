@@ -3,8 +3,9 @@ import useAppState from 'appstore/useAppState';
 import useApiRequest from 'api/useApiRequest';
 import feature from '../feature';
 import { ProductForm } from './forms';
-
-
+import { Link } from 'react-router-dom';
+import Feature from 'components/Feature';
+import {ViewProducts} from './featureaction';
 function Add(props){
 
    let { getAppState,dispatch } = useAppState();
@@ -24,18 +25,16 @@ function Add(props){
 
    return(
       //if ok,save on product,cancel don;t save
-      <div id="product-form-container">
-         <h4>New Product</h4>
-         <hr/>
+      <Feature 
+         title ="Add New Product"
+         actions = {[ViewProducts]}
+      >
          <ProductForm onSubmit={formSubmitHandler} productCategories={productCategories}/>
-      </div>
+      </Feature>
    )
 }
 
 
-export default feature(Add,{
-   title: 'Product / Create New'
-})
-
+export default Add;
 
 

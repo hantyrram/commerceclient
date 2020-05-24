@@ -1,3 +1,4 @@
+Edit Category Of existing product does not change
 
 schemaValidator, fix text on validation error make it clear
 fix product schema what properties we need

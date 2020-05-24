@@ -173,7 +173,7 @@ const ActiveTable = (props)=>{
    }
    
    return(
-      <div className="active-table" style={{maxWidth:"100%",overflowX:"scroll"}}>
+      <div className="active-table" style={{width:"100%",maxWidth:"100%"}}>
          <Table ref={tableRef} size="small">
             <TableHead><tr>{renderColumnHeaders()}</tr></TableHead>
             <TableBody>{renderRows()}</TableBody>

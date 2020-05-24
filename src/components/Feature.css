@@ -1,0 +1,123 @@
+.feature{
+   /* background-color:white; */
+   /* box-shadow:-1px -1px 5px rgba(0,0,0, 0.20),1px 1px 5px rgba(0,0,0,.19); */
+   padding-bottom: 1em;
+}
+.feature-header {
+   display: flex;
+   min-height: 3em;
+   align-items: center;
+   justify-content: space-between;
+   /* background-color: var(--shade-primary-ten); */
+   color: black;
+   padding-left: .5em;
+   padding-right: .5em;
+}
+
+.feature-header .feature-title {
+   
+   display:grid;
+   min-width: 100%;
+   grid-template-columns: 1fr 1fr;
+   grid-template-areas: 'title links';
+}
+
+.feature-header .feature-title .title{
+   grid-area: title;
+}
+
+.feature-header .feature-title .links{
+   grid-area: links;
+   text-align: right;
+   color: #ffffffde !important;
+}
+
+.feature-actions {
+   display: flex;
+   align-items: center;
+   justify-content: flex-end;
+}
+
+.feature-actions > * {
+   margin-left: .5em;
+}
+
+.feature-action {
+   border: 1px;
+   padding: .5em 1em .5em 1em;
+}
+
+.feature-actions .contained {
+   background-color: #2196f3;
+   color:white;
+}
+
+.feature-header .feature-title .links a{
+   color: #ffffffde !important;
+   border: 1px solid  #ffffffde;
+   padding: .25em;
+   margin-left: 1em;
+}
+
+.feature-header .feature-title .links a:hover{
+   border: 1px solid red;
+   background-color: red;
+}
+
+.feature-main-header {
+   background-color: #1d1a38;
+}
+
+.feature-content{
+   margin:1em;
+   display:flex;
+   flex-wrap: wrap;
+   align-items: center;
+}
+
+.feature-context-wrapper{/* wraps the feature context actual content*/
+   /* consume all space of the feature content */
+   display: flex;
+   min-width: 100%;
+   /* context content centered when there is no context-menu */
+   justify-content: center; 
+}
+
+.feature-context-wrapper-main-section{
+  /* consume 80% to give space to the feature-context-menu */
+  min-width: 80%;
+  max-width: 80%;
+  justify-content: center;
+  margin-right: 1em;
+}
+
+.feature-context-wrapper-menu-section{ /* context menu wrapper section*/
+   margin-top: 1em;
+   max-width:20%;
+}
+
+.feature-context{
+  min-width: 100%;
+}
+.feature-context-title{
+   margin-bottom: 1em;
+   padding-bottom: .5em;
+   border-bottom: 1px solid #cfcfcf;
+   color: #676565;
+   font-weight: bold;
+   min-width: 100%;
+   display: flex;
+   justify-content: space-between;
+}
+
+.feature-context-title-separator{
+   min-width: 100%;
+   border-top-color: #efecec6b;
+}
+
+
+.feature-context-main{
+/* min-width: 80%; */
+/* max-width: 80%; */
+   /* min-width: 100%; */
+}

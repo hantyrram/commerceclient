@@ -36,6 +36,13 @@ code {
     monospace;
 }
 
+input {
+   font-family: "Segoe UI", "Roboto", "Oxygen",
+      "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+      sans-serif;
+   padding-left: 1em;   
+}
+
 :root{
    --border-and-line-color: #e2dddd;
    --featurecontextmenu-color: #92bdae;

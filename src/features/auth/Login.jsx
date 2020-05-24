@@ -5,7 +5,7 @@ import useApiRequest from 'api/useApiRequest';
 import useAppState from 'appstore/useAppState';
 import {ErrorBox} from '../feature';
 import { subscribe } from '../../actionEvent';
-
+import './Login.css';
 export default function Login (props){
 
    const { getAppState, dispatch } = useAppState();
@@ -27,7 +27,11 @@ export default function Login (props){
 
    return(
       <div id="feature-login">
+         <div style={{display:"flex", justifyContent:"center"}}>
+            <img height="150px" width="200px" src="/cbo/apiv1/static/images/hantyr_transparent.png" alt="logo"/>
+         </div>
          { error && getAppState().lastAction === 'AUTH$LOGIN_EXEC_NOK' ? <ErrorBox error={error} /> : null }
+
          <form action="" onSubmit = {onSubmit} className="grid-form padded bordered">
             <div className="form-control">
                <h3>Login</h3>
@@ -44,7 +48,7 @@ export default function Login (props){
                <span className="form-input-error">{errors && errors.password}</span>
             </div>
             <div className="form-control-action">
-               <Button type="submit" variant="contained">
+               <Button id="btn-login" type="submit" variant="contained" >
                   Login
                </Button> 
             </div>

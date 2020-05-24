@@ -9,6 +9,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import PopOver from '@material-ui/core/Popover';
 import useApiRequest from 'api/useApiRequest';
 import useAppState from 'appstore/useAppState';
+import Feature from 'components/Feature';
 
 
 function AddTermContextMenu({onAddTermClick}){
@@ -123,12 +124,13 @@ function Attributes({history}){
    },[])
 
    return(
-      <div>
-         <div>
-            <Button size="small" color="primary" onClick={addNewAttributeClickHandler}>Add New Attribute</Button>
-         </div>
+      <Feature 
+         title="Attributes" 
+         actions={[<Button variant="contained" color="primary" onClick={addNewAttributeClickHandler}>Add New Attribute</Button>]}
+         >
+         <div style={{minWidth:"100%"}}>
          <div style={{display:'flex',justifyContent:'space-between',flexDirection:'column'}}>
-           <div className="flextable-row" style={{display:'flex',justifyContent:'space-between'}}>
+           <div className="flextable-row" style={{display:'flex',justifyContent:'space-between',alignItems:"center"}}>
                <div className="flextable-cell" style={{flex:1}}>
                   <h5>Attribute</h5>
                </div>
@@ -139,7 +141,7 @@ function Attributes({history}){
             {
                getAppState().attributes.map( a => {
                   return(
-                     <div className="flextable-row" style={{display:'flex',justifyContent:'space-between',borderBottom: '1px solid #cec5c5'}}>
+                     <div className="flextable-row" style={{display:'flex',justifyContent:'space-between',borderBottom: '1px solid #cec5c5',alignItems:"center"}}>
                         <div className="flextable-cell" style={{flex:1}}>
                            <span><a href="" onClick={clickAttribute(a)}>{a.name}</a> </span><br/>
                            <span style={{fontSize:'.8em',fontStyle:'italic'}}>{a.description}</span>
@@ -147,7 +149,10 @@ function Attributes({history}){
                         <div className="flextable-cell" style={{flex:2}}>
                            {
                               (a.terms || []).map( t => 
-                                 <Chip label={t} size="medium" onDelete={ () => {
+                                 <Chip 
+                                    label={t} 
+                                    size="medium" 
+                                    onDelete={ () => {
                                        deleteTerm(
                                              {
                                                 params: {productattributeId: a._id},
@@ -174,16 +179,18 @@ function Attributes({history}){
          <Dialog id="attribute-add-dialog" open={openAttributeDialog} fullWidth >
             <DialogTitle>Add New Attribute</DialogTitle>
             <DialogContent>
-               <div className="form-input-control">
-                  <label htmlFor="name">Attribute Name</label>
-                     <input type="text" name="name" id="attribute-name" value={activeAttribute.name} onChange={onActiveAttributeChange} minLength="4"/>                  
-                  <label className="form-control field-description">The name of the attribute e.g. color</label>
-               </div>
-               <div className="form-input-control">
-                  <label htmlFor="description">Description</label>
-                     <input type="text" name="description" id="attribute-description" value={activeAttribute.description} onChange={onActiveAttributeChange} minLength="4"/>                  
-                  <label className="form-control field-description">The description of the Attribute</label>
-               </div>
+               <form className="grid-form" onSubmit={e=>e.preventDefault()}>
+                  <div className="form-control">
+                     <label htmlFor="name">Attribute Name</label>
+                        <input type="text" name="name" id="attribute-name" value={activeAttribute.name} onChange={onActiveAttributeChange} minLength="4"/>                  
+                     <label className="field-description">The name of the attribute e.g. color</label>
+                  </div>
+                  <div className="form-control">
+                     <label htmlFor="description">Description</label>
+                        <input type="text" name="description" id="attribute-description" value={activeAttribute.description} onChange={onActiveAttributeChange} minLength="4"/>                  
+                     <label className="field-description">The description of the Attribute</label>
+                  </div>
+               </form>
             </DialogContent>            
             <DialogActions>
                <Button variant="contained" color="secondary" onClick={cancelSave}>Cancel</Button>
@@ -222,15 +229,15 @@ function Attributes({history}){
                
             </DialogActions>
          </Dialog>
-      </div>
+         </div>
+         
+      </Feature>
       
    )
    
 }
 
-export default feature(Attributes,{
-   title: 'Attributes'
-})
+export default Attributes;
 
 
 

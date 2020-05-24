@@ -1,0 +1,28 @@
+#feature-login{
+   width: 50%;
+   height: 65%;
+   min-height: 65%;
+   border: 1px solid var(--shade-primary-ten);
+   background-color: #ffffff;
+   margin-bottom: 5em;
+   padding: 1em;
+}
+
+#feature-login .form-control-action{
+   /* border: 1px solid green; */
+   margin-top: 1em;
+}
+
+#btn-login{
+   width: 100%;
+   margin-left: unset; /*unset form-control-action > * */
+}
+
+#feature-login form{
+   border: none;
+}
+
+#feature-login form input{
+   font-size: larger;
+   height: 2em;
+}
