@@ -1,4 +1,8 @@
 
+input:disabled {
+   background-color: #e4d8d8;
+   border: none;
+}
 
   .feature{
       /* background-color:white; */
@@ -107,6 +111,7 @@
    /* grid form */
    .grid-form{
       justify-content: center;
+      width: 100%;
    }
 
    .padded{

@@ -1,33 +1,12 @@
-Edit Category Of existing product does not change
 
-schemaValidator, fix text on validation error make it clear
-fix product schema what properties we need
-
-refreshing the page, can't redirect to last path because the routes aren't yet defined, redirect is on the admin page
-
-create a pattern for the shipping cost on ShippingMethod.json
-Add a preview of a product
-Add product photos
 
 !!!was able to login, even with redis = down
 
-Create a product image displayer component
-   - A previewer with clickable thumbnails in the bottom
-Fix product schema follow documentation
+properly redirect to the last location on reload, does not seem to store the state properly, e.g. employees is always empty after reload
+
+    a function subscribes a feature to a specific data on app store
+ -what we need:
+  - the property name of the data from the app store
+  - the identitier of the data that is needed e.g. _id for specific data from a list
 
 
-Fix duplicate key error when editing employee image / In Production.
-
-Test the new API locally /cbo Added
-
-TypeError: Cannot read property 'reduce' of undefined
-    at Object.getPermissions (/home/ubuntu/apps/commerce/app/functions/getPermissions.js:18:16)
-    at permission_list (/home/ubuntu/apps/commerce/app/services/Permission_List.js:9:27)
-    at Layer.handle [as handle_request] (/home/ubuntu/apps/commerce/node_modules/express/lib/router/layer.js:95:5)
-    at next (/home/ubuntu/apps/commerce/node_modules/express/lib/router/route.js:137:13)
-    at reqAttachments (/home/ubuntu/apps/commerce/app/__defineApis.js:20:10)
-    at Layer.handle [as handle_request] (/home/ubuntu/apps/commerce/node_modules/express/lib/router/layer.js:95:5)
-    at next (/home/ubuntu/apps/commerce/node_modules/express/lib/router/route.js:137:13)
-    at Route.dispatch (/home/ubuntu/apps/commerce/node_modules/express/lib/router/route.js:112:3)
-    at Layer.handle [as handle_request] (/home/ubuntu/apps/commerce/node_modules/express/lib/router/layer.js:95:5)
-    at /home/ubuntu/apps/commerce/node_modules/express/lib/router/index.js:281:22

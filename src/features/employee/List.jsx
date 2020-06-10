@@ -1,9 +1,12 @@
 import React, { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import ActiveTable from 'components/ActiveTable';
 import useAppState from 'appstore/useAppState';
 import useApiRequest from 'api/useApiRequest';
+import Feature from 'components/Feature';
 
 function List({history}){
+   const AddNewEmployeeFA = (props) => <Link to="/hr/employees" {...props}>Add New Employee</Link>
    let { getAppState,dispatch } = useAppState();
    let { employees } = getAppState();
    let fetchEmployees = useApiRequest('EMPLOYEE_LIST',dispatch);
@@ -13,7 +16,7 @@ function List({history}){
    },[]);
 
    const onRowClick = (rowData)=>{
-      history.replace(`/employees/${rowData._id}/edit`, {state: rowData});
+      history.replace(`/hr/employees/${rowData._id}`, {state: rowData});
    }
 
    const columnHeaders = [
@@ -34,13 +37,15 @@ function List({history}){
                   return acc;
                },[])
    return(
-      <ActiveTable 
-         key={'e1'}
-         data={data} 
-         columnHeaders={columnHeaders}
-         hidden={['_id']}
-         onRowClick={onRowClick}
-      />
+      <Feature title="Employees" actions={[<AddNewEmployeeFA className="feature-action contained primary"/>]}>
+         <ActiveTable 
+            key={'e1'}
+            data={data} 
+            columnHeaders={columnHeaders}
+            hidden={['_id']}
+            onRowClick={onRowClick}
+         />
+      </Feature>
    )
    
 }

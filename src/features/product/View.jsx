@@ -40,7 +40,7 @@ function View({match,history,location}){
  
    return(
       //if ok,save on product,cancel don;t save
-      <React.Fragment>
+      <Router>
          {
             product ? 
 
@@ -79,7 +79,7 @@ function View({match,history,location}){
          
             :null
          }
-      </React.Fragment>     
+      </Router>     
    )
 }
 

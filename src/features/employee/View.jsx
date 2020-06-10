@@ -1,15 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import useApiRequest from 'api/useApiRequest';
 import useAppState from 'appstore/useAppState';
 import Avatar from 'components/Avatar';
-import TextField from '@material-ui/core/TextField';
-import InputLabel from '@material-ui/core/InputLabel';
-import FormControl from '@material-ui/core/FormControl';
 import Button from '@material-ui/core/Button';
-import Select from '@material-ui/core/Select';
 import feature from '../feature';
-
-
+import Feature from 'components/Feature';
 
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -34,23 +29,23 @@ let formContainerStyle = {
    minWidth: "75%"
 }
 
-function View({match}){
-
+export default function View({match}){
+   
    let { getAppState, dispatch } = useAppState();
    let fetchEmployee = useApiRequest('EMPLOYEE_READ',dispatch);
    let editEmployee = useApiRequest('EMPLOYEE_EDIT',dispatch);
    let uploadEmployeePhoto = useApiRequest('EMPLOYEE$PHOTO_EDIT',dispatch);
-
+   console.log(getAppState());
    // let employeeFromStore = getAppState().employees.find(emp=> emp._id === match.params.id);
    // let [employee,setEmployee] = useState(employeeFromStore);
-   let employee = getAppState().employees.find(emp=> emp._id === match.params.id) || {};
+   let employee = getAppState().employees.find(emp=> emp._id === match.params._id) || {};
    let md5 = employee.photo && employee.photo.md5 || '';
    let formClasses = useStyles();
    
    //always get the fresh copy
    useEffect( () => { 
-         fetchEmployee({ params: { employeeId: match.params.id}});
-   },[match.params.id] );
+         fetchEmployee({ params: { employeeId: match.params._id}});
+   },[match.params._id] );
 
    const formSubmitHandler = (e)=>{
       e.preventDefault();
@@ -94,11 +89,10 @@ function View({match}){
 
 
    return(
-      <div className="feature-context">
+      <Feature title={`Employee : ${employee.employeeId}`}>
          {/* md5 here is only used to bust image browser cache,it does not have any implication on the request */}
          <Avatar src={`/cbo/apiv1/employees/${employee._id}/photo?md5=${md5}`} photoChangeHandler={employeePhotoChangeHandler} />                               
          <form className={formClasses.root} action="#" onSubmit={formSubmitHandler} className="grid-form">
-               <h3>Employee Id: {employee.employeeId}</h3>
                <h3>Personal Information</h3>
                <hr/>
                <div  className="form-control">
@@ -186,13 +180,13 @@ function View({match}){
                </div>
             
          </form>
-      </div>
+      </Feature>
         
    )
    
 }
 
 
-export default feature(View,{title : 'Employee'});
+
 
 

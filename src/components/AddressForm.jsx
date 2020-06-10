@@ -275,7 +275,7 @@ export function PhilippinesAddressForm({data,onSubmit,readOnly, validator}){
    },[]);
 
    useEffect(()=>{
-      if(province){
+      if(formState.province){
          (async ()=>{
             let municipalities = await fetchPSGC({query: `prov=${formState.province}&geolevel=mun`});//add query BUT useApiRequest does not yet support queries         
             setMunicipalities(municipalities);
@@ -394,6 +394,101 @@ export function PhilippinesAddressForm({data,onSubmit,readOnly, validator}){
             <Button type="button" variant="contained"  color="secondary" onClick={onReset}>Reset</Button>
             <Button type="submit" variant="contained" >Save</Button> 
          </div>
+         
+      </form>
+   )
+}
+
+export function Test({ data, onSubmit, validator }){
+
+   const { getAppState, dispatch } = useAppState();
+   const util = getAppState().util;
+   const countries = util.countries;
+   const countryStates = util.countryStates;
+   const [state, setState] = useState({ country: 'Philippines', philippinesIslandGroup: 'Luzon', ...data});
+   
+   const fetchCountries = useApiRequest('UTIL$EXTDATA$COUNTRY_LIST',dispatch, ({responseData})=> responseData);
+   const fetchStates = useApiRequest('UTIL$EXTDATA$COUNTRYSTATE_LIST',dispatch, ({responseData})=> responseData);
+   const fetchCities = useApiRequest('UTIL$EXTDATA$COUNTRYCITY_LIST',dispatch, ({responseData})=> responseData);
+   //If country is Philippines
+   const fetchPSGC = useApiRequest('UTIL$EXTDATA$PSGC_READ', dispatch, ({responseData})=> responseData);
+
+   const onChange = (e)=>{
+      setState({...state, [e.target.name]: e.target.value });
+   };
+
+   /**
+    * Fetch Countries,once.
+    */
+   useEffect(()=>{
+      fetchCountries();
+   },[]);
+
+  
+   /**
+   * Clear Philippine island group if not Philippines
+   */
+   useEffect(()=>{
+      if(state.country !== 'Philippines' && state.philippinesIslandGroup){
+         let newState = Object.assign({},state);
+         delete newState.philippinesIslandGroup;
+         setState(newState);
+      }
+   },[state.country]);
+
+   /**
+    * Fetch the countries states, if country is not Philippines. Since the default country onload is
+    * Philippines, this only needs to be done when state.country changes.
+    */
+   useEffect(()=>{
+      if(state.country !== 'Philippines'){
+         fetchStates({params: {country: state.country}});
+         console.log(countryStates);
+      }
+   },[state.country]);
+
+   /**
+    * Always set the default Philippines island group if country is set to Philippines and 
+    * the philippinesIslandGroup has no value.
+    */
+   useEffect(()=>{
+      if(state.country === 'Philippines' && !state.philippinesIslandGroup){
+         setState({...state,philippinesIslandGroup: 'Luzon'});
+      }
+   },[state.country]);
+
+
+
+
+   return(
+      <form id="data" action="#" onSubmit={onSubmit} className="grid-form" >  
+         {JSON.stringify(state)} 
+         <div className="form-control">
+            <label htmlFor="country">Country</label>
+            <select  name="country" id="country" 
+               value={state.country}  className="form-control-input" onChange={onChange}>
+                  {/* hardcode Philippines, fix this, MUST always come from countries */}
+                  {
+                     (countries).map((c,i) => <option key={i} value={c.name}>{c.name}</option> )
+                  }
+            </select>
+            {/* <span className="form-input-error">{errors && errors.country}</span> */}
+         </div>
+         {
+            state.country === 'Philippines' ?
+               <div className="form-control">
+                  <label htmlFor="philippinesIslandGroup">Island Group</label>
+                  <select  name="philippinesIslandGroup" id="philippinesIslandGroup" 
+                     value={state.philippinesIslandGroup}  className="form-control-input" onChange={onChange}>
+                        {/* hardcode Philippines, fix this, MUST always come from countries */}
+                        {
+                           ['Luzon','Visayas','Mindanao'].map((c,i) => <option key={i} value={c}>{c}</option> )
+                        }
+                  </select>
+                  {/* <span className="form-input-error">{errors && errors.country}</span> */}
+               </div>
+            : null
+         }
          
       </form>
    )

@@ -27,6 +27,7 @@ export default {
    PRODUCT_READ: 'get:/cbo/apiv1/products/:productId',
    PRODUCT_DELETE: 'delete:/cbo/apiv1/products/:productId',
    PRODUCT_UPDATE: 'patch:/cbo/apiv1/products/:productId',
+   PRODUCT$CATEGORY_EDIT: 'patch:/cbo/apiv1/products/:product_id/category',
    PRODUCT$IMAGES_ADD: 'post:/cbo/apiv1/products/:_id/images',
    PRODUCT$IMAGES_DELETE: 'delete:/cbo/apiv1/products/:product_id/images/:_id',
    PRODUCTCATEGORY_LIST: 'get:/cbo/apiv1/productcategories',
@@ -61,6 +62,7 @@ export default {
    STORESETTING$SHIPPING$SHIPPINGZONE$SHIPPINGMETHOD_ADD: 'patch:/cbo/apiv1/storesettings/shipping/shippingzones/:shippingZoneId/shippingmethods',
    STORESETTING$SHIPPING$SHIPPINGZONE$SHIPPINGMETHOD_DELETE: 'delete:/cbo/apiv1/storesettings/shipping/shippingzones/:shippingZoneId/shippingmethods/:_name',
    STORESETTING$SHIPPING$SHIPPINGORIGIN_EDIT: 'patch:/cbo/apiv1/storesettings/shipping/shippingorigin',
+   SETTING$STORE$GENERAL_EDIT: 'patch:/cbo/apiv1/settings/store/general',
    SEARCH_EXEC: 'get:/cbo/apiv1/search'
    //search?resource=product,key=slug,slug=abc,limit=1
 }

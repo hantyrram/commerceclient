@@ -1,7 +1,6 @@
 import React,{useEffect, useContext} from'react';
-import {BrowserRouter as Router,Route,Switch,Link,Redirect} from 'react-router-dom';
 // import Resources from 'features/admin/Resources';
-
+import {BrowserRouter as Router, Link, Switch, Route} from 'react-router-dom';
 import TreeView from '@material-ui/lab/TreeView';
 import TreeItem from '@material-ui/lab/TreeItem';
 import Grid from '@material-ui/core/Grid';
@@ -36,7 +35,7 @@ const RoleCreate = React.lazy(()=>import(/*webpackChunkName: "feature.admin.role
 const RoleRead = React.lazy(()=>import(/*webpackChunkName: "feature.admin.roles.read" */'features/admin/roles/Read'));
 const RoleEdit= React.lazy(()=>import(/*webpackChunkName: "feature.admin.roles.edit" */'features/admin/roles/Edit'));
 const Permissions = React.lazy(()=>import(/*webpackChunkName: "feature.admin.permission.list" */'features/admin/Permissions'));
-const Employees = React.lazy(()=> import(/*webpackChunkName: "feature.employees" */'features/employee/index'));
+const Employees = React.lazy(()=> import(/*webpackChunkName: "feature.employees" */'features/employee/Index'));
 
 // const EmployeeAdd = React.lazy(()=> import(/*webpackChunkName: "feature.personnel_management.employee.add" */'features/personnel_management/employee/Add'));
 const EmployeeView = React.lazy(()=> import(/*webpackChunkName: "feature.employee" */'features/employee/View'));
@@ -45,7 +44,7 @@ const UserAccounts = React.lazy(()=> import(/*webpackChunkName: "feature.admin.u
 const UserAccountRead = React.lazy(()=> import(/*webpackChunkName: "feature.admin.userAccount.read" */'features/admin/useraccount/Read'));
 const ProductCategories = React.lazy(()=> import(/*webpackChunkName: "feature.productcategory" */'features/productcategory'));
 const ProductCategoryCreate = React.lazy(()=> import(/*webpackChunkName: "feature.productcategory.create" */'features/productcategory/Create'));
-const Products = React.lazy(()=> import(/*webpackChunkName: "feature.product" */'features/product/index'));
+const Products = React.lazy(()=> import(/*webpackChunkName: "feature.product.index" */'features/product/Index'));
 const ProductAdd = React.lazy(()=> import(/*webpackChunkName: "feature.product.add" */'features/product/Add'));
 const ProductView = React.lazy(()=> import(/*webpackChunkName: "feature.product.view" */'features/product/View'));
 const ProductAttributes = React.lazy(()=> import(/*webpackChunkName: "feature.productattribute" */'features/productattribute'));
@@ -71,6 +70,29 @@ const PageTransitioner = ({history,location})=>{
          default:
       }
    },[appState.lastAction]);
+
+   window.onbeforeunload = (e)=>{    
+      //remove existing data
+      window.sessionStorage.removeItem(STORE_NAME);     
+      //store the state on sessionStorage
+      window.sessionStorage.setItem(STORE_NAME,JSON.stringify(appState));
+      //store the last path the user was on before refresing the page
+      window.sessionStorage.setItem("LAST_VISITED_PATH_BEFORE_RELOAD",window.location.pathname);
+
+   }
+
+   useEffect(()=>{
+      //LAST_VISITED_PATH_BEFORE_RELOAD has a value, go there. 
+      //It is IMPORTANT to CLEAR this value, and should be only be used once
+      const LAST_PATH = window.sessionStorage.getItem('LAST_VISITED_PATH_BEFORE_RELOAD');
+      
+      if(LAST_PATH && !LAST_PATH.includes('/auth/login')){
+         window.sessionStorage.removeItem('LAST_VISITED_PATH_BEFORE_RELOAD');
+         console.log('Admin sessionStorage value',JSON.parse(window.sessionStorage.getItem(STORE_NAME)));
+         dispatch({type:'INIT',payload: JSON.parse(window.sessionStorage.getItem(STORE_NAME))});
+         history.push(LAST_PATH);
+      }
+   },[]);
    return(<span></span>)
 }
 
@@ -185,10 +207,10 @@ export default ({history,match})=>{
                         <TreeItem classes={treeItemClasses} nodeId="54" label={<Link    to="/orders/shoppingcarts">Shopping Carts</Link>} icon={<ShoppingCartIcon  fontSize="small"/>} />
                      </TreeItem>
                      <TreeItem classes={treeItemClasses} label="Personnel Management" nodeId="2">
-                        <TreeItem classes={treeItemClasses} nodeId="21" label={<Link    to="/employees">Employees</Link>} icon={<SupervisedUserCircleIcon  fontSize="small"/>}/>
+                        <TreeItem classes={treeItemClasses} nodeId="21" label={<Link    to="/hr/employees">Employees</Link>} icon={<SupervisedUserCircleIcon  fontSize="small"/>}/>
                      </TreeItem>
                      <TreeItem classes={treeItemClasses} label="Store Setting" nodeId="3">
-                        <TreeItem classes={treeItemClasses} nodeId="31" label={<Link    to="/settings/store">General</Link>} icon={<SettingsIcon   fontSize="small"/>}/>
+                        <TreeItem classes={treeItemClasses} nodeId="31" label={<Link    to="/settings/store/general">General</Link>} icon={<SettingsIcon   fontSize="small"/>}/>
                         {/* <TreeItem nodeId="32" label={<Link   to="/settings/store/shipping">Shipping</Link>} icon={<LocalShippingIcon   fontSize="small"/>}/> */}
                         <TreeItem classes={treeItemClasses} nodeId="32" label={<Link   to="/settings/store/shipping">Shipping</Link>} icon={<LocalShippingIcon   fontSize="small"/>}/>
                      </TreeItem>

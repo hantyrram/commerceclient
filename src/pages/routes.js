@@ -6,16 +6,16 @@ import React from 'react';
 // const RoleRead = React.lazy(()=>import(/*webpackChunkName: "feature.admin.roles.read" */'features/admin/roles/Read'));
 // const RoleEdit= React.lazy(()=>import(/*webpackChunkName: "feature.admin.roles.edit" */'features/admin/roles/Edit'));
 // const Permissions = React.lazy(()=>import(/*webpackChunkName: "feature.admin.permission.list" */'features/admin/Permissions'));
-const Employees = React.lazy(()=> import(/*webpackChunkName: "feature.employees" */'features/employee/index'));
+const Employees = React.lazy(()=> import(/*webpackChunkName: "feature.employees.index" */'features/employee/Index'));
 
 const AddEmployee = React.lazy(()=> import(/*webpackChunkName: "feature.personnel_management.employee.add" */'features/employee/Add'));
 const ViewEmployee = React.lazy(()=> import(/*webpackChunkName: "feature.employee" */'features/employee/View'));
-const UserAccounts = React.lazy(()=> import(/*webpackChunkName: "feature.admin.userAccounts" */'features/admin/UserAccounts'));
-// const UserAccountCreate = React.lazy(()=> import(/*webpackChunkName: "feature.admin.userAccount.create" */'features/admin/useraccount/Create'));
-// const UserAccountRead = React.lazy(()=> import(/*webpackChunkName: "feature.admin.userAccount.read" */'features/admin/useraccount/Read'));
+const UserAccounts = React.lazy(()=> import(/*webpackChunkName: "feature.useraccount.index" */'features/useraccount/Index'));
+const UserAccountCreate = React.lazy(()=> import(/*webpackChunkName: "feature.userAccount.create" */'features/useraccount/Create'));
+const UserAccountRead = React.lazy(()=> import(/*webpackChunkName: "feature.userAccount.read" */'features/useraccount/Read'));
 const ProductCategories = React.lazy(()=> import(/*webpackChunkName: "feature.productcategory" */'features/productcategory'));
 const CreateProductCategory = React.lazy(()=> import(/*webpackChunkName: "feature.productcategory.create" */'features/productcategory/Create'));
-const Products = React.lazy(()=> import(/*webpackChunkName: "feature.product" */'features/product/index'));
+const Products = React.lazy(()=> import(/*webpackChunkName: "feature.product" */'features/product/Index'));
 const AddProduct = React.lazy(()=> import(/*webpackChunkName: "feature.product.add" */'features/product/Add'));
 const ViewProduct = React.lazy(()=> import(/*webpackChunkName: "feature.product.view" */'features/product/View'));
 const ProductAttributes = React.lazy(()=> import(/*webpackChunkName: "feature.productattribute" */'features/productattribute'));
@@ -23,7 +23,8 @@ const ProductAttributes = React.lazy(()=> import(/*webpackChunkName: "feature.pr
 // const ProductView = React.lazy(()=> import(/*webpackChunkName: "feature.catalog.product.view" */'features/catalog/product/View'));
 // const Product = React.lazy(()=> import(/*webpackChunkName: "feature.product" */'features/Product'));
 // const Shipping = React.lazy(()=> import(/*webpackChunkName: "feature.shipping" */'features/shipping'));
-const StoreSettingGeneral = React.lazy(()=> import(/*webpackChunkName: "feature.store.general" */'features/settings_store/General'));
+// const StoreSettingGeneral = React.lazy(()=> import(/*webpackChunkName: "feature.store.general" */'features/settings_store/General'));
+const SettingStoreGeneral = React.lazy(()=> import(/*webpackChunkName: "feature.store.general" */'features/setting/store/general/General'));
 const Shipping = React.lazy(()=> import(/*webpackChunkName: "feature.shipping" */'features/shipping/Index'));
 const TestFeature = React.lazy(()=> import(/*webpackChunkName: "feature.TestFeature" */'features/TestFeature.jsx'));
 const Dashboard = React.lazy(()=> import(/*webpackChunkName: "feature.Dashboard" */'features/Dashboard.jsx'));
@@ -52,10 +53,12 @@ export default [
 
    { path: "/hr/employees", name: "Employees", Component: Employees, featureType: PRIMARY, featureGroup: HR },
    { path: "/hr/employees/add", name: "Add New Employee", Component: AddEmployee },
-   { path: "/hr/employees/:employeeId", name: "Employee", Component: ViewEmployee },
-   { path: "/settings/store/general", name: "Store Setting", Component: StoreSettingGeneral,featureType: PRIMARY, featureGroup: STORE_SETTING },
+   { path: "/hr/employees/:_id", name: "Employee", Component: ViewEmployee },
+   { path: "/settings/store/general", name: "Store Setting", Component: SettingStoreGeneral,featureType: PRIMARY, featureGroup: STORE_SETTING },
    { path: "/settings/store/shipping", name: "Shipping", Component: Shipping, featureType: PRIMARY, featureGroup: STORE_SETTING },
-   { path: "/webadmin/useraccounts", name: "User Accounts", Component: UserAccounts, featureType: PRIMARY, featureGroup: STORE_SETTING },
+   { path: "/admin/useraccounts", name: "User Accounts", Component: UserAccounts, featureType: PRIMARY, featureGroup: WEB_ADMINISTRATION },
+   { path: "/admin/useraccounts/create", name: "User Accounts", Component: UserAccountCreate },
+   { path: "/admin/useraccounts/:_id", name: "User Accounts", Component: UserAccountRead },
    { path: "/test", name: "Test Feature", Component: TestFeature, featureType: PRIMARY, featureGroup: STORE_SETTING },
 ]
 

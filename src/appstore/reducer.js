@@ -28,7 +28,14 @@ const productsReducer = (productsState = [], action)=>{
       }
 
       case apiRequestActionTypes.PRODUCT_UPDATE_OK: {
+         let product = newState.find(p => p._id === action.payload._id);
+         
+         Object.assign(product,{...action.payload})
+         
+         return newState;
+      }
 
+      case apiRequestActionTypes.PRODUCT$CATEGORY_EDIT_OK : {
          let product = newState.find(p => p._id === action.payload._id);
          
          Object.assign(product,{...action.payload})
@@ -240,6 +247,7 @@ const employeesReducer = (employeesState = [], action) => {
          return newState;
       }
       case apiRequestActionTypes.EMPLOYEE_LIST_OK: {
+         console.log('@reducer: employeeReducer',action.payload);
          return [...action.payload]
       }
       case apiRequestActionTypes.EMPLOYEE_ADD_OK:   return [...newState, action.payload]
@@ -406,6 +414,30 @@ const identityReducer = ( identity = null, action)=>{
    return identity;
 }
 
+const settingsReducer = (settings = {}, action ) => {
+   let settingState = {...settings};
+
+   return settingState;
+}
+
+const utilReducer = ( util = { countries:[], countryStates: {}, cities: {} }, action ) => {
+   let newState = { ...util };
+
+   switch(action.type){
+      case apiRequestActionTypes.UTIL$EXTDATA$COUNTRY_LIST_OK : 
+         return { ...newState, countries: action.payload };
+
+      case apiRequestActionTypes.UTIL$EXTDATA$COUNTRYSTATE_LIST_OK : {
+         //action.payload schema = {'United States': []}
+         return { ...newState, countryStates: { ...newState.countryStates, ...action.payload }} 
+      }   
+      case apiRequestActionTypes.UTIL$EXTDATA$COUNTRYCITY_LIST_OK : {
+         return { ...newState, cities:  { ...newState.cities, ...action.payload }} // e.g. action.payload = {'United States': []}
+         // return {...action.payload }
+      }
+      default: return newState;
+   }
+}
 /**
  * Root Reducer
  */
@@ -423,7 +455,7 @@ export default (state, action)=>{
    //    console.log('LoginOk',action.payload);
    //    newState = { ...newState , identity: action.payload }
    // }
-
+   console.log(`@reducer:reducer, Current State: `,state);
    return { 
       ...newState,
       lastAction: action.type, 
@@ -446,6 +478,8 @@ export default (state, action)=>{
       cities: citiesReducer(state.cities,action),
       storeSettings: storeSettingsReducer(state.storeSettings,action),
       shippingZones: shippingZonesReducer(state.shippingZones,action),
+      settings: settingsReducer(state.settings, action),
+      util: utilReducer(state.util,action),
       psgc: psgcReducer(state.psgc,action)
    };
 

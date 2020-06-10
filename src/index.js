@@ -17,17 +17,24 @@ const AppContainer = (props)=>{
 
    useEffect(()=>{
 
-      // window.onbeforeunload = (e)=>{    
-      //    // window.localStorage.removeItem(STORE_NAME);     
-      //    window.localStorage.setItem(STORE_NAME,JSON.stringify(state));
-      //    window.localStorage.setItem("LAST_PATH",window.location.pathname);
-      // }
+      window.onbeforeunload = (e)=>{    
+         //remove existing data
+         window.sessionStorage.removeItem(STORE_NAME);     
+         //store the state on sessionStorage
+         window.sessionStorage.setItem(STORE_NAME,JSON.stringify(state));
+         //store the last path the user was on before refresing the page
+         window.sessionStorage.setItem("LAST_VISITED_PATH_BEFORE_RELOAD",window.location.pathname);
+
+      }
 
    })
 
    useEffect(()=>{
       console.log('reloaded');
-      // dispatch({type:'INIT',payload: JSON.parse(window.localStorage.getItem(STORE_NAME))});
+      //hyrdrate the appstore state from sessionStorage
+      // if(window.sessionStorage.getItem(STORE_NAME) && Boolean(window.sessionStorage.getItem("RELOADED"))){
+      //    dispatch({type:'INIT',payload: JSON.parse(window.sessionStorage.getItem(STORE_NAME))});
+      // }
    },[]);
 
    

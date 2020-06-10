@@ -25,6 +25,7 @@ export function ProductForm({ product = {} }){
    let fetchProductCategories = useApiRequest('PRODUCTCATEGORY_LIST',dispatch);
    let updateProduct = useApiRequest('PRODUCT_UPDATE',dispatch);
    let addProduct = useApiRequest('PRODUCT_ADD',dispatch);
+   let updateProductCategory = useApiRequest('PRODUCT$CATEGORY_EDIT',dispatch);
    let categoryRef = useRef();
 
    const onSubmitCallback = ({values,changedValues})=>{
@@ -40,24 +41,33 @@ export function ProductForm({ product = {} }){
 
    let {values, onChange, onSubmit, errors,changedValues,setFormFieldValue} = useForm({initialValues: product, onSubmitCallback });
    
-   let [selectedCategory,setSelectedCategory] = useState({_id:'root'});
+   let [selectedCategory,setSelectedCategory] = useState( product.category || {_id:'root', name: 'Root'} );
    let [openSelectCategoryDialog,setOpenSelectCategoryDialog] = useState(false);
 
+   /**
+    * Only selects the category from the category tree. Cached as state (selectedCategory) for use later.
+    */
    const categoriesOnSelectHandler = s => {
-      
+      console.log(s);
       setSelectedCategory(s);
    }
+
    const selectCategoryModalTriggerHandler = (e)=>{
       e.preventDefault();
       setOpenSelectCategoryDialog(true);
    }
 
+   /**
+    * Confirms category select (Ok button was clicked on the "Select Category" dialog).
+    * Sends a Product.Category_Edit request.
+    */
    const selectCategoryModalOkHandler = (e) => {
       if(selectedCategory._id !== 'root'){
-         values.category = selectedCategory;
-         values.category_id = selectedCategory._id;
-         changedValues.category_id = selectedCategory._id;
+         // values.category = selectedCategory;
+         // values.category_id = selectedCategory._id;
+         // changedValues.category_id = selectedCategory._id;
          setOpenSelectCategoryDialog(false);
+         updateProductCategory({params: { product_id: product._id }, payload: selectedCategory});
       }
    }
 
@@ -78,6 +88,8 @@ export function ProductForm({ product = {} }){
       fetchProductCategories();
    },[])
 
+   console.log(values);
+
    return(
      
       <div className="feature-context">
@@ -94,10 +106,10 @@ export function ProductForm({ product = {} }){
                {/* <span> */}
                   {/* using hidden input element to be able to utilize onChange of useForm */}
                   {/* Chip is used as some kind of proxy for the ui */}
-                  <input ref={categoryRef} type="hidden" name={values.category} className="form-control-input"/> 
+                  {/* <input ref={categoryRef} type="hidden" name={values.category} className="form-control-input"/>  */}
                   {
-                      values.category ? 
-                        <Chip size="small" className={chipClasses.root} label={values.category.name} onDelete={removeCategory} /> 
+                      product.category ? 
+                        <Chip size="small" className={chipClasses.root} label={selectedCategory.name} onDelete={removeCategory} /> 
                      : null
                   }
                {/* </span> */}

@@ -18,9 +18,9 @@ export default (props)=>{
          return c.trim().split('=')[0] === 'U_SID';
       });
    }
-
+   console.log(lastAction);
    useEffect(()=>{//has session id try to authenticate
-      if(!identity && U_SID && !lastAction.type.includes('AUTH$AUTHENTICATE')){
+      if(!identity && U_SID && !String(lastAction.type).includes('AUTH$AUTHENTICATE')){
          authenticate();
       }
    },[]);
